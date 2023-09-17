@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "nexpiro-firebase": {
+      "hosting": {
+        "NexpiroAngular": [
+          "nexpiro-firebase"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "nexpiro-firebase"
+  }
+}
