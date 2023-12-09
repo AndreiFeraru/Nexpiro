@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   private AUTH_TOKEN_KEY: string = 'AUTH_TOKEN';
+  public LoggedInUser: string | null | undefined;
 
   constructor(private fireAuth: AngularFireAuth, private router: Router) {}
 
@@ -34,7 +35,6 @@ export class AuthService {
       (res) => {
         this.sendEmailForVerification(res.user);
         localStorage.setItem(this.AUTH_TOKEN_KEY, 'true');
-        this.router.navigate(['/dashboard']);
         alert('Registration successful.');
       },
       (err) => {
@@ -91,6 +91,7 @@ export class AuthService {
           this.AUTH_TOKEN_KEY,
           JSON.stringify(result.user?.uid)
         );
+        this.LoggedInUser = result.user?.displayName;
         this.router.navigate(['/dashboard']);
       },
       (error) => {

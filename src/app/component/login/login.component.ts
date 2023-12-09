@@ -25,7 +25,7 @@ export class LoginComponent {
     this.email = this.password = '';
   }
 
-  signInWithgoogle() {
+  signInWithGoogle() {
     this.auth.googleSignIn();
   }
 }

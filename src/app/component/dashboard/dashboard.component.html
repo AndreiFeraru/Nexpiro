@@ -6,7 +6,7 @@
                 <div class="card-body">
                     <form>
                         <div class="mb-3">
-                            <h4 class="text-danger text-muted">Welcome</h4>
+                            <h4 class="text-danger text-muted">Welcome, {{ this.LoggedInUser }}</h4>
                         </div>
                         <button type="button" class="btn btn-warning text-center" (click)="logout()">Logout</button>
                     </form>
