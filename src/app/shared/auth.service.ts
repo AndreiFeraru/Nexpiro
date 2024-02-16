@@ -11,7 +11,6 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  user,
 } from '@angular/fire/auth';
 
 @Injectable({
@@ -20,18 +19,21 @@ import {
 export class AuthService {
   private AUTH_TOKEN_KEY: string = 'AUTH_TOKEN';
   public LoggedInUserName: string | null | undefined;
+  // user$: Observable<User | null>;
 
   constructor(private router: Router, private auth: Auth) {}
 
   getCurrentUser(): Observable<User | null> {
-    // TODO
-    return of(null);
+    return of(this.auth.currentUser);
   }
 
   login(email: string, password: string) {
     signInWithEmailAndPassword(this.auth, email, password).then(
       (res) => {
         localStorage.setItem(this.AUTH_TOKEN_KEY, 'true');
+
+        this.PopulateLoggedInUserName(res.user);
+
         if (res.user?.emailVerified == true) {
           this.router.navigate(['/dashboard']);
         } else {
@@ -41,6 +43,22 @@ export class AuthService {
       (err) => {
         alert(`Something went wrong while singing in: ${err.message}`);
         this.router.navigate(['/login']);
+      }
+    );
+  }
+
+  googleSignIn() {
+    signInWithPopup(this.auth, new GoogleAuthProvider()).then(
+      (result) => {
+        localStorage.setItem(
+          this.AUTH_TOKEN_KEY,
+          JSON.stringify(result.user?.uid)
+        );
+        this.PopulateLoggedInUserName(result.user);
+        this.router.navigate(['/dashboard']);
+      },
+      (error) => {
+        alert('Something went wrong' + error);
       }
     );
   }
@@ -95,19 +113,11 @@ export class AuthService {
     );
   }
 
-  googleSignIn() {
-    signInWithPopup(this.auth, new GoogleAuthProvider()).then(
-      (result) => {
-        localStorage.setItem(
-          this.AUTH_TOKEN_KEY,
-          JSON.stringify(result.user?.uid)
-        );
-        this.LoggedInUserName = result.user?.displayName;
-        this.router.navigate(['/dashboard']);
-      },
-      (error) => {
-        alert('Something went wrong' + error);
-      }
-    );
+  PopulateLoggedInUserName(user: User) {
+    if (user) {
+      this.LoggedInUserName = user.displayName || user.email || 'Unknown';
+    } else {
+      this.LoggedInUserName = 'Guest';
+    }
   }
 }

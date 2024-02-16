@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from '@angular/fire/auth';
 import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { AuthService } from 'src/app/shared/auth.service';
   styleUrls: ['./verify-email.component.css'],
 })
 export class VerifyEmailComponent implements OnInit {
-  private currentUser: any;
+  private currentUser: User | null = null;
 
   constructor(private auth: AuthService) {}
 
@@ -15,7 +16,9 @@ export class VerifyEmailComponent implements OnInit {
     this.auth.getCurrentUser().subscribe((user) => {
       this.currentUser = user;
     });
-    this.auth.sendEmailForVerification(this.currentUser);
-    // TODO add resend link button with timer to avoid spamming.
+    if (this.currentUser) {
+      this.auth.sendEmailForVerification(this.currentUser);
+      // TODO add resend link button with timer to avoid spamming.
+    }
   }
 }
