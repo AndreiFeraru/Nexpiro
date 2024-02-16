@@ -1,20 +1,35 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { GoogleAuthProvider, FacebookAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import {
+  Auth,
+  GoogleAuthProvider,
+  User,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  user,
+} from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private AUTH_TOKEN_KEY: string = 'AUTH_TOKEN';
-  public LoggedInUser: string | null | undefined;
+  public LoggedInUserName: string | null | undefined;
 
-  constructor(private fireAuth: AngularFireAuth, private router: Router) {}
+  constructor(private router: Router, private auth: Auth) {}
+
+  getCurrentUser(): Observable<User | null> {
+    // TODO
+    return of(null);
+  }
 
   login(email: string, password: string) {
-    this.fireAuth.signInWithEmailAndPassword(email, password).then(
+    signInWithEmailAndPassword(this.auth, email, password).then(
       (res) => {
         localStorage.setItem(this.AUTH_TOKEN_KEY, 'true');
         if (res.user?.emailVerified == true) {
@@ -31,7 +46,7 @@ export class AuthService {
   }
 
   register(email: string, password: string) {
-    this.fireAuth.createUserWithEmailAndPassword(email, password).then(
+    createUserWithEmailAndPassword(this.auth, email, password).then(
       (res) => {
         this.sendEmailForVerification(res.user);
         localStorage.setItem(this.AUTH_TOKEN_KEY, 'true');
@@ -45,7 +60,7 @@ export class AuthService {
   }
 
   logout() {
-    this.fireAuth.signOut().then(
+    signOut(this.auth).then(
       () => {
         localStorage.removeItem(this.AUTH_TOKEN_KEY);
         this.router.navigate(['/login']);
@@ -57,7 +72,7 @@ export class AuthService {
   }
 
   forgotPassword(email: string) {
-    this.fireAuth.sendPasswordResetEmail(email).then(
+    sendPasswordResetEmail(this.auth, email).then(
       () => {
         this.router.navigate(['/verify-email']);
       },
@@ -68,7 +83,7 @@ export class AuthService {
   }
 
   sendEmailForVerification(user: any) {
-    user.sendEmailVerification().then(
+    sendEmailVerification(user).then(
       (res: any) => {
         this.router.navigate(['/verify-email']);
       },
@@ -80,18 +95,14 @@ export class AuthService {
     );
   }
 
-  getCurrentUser(): Observable<firebase.default.User | null> {
-    return this.fireAuth.authState;
-  }
-
   googleSignIn() {
-    this.fireAuth.signInWithPopup(new GoogleAuthProvider()).then(
+    signInWithPopup(this.auth, new GoogleAuthProvider()).then(
       (result) => {
         localStorage.setItem(
           this.AUTH_TOKEN_KEY,
           JSON.stringify(result.user?.uid)
         );
-        this.LoggedInUser = result.user?.displayName;
+        this.LoggedInUserName = result.user?.displayName;
         this.router.navigate(['/dashboard']);
       },
       (error) => {

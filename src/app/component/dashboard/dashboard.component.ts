@@ -7,12 +7,12 @@ import { AuthService } from 'src/app/shared/auth.service';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent {
-  public LoggedInUser: string = '';
+  public LoggedInUserName: string = '';
 
   constructor(private auth: AuthService) {}
 
   ngOnInit(): void {
-    this.LoggedInUser = this.auth.LoggedInUser ?? '';
+    this.LoggedInUserName = this.auth.LoggedInUserName ?? '';
   }
 
   logout() {

@@ -8,7 +8,7 @@ import { ref, child, get } from 'firebase/database';
 export class FridgeService {
   constructor(private db: Database) {}
 
-  getFridgeItemsByFridgeId(fridgeId: string): Promise<any> {
+  getItemsByFridgeId(fridgeId: string): Promise<any> {
     const dbRef = ref(this.db);
     return get(child(dbRef, `fridges/${fridgeId}/fridgeItems`))
       .then((snapshot) => {

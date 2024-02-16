@@ -27,7 +27,7 @@ export class ViewFridgeComponent implements AfterViewInit {
 
   loadFridgeItems(): void {
     this.fridgeService
-      .getFridgeItemsByFridgeId('0')
+      .getItemsByFridgeId('0')
       .then((items) => {
         if (items) {
           this.fridgeItems = Object.values(items);
