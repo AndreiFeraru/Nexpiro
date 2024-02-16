@@ -8,7 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-view-fridge',
   templateUrl: 'view-fridge.component.html',
-  styleUrls: ['view-fridge.component.sass'],
+  styleUrls: ['view-fridge.component.css'],
 })
 export class ViewFridgeComponent implements AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'expirationDate'];

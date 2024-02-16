@@ -4,7 +4,7 @@ import { AuthService } from 'src/app/shared/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.sass'],
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   email: string = '';

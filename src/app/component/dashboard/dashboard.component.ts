@@ -4,7 +4,7 @@ import { AuthService } from 'src/app/shared/auth.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.sass'],
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent {
   public LoggedInUser: string = '';
