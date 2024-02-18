@@ -5,6 +5,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   standalone: true,
@@ -16,6 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatSortModule,
     MatFormFieldModule,
     MatPaginatorModule,
+    MatInputModule,
   ],
 })
 export class ViewFridgeComponent implements AfterViewInit {

@@ -1,1 +1,32 @@
-<router-outlet></router-outlet>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="side" opened="true" class="sidenav">
+    <button mat-icon-button class="sidenav-button" routerLink="/dashboard">
+      <mat-icon>dashboard</mat-icon>
+      <span class="sidenav-button-text">Dashboard</span>
+    </button>
+    <button mat-icon-button class="sidenav-button" routerLink="/view-fridge">
+      <mat-icon>fastfood</mat-icon>
+      <span class="sidenav-button-text">View Fridge</span>
+    </button>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar>
+      <!-- <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button> -->
+      <img
+        src="../../../assets/logo.svg"
+        alt=""
+        width="auto"
+        height="50"
+        class="d-inline-block align-text-top"
+      />
+      Nexpiro
+    </mat-toolbar>
+    <div class="router-content-container">
+      <div class="router-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
