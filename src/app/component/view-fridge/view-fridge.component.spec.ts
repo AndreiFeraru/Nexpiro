@@ -8,7 +8,7 @@ describe('ViewFridgeComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ViewFridgeComponent]
+      declarations: [ViewFridgeComponent],
     });
     fixture = TestBed.createComponent(ViewFridgeComponent);
     component = fixture.componentInstance;
