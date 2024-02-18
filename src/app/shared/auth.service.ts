@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
 import {
   Auth,
   GoogleAuthProvider,
   User,
+  authState,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   sendPasswordResetEmail,
@@ -12,30 +11,30 @@ import {
   signInWithPopup,
   signOut,
 } from '@angular/fire/auth';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private AUTH_TOKEN_KEY: string = 'AUTH_TOKEN';
-  public LoggedInUserName: string | null | undefined;
-  // user$: Observable<User | null>;
+  user$: Observable<User | null>;
 
-  constructor(private router: Router, private auth: Auth) {}
+  constructor(private router: Router, private auth: Auth) {
+    this.user$ = authState(auth);
+  }
 
-  getCurrentUser(): Observable<User | null> {
-    return of(this.auth.currentUser);
+  isLoggedIn(): boolean {
+    if (localStorage['currentUser']) return true;
+    return false;
   }
 
   login(email: string, password: string) {
     signInWithEmailAndPassword(this.auth, email, password).then(
       (res) => {
-        localStorage.setItem(this.AUTH_TOKEN_KEY, 'true');
-
-        this.PopulateLoggedInUserName(res.user);
-
         if (res.user?.emailVerified == true) {
           this.router.navigate(['/dashboard']);
+          localStorage.setItem('currentUser', JSON.stringify(res.user));
         } else {
           this.router.navigate(['/verify-email']);
         }
@@ -50,11 +49,7 @@ export class AuthService {
   googleSignIn() {
     signInWithPopup(this.auth, new GoogleAuthProvider()).then(
       (result) => {
-        localStorage.setItem(
-          this.AUTH_TOKEN_KEY,
-          JSON.stringify(result.user?.uid)
-        );
-        this.PopulateLoggedInUserName(result.user);
+        localStorage.setItem('currentUser', JSON.stringify(result.user));
         this.router.navigate(['/dashboard']);
       },
       (error) => {
@@ -67,7 +62,6 @@ export class AuthService {
     createUserWithEmailAndPassword(this.auth, email, password).then(
       (res) => {
         this.sendEmailForVerification(res.user);
-        localStorage.setItem(this.AUTH_TOKEN_KEY, 'true');
         alert('Registration successful.');
       },
       (err) => {
@@ -80,7 +74,7 @@ export class AuthService {
   logout() {
     signOut(this.auth).then(
       () => {
-        localStorage.removeItem(this.AUTH_TOKEN_KEY);
+        localStorage.removeItem('currentUser');
         this.router.navigate(['/login']);
       },
       (err) => {
@@ -100,7 +94,7 @@ export class AuthService {
     );
   }
 
-  sendEmailForVerification(user: any) {
+  sendEmailForVerification(user: User) {
     sendEmailVerification(user).then(
       (res: any) => {
         this.router.navigate(['/verify-email']);
@@ -111,13 +105,5 @@ export class AuthService {
         );
       }
     );
-  }
-
-  PopulateLoggedInUserName(user: User) {
-    if (user) {
-      this.LoggedInUserName = user.displayName || user.email || 'Unknown';
-    } else {
-      this.LoggedInUserName = 'Guest';
-    }
   }
 }
