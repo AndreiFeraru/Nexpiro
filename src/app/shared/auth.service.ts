@@ -24,11 +24,6 @@ export class AuthService {
     this.user$ = authState(auth);
   }
 
-  isLoggedIn(): boolean {
-    if (localStorage['currentUser']) return true;
-    return false;
-  }
-
   login(email: string, password: string) {
     signInWithEmailAndPassword(this.auth, email, password).then(
       (res) => {
