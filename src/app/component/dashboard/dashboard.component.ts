@@ -3,6 +3,7 @@ import { User } from '@angular/fire/auth';
 import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
+  standalone: true,
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],

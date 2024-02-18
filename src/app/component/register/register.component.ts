@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
+  standalone: true,
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
+  imports: [FormsModule],
 })
 export class RegisterComponent {
   email: string = '';
   password: string = '';
 
   constructor(private auth: AuthService) {}
-
-  ngOnInit(): void {}
 
   register() {
     if (this.email == '') {

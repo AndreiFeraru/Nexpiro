@@ -1,14 +1,22 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FridgeService } from 'src/app/shared/fridge.service';
 
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
+  standalone: true,
   selector: 'app-view-fridge',
   templateUrl: 'view-fridge.component.html',
   styleUrls: ['view-fridge.component.css'],
+  imports: [
+    MatTableModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatPaginatorModule,
+  ],
 })
 export class ViewFridgeComponent implements AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'expirationDate'];
