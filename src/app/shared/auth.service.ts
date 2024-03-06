@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import {
   Auth,
   GoogleAuthProvider,
@@ -10,41 +10,53 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  browserLocalPersistence,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
-  user$: Observable<User | null>;
+export class AuthService implements OnDestroy {
+  authState$: Observable<User | null>;
+  authStateSubscription: Subscription;
 
   constructor(private router: Router, private auth: Auth) {
-    this.user$ = authState(auth);
+    this.authState$ = authState(auth);
+    this.authStateSubscription = this.authState$.subscribe(
+      (aUser: User | null) => {
+        //handle auth state changes here. Note, that user will be null if there is no currently logged in user.
+        console.log(aUser);
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.authStateSubscription.unsubscribe();
   }
 
   login(email: string, password: string) {
     signInWithEmailAndPassword(this.auth, email, password).then(
-      (res) => {
-        if (res.user?.emailVerified == true) {
-          this.router.navigate(['/dashboard']);
-          localStorage.setItem('currentUser', JSON.stringify(res.user));
-        } else {
+      async (res) => {
+        if (res.user?.emailVerified == false) {
           this.router.navigate(['/verify-email']);
+        } else {
+          await this.auth.setPersistence(browserLocalPersistence);
+          this.router.navigate(['/dashboard']);
         }
       },
       (err) => {
         alert(`Something went wrong while singing in: ${err.message}`);
-        this.router.navigate(['/login']);
+        this.router.navigate(['/login']); // TODO Remove?
       }
     );
   }
 
   googleSignIn() {
     signInWithPopup(this.auth, new GoogleAuthProvider()).then(
-      (result) => {
-        localStorage.setItem('currentUser', JSON.stringify(result.user));
+      async (result) => {
+        await this.auth.setPersistence(browserLocalPersistence);
         this.router.navigate(['/dashboard']);
       },
       (error) => {
@@ -69,7 +81,6 @@ export class AuthService {
   logout() {
     signOut(this.auth).then(
       () => {
-        localStorage.removeItem('currentUser');
         this.router.navigate(['/login']);
       },
       (err) => {

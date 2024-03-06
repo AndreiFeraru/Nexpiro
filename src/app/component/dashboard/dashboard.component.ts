@@ -15,7 +15,7 @@ export class DashboardComponent {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.authService.user$.subscribe((user) => {
+    this.authService.authState$.subscribe((user) => {
       this.currentUser = user;
       this.LoggedInUserName = user?.displayName ?? user?.email ?? '';
     });
