@@ -1,5 +1,11 @@
 <mat-sidenav-container>
-  <mat-sidenav #sidenav mode="side" opened="true" class="sidenav">
+  <mat-sidenav
+    #sidenav
+    mode="side"
+    opened="true"
+    class="sidenav"
+    *ngIf="loggedIn"
+  >
     <button mat-icon-button class="sidenav-button" routerLink="/dashboard">
       <mat-icon>dashboard</mat-icon>
       <span class="sidenav-button-text">Dashboard</span>
@@ -9,8 +15,8 @@
       <span class="sidenav-button-text">View Fridge</span>
     </button>
   </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar>
+  <mat-sidenav-content id="sidenav-content">
+    <mat-toolbar id="toolbar" routerLink="/">
       <!-- <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button> -->

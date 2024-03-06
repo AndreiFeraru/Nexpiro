@@ -1,5 +1,15 @@
+#toolbar {
+  margin-top: 10px;
+  margin-left: 10px;
+  background-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
+}
+
 .sidenav {
   width: 60px; /* Set your desired width */
+  background-color: #90dfaa;
+  border-radius: 10px;
+  margin: 10px;
 }
 
 .sidenav-button {
@@ -10,7 +20,6 @@
   border: none;
   background-color: transparent;
   color: #333; /* Adjust the color as needed */
-  transition: background-color 0.3s;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,12 +34,12 @@
 }
 
 .router-content-container {
+  background-color: transparent;
   padding: 1rem;
 }
 
 .router-content {
-  background-color: white;
-  border: 5px solid #673ab7;
+  background-color: #90dfaa;
   border-radius: 10px;
   padding: 1rem;
 }
