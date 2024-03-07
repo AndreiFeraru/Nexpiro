@@ -7,7 +7,11 @@ import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
-import { provideDatabase, getDatabase } from '@angular/fire/database';
+import {
+  provideDatabase,
+  getDatabase,
+  connectDatabaseEmulator,
+} from '@angular/fire/database';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,7 +33,11 @@ import { MatIconModule } from '@angular/material/icon';
       });
       return auth;
     }),
-    provideDatabase(() => getDatabase()),
+    provideDatabase(() => {
+      const db = getDatabase();
+      connectDatabaseEmulator(db, '127.0.0.1', 9000);
+      return db;
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],
