@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Database } from '@angular/fire/database';
-import { ref, child, get } from 'firebase/database';
+import { Database, get, ref, child, set, push } from '@angular/fire/database';
+import { FridgeItem } from '../models/fridgeItem';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ export class FridgeService {
 
   getItemsByFridgeId(fridgeId: string): Promise<any> {
     const dbRef = ref(this.db);
-    return get(child(dbRef, `fridges/${fridgeId}/fridgeItems`))
+    return get(child(dbRef, `fridges/${fridgeId}/items`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           return snapshot.val();
@@ -18,8 +18,23 @@ export class FridgeService {
           return null;
         }
       })
-      .catch((error) => {
-        throw error;
+      .catch((err) => {
+        throw err;
       });
+  }
+
+  addItemToFridge(fridgeId: string, item: FridgeItem) {
+    const itemsRef = ref(this.db, `fridges/${fridgeId}/items`);
+    const newItemRef = push(itemsRef);
+    set(newItemRef, item)
+      .then((res) => {
+        alert('success');
+        console.log(res);
+      })
+      .catch((err) => {
+        alert('error');
+        console.log(err);
+      });
+    return item.id;
   }
 }

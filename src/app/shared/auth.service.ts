@@ -94,7 +94,7 @@ export class AuthService implements OnDestroy {
       () => {
         this.router.navigate(['/verify-email']);
       },
-      (error) => {
+      (err) => {
         alert('Something went wrong!');
       }
     );
@@ -105,7 +105,7 @@ export class AuthService implements OnDestroy {
       (res: any) => {
         this.router.navigate(['/verify-email']);
       },
-      (error: any) => {
+      (err: any) => {
         alert(
           'Something went wrong! Could not send email to to verify account.'
         );
