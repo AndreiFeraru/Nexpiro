@@ -27,7 +27,6 @@ export class AuthService implements OnDestroy {
     this.authStateSubscription = this.authState$.subscribe(
       (aUser: User | null) => {
         //handle auth state changes here. Note, that user will be null if there is no currently logged in user.
-        console.log(aUser);
       }
     );
   }
