@@ -23,7 +23,9 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/shared/auth.service';
+import { User } from '@angular/fire/auth';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -60,36 +62,51 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   ],
 })
 export class ViewFridgeComponent implements AfterViewInit, OnDestroy {
+  authStateSubscription: Subscription;
+  currentUser: User | null = null;
+
   public nameFormControl = new FormControl('', [Validators.required]);
   matcher = new MyErrorStateMatcher();
 
   displayedColumns: string[] = ['id', 'name', 'expirationDate'];
   dataSource: MatTableDataSource<FridgeItem> =
     new MatTableDataSource<FridgeItem>([]);
-  fridgeItems: FridgeItem[] = [];
-  fridgeItems$: Observable<FridgeItem[]>;
   fridgeItemsSubscription: Subscription;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private fridgeService: FridgeService) {
-    this.fridgeItems$ = fridgeService.getItemsByFridgeId('0');
-    this.fridgeItemsSubscription = this.fridgeItems$.subscribe(
-      (items: FridgeItem[]) => {
-        if (items) {
-          this.fridgeItems = Object.values(items);
-          this.dataSource = new MatTableDataSource(this.fridgeItems);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          console.log(this.dataSource);
-        } else {
-          console.log('No fridge items available');
-        }
+  constructor(
+    private fridgeService: FridgeService,
+    private authService: AuthService
+  ) {
+    this.authStateSubscription = this.authService.authState$.subscribe(
+      (user) => {
+        this.currentUser = user;
       }
     );
+    const fridgeId = '0';
+    this.fridgeItemsSubscription = fridgeService
+      .getItemsByFridgeId(fridgeId)
+      .subscribe({
+        next: (items) => {
+          if (items) {
+            this.dataSource.data = items; // Use 'data' property to update the data source
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+            console.log(this.dataSource);
+          } else {
+            console.log('No fridge items available');
+          }
+        },
+        error: (e) => console.error(e),
+        complete: () => console.info('complete'),
+      });
   }
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.fridgeItemsSubscription.unsubscribe();
+    this.authStateSubscription.unsubscribe();
+  }
 
   ngOnInit(): void {}
 
@@ -114,12 +131,17 @@ export class ViewFridgeComponent implements AfterViewInit, OnDestroy {
   addItem(itemName: string) {
     itemName = itemName.trim();
     if (!itemName) {
-      return; // TODO show error
-      // OR remove this part entirely if the validator is enough
+      return;
+      // TODO show error
     }
 
     const date = new Date();
     const stringDate = date.toISOString().split('T')[0];
+
+    if (this.currentUser?.displayName === undefined) {
+      console.log(`Could not retrieve user name`);
+      return;
+    }
 
     const item: FridgeItem = {
       id: 1,
@@ -127,8 +149,16 @@ export class ViewFridgeComponent implements AfterViewInit, OnDestroy {
       expirationDate: stringDate,
       createdAt: stringDate,
       lastModified: stringDate,
-      createdBy: 'andreif',
+      createdBy: this.currentUser.displayName as string,
     };
-    this.fridgeService.addItemToFridge('0', item);
+    this.fridgeService.addItemToFridge('0', item).then(
+      () => {
+        // Todo write in label
+        console.log(`Item added successfully ${item.name}`);
+      },
+      (err) => {
+        console.log(`Error adding item ${item.name} ${err}`);
+      }
+    );
   }
 }
