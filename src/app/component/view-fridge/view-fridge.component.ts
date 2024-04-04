@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { FridgeService } from 'src/app/shared/fridge.service';
 
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -23,6 +23,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -58,28 +59,24 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     NgIf,
   ],
 })
-export class ViewFridgeComponent implements AfterViewInit {
+export class ViewFridgeComponent implements AfterViewInit, OnDestroy {
   public nameFormControl = new FormControl('', [Validators.required]);
   matcher = new MyErrorStateMatcher();
 
   displayedColumns: string[] = ['id', 'name', 'expirationDate'];
-  fridgeItems: FridgeItem[] = [];
   dataSource: MatTableDataSource<FridgeItem> =
     new MatTableDataSource<FridgeItem>([]);
+  fridgeItems: FridgeItem[] = [];
+  fridgeItems$: Observable<FridgeItem[]>;
+  fridgeItemsSubscription: Subscription;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private fridgeService: FridgeService) {}
-
-  ngOnInit(): void {
-    this.loadFridgeItems();
-  }
-
-  loadFridgeItems(): void {
-    this.fridgeService
-      .getItemsByFridgeId('0')
-      .then((items) => {
+  constructor(private fridgeService: FridgeService) {
+    this.fridgeItems$ = fridgeService.getItemsByFridgeId('0');
+    this.fridgeItemsSubscription = this.fridgeItems$.subscribe(
+      (items: FridgeItem[]) => {
         if (items) {
           this.fridgeItems = Object.values(items);
           this.dataSource = new MatTableDataSource(this.fridgeItems);
@@ -89,12 +86,12 @@ export class ViewFridgeComponent implements AfterViewInit {
         } else {
           console.log('No fridge items available');
         }
-      })
-      .catch((error) => {
-        console.error('Error fetching fridge items:', error);
-        // TODO Handle error appropriately, e.g., display an error message
-      });
+      }
+    );
   }
+  ngOnDestroy(): void {}
+
+  ngOnInit(): void {}
 
   ngAfterViewInit() {
     this.dataSource.filterPredicate = function (data, filter: string): boolean {

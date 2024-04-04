@@ -1,26 +1,47 @@
 import { Injectable } from '@angular/core';
-import { Database, get, ref, child, set, push } from '@angular/fire/database';
+import {
+  Database,
+  get,
+  ref,
+  child,
+  onValue,
+  set,
+  push,
+} from '@angular/fire/database';
 import { FridgeItem } from '../models/fridgeItem';
+import { Observable, ReplaySubject, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FridgeService {
+  fridgeItems$: Observable<FridgeItem[]>;
+
   constructor(private db: Database) {}
 
-  getItemsByFridgeId(fridgeId: string): Promise<any> {
-    const dbRef = ref(this.db);
-    return get(child(dbRef, `fridges/${fridgeId}/items`))
-      .then((snapshot) => {
+  getItemsByFridgeId(fridgeId: string): Observable<FridgeItem[]> {
+    if (!fridgeId) {
+      console.log('No fridge id!');
+      throw 'No fridge id!'; // TODO
+    }
+    const fridgesRef = ref(this.db, `fridges/${fridgeId}`);
+    new Observable();
+    return onValue(
+      fridgesRef,
+      (snapshot) => {
         if (snapshot.exists()) {
-          return snapshot.val();
+          const data: FridgeItem[] = snapshot.val();
+          return data;
+          this.fridgeItems$ = data;
         } else {
           return null;
         }
-      })
-      .catch((err) => {
+      },
+      (err) => {
+        console.log(err);
         throw err;
-      });
+      }
+    );
   }
 
   addItemToFridge(fridgeId: string, item: FridgeItem) {
@@ -28,11 +49,9 @@ export class FridgeService {
     const newItemRef = push(itemsRef);
     set(newItemRef, item)
       .then((res) => {
-        alert('success');
         console.log(res);
       })
       .catch((err) => {
-        alert('error');
         console.log(err);
       });
     return item.id;
