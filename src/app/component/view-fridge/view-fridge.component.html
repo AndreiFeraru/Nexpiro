@@ -30,61 +30,50 @@
   <p>{{ fridgeItem.name }}</p>
 </div>
 
-<div class="card w-96 glass shadow-xl">
-  <div class="card-body">
-    <div class="card-actions justify-between">
-      <h2 class="card-title">Add item</h2>
-      <button class="btn-circle btn-sm bg-transparent">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+<button class="btn btn-primary" onclick="add_item_modal.showModal()">
+  Add item
+</button>
+<dialog id="add_item_modal" class="modal">
+  <div class="modal-box w-96">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+        ✕
       </button>
-    </div>
-    <form class="">
-      <input
-        #name
-        type="text"
-        placeholder="Name"
-        class="input input-ghost w-full max-w-xs"
-        required
-      />
-      <textarea
-        #description
-        class="textarea textarea-ghost w-full max-w-xs"
-        placeholder="Description"
-      ></textarea>
-      <input
-        #expirationDate
-        type="date"
-        id="start"
-        name="expiration-date"
-        min="2024-01-01"
-        max="2030-12-31"
-        class="input input-ghost w-full max-w-xs"
-        required
-        [value]="today"
-      />
-      <div class="card-actions justify-end">
+    </form>
+    <h3 class="font-bold text-lg">Add item</h3>
+    <input
+      #name
+      type="text"
+      placeholder="Name"
+      class="input input-ghost w-full"
+    />
+    <textarea
+      #description
+      class="textarea textarea-ghost w-full"
+      placeholder="Description"
+    ></textarea>
+    <input
+      #expirationDate
+      type="date"
+      id="start"
+      name="expiration-date"
+      min="2024-01-01"
+      max="2030-12-31"
+      class="input input-ghost w-full"
+      [value]="today"
+    />
+    <div class="modal-action">
+      <form id="modal_action_dialog_form" method="dialog">
         <button class="btn btn-ghost">Cancel</button>
         <button
           type="submit"
+          form="add_item_form"
           class="btn btn-primary"
           (click)="addItem(name.value, description.value, expirationDate.value)"
         >
           Confirm
         </button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
+</dialog>
