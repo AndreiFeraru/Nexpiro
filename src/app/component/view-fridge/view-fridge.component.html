@@ -1,33 +1,20 @@
-<div class="collapse collapse-arrow bg-base-200">
-  <input type="radio" name="my-accordion-2" checked="checked" />
-  <div class="collapse-title text-xl font-medium">
-    Click to open this one and close others
+<div class="join join-vertical w-full shadow-xl">
+  <div *ngFor="let fridgeItem of fridgeItems">
+    <div
+      class="collapse show collapse-arrow join-item glass bg-violet-400 bg-opacity-60 pl-5 pr-5 border border-violet-700 border-opacity-50"
+    >
+      <input type="radio" name="fridge_items_accordion" />
+      <!-- <input type="checkbox" /> -->
+      <div class="collapse-title text-l font-medium">
+        {{ fridgeItem.name }}
+      </div>
+      <div class="collapse-content">
+        <p>Expiration date: {{ fridgeItem.expirationDate }}</p>
+        <p>Added on: {{ fridgeItem.createdAt }}</p>
+        <p>Added by: {{ fridgeItem.createdBy }}</p>
+      </div>
+    </div>
   </div>
-  <div class="collapse-content">
-    <p>hello</p>
-  </div>
-</div>
-<div class="collapse collapse-arrow bg-base-200">
-  <input type="radio" name="my-accordion-2" />
-  <div class="collapse-title text-xl font-medium">
-    Click to open this one and close others
-  </div>
-  <div class="collapse-content">
-    <p>hello</p>
-  </div>
-</div>
-<div class="collapse collapse-arrow bg-base-200">
-  <input type="radio" name="my-accordion-2" />
-  <div class="collapse-title text-xl font-medium">
-    Click to open this one and close others
-  </div>
-  <div class="collapse-content">
-    <p>hello</p>
-  </div>
-</div>
-
-<div *ngFor="let fridgeItem of fridgeItems">
-  <p>{{ fridgeItem.name }}</p>
 </div>
 
 <button class="btn btn-primary" onclick="add_item_modal.showModal()">
