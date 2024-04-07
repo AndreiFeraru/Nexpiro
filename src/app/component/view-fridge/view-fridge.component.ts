@@ -87,6 +87,7 @@ export class ViewFridgeComponent implements OnDestroy {
     const item: FridgeItem = {
       id: 1,
       name: itemName,
+      description: description,
       expirationDate: expirationDate,
       createdAt: dateNow,
       lastModified: dateNow,
