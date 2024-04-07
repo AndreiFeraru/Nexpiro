@@ -9,18 +9,14 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnDestroy {
-  title = 'NexpiroAngular';
+  title = 'Nexpiro';
   loggedIn: boolean = false;
 
   authStateSubscription: Subscription;
 
   constructor(public router: Router, public authService: AuthService) {
     this.authStateSubscription = authService.authState$.subscribe((user) => {
-      if (user) {
-        this.loggedIn = true;
-      } else {
-        this.loggedIn = false;
-      }
+      this.loggedIn = !!user;
     });
   }
   ngOnDestroy(): void {

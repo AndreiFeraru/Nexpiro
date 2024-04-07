@@ -1,38 +1,56 @@
-<mat-sidenav-container>
-  <mat-sidenav
-    #sidenav
-    mode="side"
-    opened="true"
-    class="sidenav"
-    *ngIf="loggedIn"
-  >
-    <button mat-icon-button class="sidenav-button" routerLink="/dashboard">
-      <mat-icon>dashboard</mat-icon>
-      <span class="sidenav-button-text">Dashboard</span>
-    </button>
-    <button mat-icon-button class="sidenav-button" routerLink="/view-fridge">
-      <mat-icon>fastfood</mat-icon>
-      <span class="sidenav-button-text">View Fridge</span>
-    </button>
-  </mat-sidenav>
-  <mat-sidenav-content id="sidenav-content">
-    <mat-toolbar id="toolbar" routerLink="/">
-      <!-- <button mat-icon-button (click)="sidenav.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button> -->
-      <!-- <img
-        src="../../../assets/logo.svg"
-        alt=""
-        width="auto"
-        height="50"
-        class="d-inline-block align-text-top"
-      /> -->
-      Nexpiro
-    </mat-toolbar>
-    <div class="router-content-container">
-      <div class="router-content">
-        <router-outlet></router-outlet>
-      </div>
+<div class="flex m-3">
+  <div class="mr-3 flex flex-col items-center">
+    <div class="self-center mb-3" routerLink="/">
+      <img src="../../../assets/logo.svg" alt="Nexpiro" class="w-14 h-14" />
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    <ul *ngIf="loggedIn" class="menu bg-base-200 rounded-box w-fit shadow-xl">
+      <li>
+        <a
+          class="tooltip tooltip-right"
+          data-tip="Home"
+          routerLink="/dashboard"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            />
+          </svg>
+        </a>
+      </li>
+      <li>
+        <a
+          class="tooltip tooltip-right"
+          data-tip="Details"
+          routerLink="/view-fridge"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="router-content grow">
+    <router-outlet></router-outlet>
+  </div>
+</div>

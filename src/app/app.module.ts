@@ -12,9 +12,6 @@ import {
   getDatabase,
   connectDatabaseEmulator,
 } from '@angular/fire/database';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,9 +19,6 @@ import { MatIconModule } from '@angular/material/icon';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatIconModule,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => {
       const auth = getAuth();
