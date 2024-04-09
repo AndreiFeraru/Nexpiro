@@ -1,9 +1,9 @@
-<div class="flex m-3">
-  <div class="mr-3 flex flex-col items-center">
+<div class="flex p-3 min-h-screen backdrop-blur-sm">
+  <div *ngIf="loggedIn" class="mr-3 flex flex-col items-center">
     <div class="self-center mb-3" routerLink="/">
       <img src="../../../assets/logo.svg" alt="Nexpiro" class="w-14 h-14" />
     </div>
-    <ul *ngIf="loggedIn" class="menu bg-base-200 rounded-box w-fit shadow-xl">
+    <ul class="menu bg-base-200 rounded-box w-fit shadow-xl">
       <li>
         <a
           class="tooltip tooltip-right"
