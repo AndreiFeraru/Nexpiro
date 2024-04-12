@@ -2,3 +2,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Styles required to allow placing buttons in collapse-title components */
+.collapse-title {
+  z-index: 10;
+  pointer-events: none;
+}
+.collapse-title button {
+  pointer-events: all;
+}
