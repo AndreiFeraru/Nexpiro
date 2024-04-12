@@ -1,9 +1,9 @@
 export interface FridgeItem {
-  id: number;
+  id: string;
   name: string;
-  description: string;
+  description: string | undefined;
   expirationDate: string;
   createdAt: string;
   lastModified: string;
-  createdBy: string;
+  lastModifiedBy: string;
 }

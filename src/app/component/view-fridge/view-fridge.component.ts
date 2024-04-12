@@ -4,15 +4,11 @@ import { FridgeService } from 'src/app/shared/fridge.service';
 import { FridgeItem } from 'src/app/models/fridgeItem';
 
 import { CommonModule } from '@angular/common';
-import {
-  FormControl,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/shared/auth.service';
 import { User } from '@angular/fire/auth';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   standalone: true,
@@ -28,13 +24,17 @@ export class ViewFridgeComponent implements OnDestroy {
   fridgeItems: FridgeItem[] | undefined;
   currentUser: User | null = null;
 
-  today: string | undefined;
+  name: string | undefined;
+  description: string | undefined;
+  expirationDate: string | undefined;
+
+  itemSelectedForEdit: FridgeItem | undefined;
 
   constructor(
     private fridgeService: FridgeService,
     private authService: AuthService
   ) {
-    this.today = new Date().toISOString().split('T')[0];
+    this.clearForm();
   }
 
   ngOnInit(): void {
@@ -65,8 +65,11 @@ export class ViewFridgeComponent implements OnDestroy {
     this.authStateSubscription?.unsubscribe();
   }
 
-  addItem(itemName: string, description: string, expirationDate: string) {
-    itemName = itemName.trim();
+  addItem(
+    itemName: string | undefined,
+    description: string | undefined,
+    expirationDate: string | undefined
+  ) {
     if (!itemName) {
       alert('Item name is required');
       return;
@@ -82,25 +85,86 @@ export class ViewFridgeComponent implements OnDestroy {
       return;
     }
 
+    itemName = itemName.trim();
+    description = description?.trim();
     const dateNow = new Date().toISOString().split('T')[0];
 
     const item: FridgeItem = {
-      id: 1,
+      id: uuidv4(),
       name: itemName,
       description: description,
       expirationDate: expirationDate,
       createdAt: dateNow,
       lastModified: dateNow,
-      createdBy: this.currentUser.displayName as string,
+      lastModifiedBy: this.currentUser.displayName as string,
     };
     this.fridgeService.addItemToFridge('0', item).then(
       () => {
         // Todo write in label
         console.log(`Item added successfully ${item.name}`);
+        this.name = 'xcz';
+        this.clearForm();
       },
       (err) => {
         console.log(`Error adding item ${item.name} ${err}`);
       }
     );
+  }
+
+  loadItemForEdit(item: FridgeItem) {
+    this.itemSelectedForEdit = item;
+    this.name = this.itemSelectedForEdit.name;
+    this.description = this.itemSelectedForEdit.description;
+    this.expirationDate = this.itemSelectedForEdit.expirationDate;
+  }
+
+  editItem(
+    itemSelectedForEdit: FridgeItem | undefined,
+    itemName: string | undefined,
+    description: string | undefined,
+    expirationDate: string | undefined
+  ) {
+    if (!itemSelectedForEdit) {
+      console.log('No item selected for edit');
+      return;
+    }
+    if (!itemName) {
+      alert('Item name is required');
+      return;
+    }
+    if (!expirationDate) {
+      alert('Expiration date is required');
+      return;
+    }
+    if (this.currentUser?.displayName === undefined) {
+      console.log(`Could not retrieve user name`);
+      return;
+    }
+
+    itemName = itemName.trim();
+    description = description?.trim();
+    const dateNow = new Date().toISOString().split('T')[0];
+
+    itemSelectedForEdit.name = itemName as string;
+    itemSelectedForEdit.description = description;
+    itemSelectedForEdit.expirationDate = expirationDate as string;
+    itemSelectedForEdit.lastModified = dateNow;
+
+    this.fridgeService.updateItemInFridge('0', itemSelectedForEdit).then(
+      () => {
+        console.log(`Item updated successfully ${itemSelectedForEdit.name}`);
+        this.clearForm();
+        this.itemSelectedForEdit = undefined;
+      },
+      (err) => {
+        console.log(`Error updating item ${itemSelectedForEdit.name} ${err}`);
+      }
+    );
+  }
+
+  clearForm() {
+    this.name = '';
+    this.description = '';
+    this.expirationDate = new Date().toISOString().split('T')[0];
   }
 }
