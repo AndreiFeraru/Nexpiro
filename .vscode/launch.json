@@ -4,7 +4,7 @@
   "configurations": [
     {
       "name": "Attach to Chrome",
-      "port": 4200,
+      "port": 4201,
       "request": "attach",
       "type": "chrome",
       "webRoot": "${workspaceFolder}"
@@ -14,7 +14,7 @@
       "type": "chrome",
       "request": "launch",
       "preLaunchTask": "npm: start",
-      "url": "http://localhost:4200/"
+      "url": "http://localhost:4201/"
     },
     {
       "name": "ng test",
