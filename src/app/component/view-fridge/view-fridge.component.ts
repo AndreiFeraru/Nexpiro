@@ -1,12 +1,12 @@
-import { Subscription } from 'rxjs';
-import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnDestroy } from '@angular/core';
 import { User } from '@angular/fire/auth';
-import { FridgeService } from 'src/app/shared/fridge.service';
-import { AuthService } from 'src/app/shared/auth.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { AddItemComponent } from 'src/app/component/add-item/add-item.component';
 import { FridgeItem } from 'src/app/models/fridgeItem';
-import { AddItemComponent } from 'src/app/add-item/add-item.component';
+import { AuthService } from 'src/app/shared/auth.service';
+import { FridgeService } from 'src/app/shared/fridge.service';
 
 @Component({
   standalone: true,
