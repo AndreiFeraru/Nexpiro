@@ -2,7 +2,7 @@
   <button
     class="btn btn-primary mb-3"
     onclick="add_item_modal.showModal()"
-    (click)="clearForm()"
+    (click)="addItemInstance.clearForm()"
   >
     Add item
   </button>
@@ -39,52 +39,6 @@
       </div>
     </div>
   </div>
-
-  <dialog id="add_item_modal" class="modal">
-    <div class="modal-box w-96">
-      <form method="dialog">
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-          ✕
-        </button>
-      </form>
-      <h3 class="font-bold text-lg">Add item</h3>
-      <input
-        type="text"
-        placeholder="Name"
-        class="input input-ghost w-full"
-        [(ngModel)]="name"
-      />
-      <textarea
-        class="textarea textarea-ghost w-full"
-        placeholder="Description"
-        [(ngModel)]="description"
-      ></textarea>
-      <input
-        type="date"
-        id="start"
-        name="expiration-date"
-        min="2024-01-01"
-        max="2030-12-31"
-        class="input input-ghost w-full"
-        [(ngModel)]="expirationDate"
-      />
-      <div class="modal-action">
-        <form id="modal_action_dialog_form" method="dialog">
-          <button class="btn btn-ghost">Cancel</button>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            (click)="addItem(name, description, expirationDate)"
-          >
-            Confirm
-          </button>
-        </form>
-      </div>
-    </div>
-    <form method="dialog" class="modal-backdrop">
-      <button>close</button>
-    </form>
-  </dialog>
 
   <dialog id="edit_item_modal" class="modal">
     <div class="modal-box w-96">
@@ -134,3 +88,5 @@
     </form>
   </dialog>
 </div>
+
+<app-add-item></app-add-item>
