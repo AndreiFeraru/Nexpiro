@@ -1,9 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { User } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { FridgeItem } from 'src/app/models/fridgeItem';
-import { AuthService } from 'src/app/shared/auth.service';
 import { FridgeService } from 'src/app/shared/fridge.service';
 
 @Component({
@@ -17,16 +14,10 @@ export class EditItemComponent implements OnChanges {
   name: string | undefined;
   description: string | undefined;
   expirationDate: string | undefined;
-  currentUser: User | null = null;
 
   @Input() itemSelectedForEdit: FridgeItem | undefined;
 
-  authStateSubscription: Subscription | undefined;
-
-  constructor(
-    private fridgeService: FridgeService,
-    private authService: AuthService
-  ) {}
+  constructor(private fridgeService: FridgeService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('ngOnChanges called with changes:', changes);
@@ -41,16 +32,7 @@ export class EditItemComponent implements OnChanges {
   }
 
   ngOnInit(): void {
-    // this.clearForm();
-    this.authStateSubscription = this.authService.authState$.subscribe(
-      (user) => {
-        this.currentUser = user;
-      }
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.authStateSubscription?.unsubscribe();
+    this.clearForm();
   }
 
   clearForm() {
@@ -66,33 +48,13 @@ export class EditItemComponent implements OnChanges {
   }
 
   editItem() {
-    if (!this.itemSelectedForEdit) {
-      alert('No item selected for edit');
-      return;
-    }
-    if (!this.name) {
-      alert('Item name is required');
-      return;
-    }
-    if (!this.expirationDate) {
-      alert('Expiration date is required');
-      return;
-    }
-    if (this.currentUser?.displayName === undefined) {
-      console.log(`Could not retrieve user name`);
+    if (!this.validateForm()) {
       return;
     }
 
-    this.name = this.name.trim();
-    this.description = this.description?.trim();
-    const dateNow = new Date().toISOString().split('T')[0];
+    this.updateSelectedForEdit();
 
-    this.itemSelectedForEdit.name = this.name as string;
-    this.itemSelectedForEdit.description = this.description;
-    this.itemSelectedForEdit.expirationDate = this.expirationDate as string;
-    this.itemSelectedForEdit.lastModified = dateNow;
-
-    this.fridgeService.updateItemInFridge('0', this.itemSelectedForEdit).then(
+    this.fridgeService.updateItemInFridge('0', this.itemSelectedForEdit!).then(
       () => {
         console.log(
           `Item updated successfully ${this.itemSelectedForEdit!.name}`
@@ -106,5 +68,34 @@ export class EditItemComponent implements OnChanges {
         );
       }
     );
+  }
+
+  validateForm(): boolean {
+    if (!this.itemSelectedForEdit) {
+      alert('No item selected for edit');
+      return false;
+    }
+    if (!this.name) {
+      alert('Item name is required');
+      return false;
+    }
+    if (!this.expirationDate) {
+      alert('Expiration date is required');
+      return false;
+    }
+
+    this.name = this.name.trim();
+    this.description = this.description?.trim();
+
+    return true;
+  }
+
+  updateSelectedForEdit() {
+    if (this.itemSelectedForEdit === undefined) return;
+    this.itemSelectedForEdit.name = this.name as string;
+    this.itemSelectedForEdit.description = this.description;
+    this.itemSelectedForEdit.expirationDate = this.expirationDate as string;
+    const dateNow = new Date().toISOString().split('T')[0];
+    this.itemSelectedForEdit.lastModified = dateNow;
   }
 }
