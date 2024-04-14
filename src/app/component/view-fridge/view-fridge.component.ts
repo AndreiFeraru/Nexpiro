@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AddItemComponent } from 'src/app/component/add-item/add-item.component';
 import { EditItemComponent } from 'src/app/component/edit-item/edit-item.component';
 import { FridgeItem } from 'src/app/models/fridgeItem';
-import { AuthService } from 'src/app/shared/auth.service';
 import { FridgeService } from 'src/app/shared/fridge.service';
 
 @Component({
@@ -25,21 +24,12 @@ export class ViewFridgeComponent implements OnDestroy {
   authStateSubscription: Subscription | undefined;
   fridgeItemsSubscription: Subscription | undefined;
 
-  fridgeItems: FridgeItem[] | undefined;
+  @ViewChild(AddItemComponent) addItemModal!: AddItemComponent | null;
 
+  fridgeItems: FridgeItem[] | undefined;
   itemSelectedForEdit: FridgeItem | undefined;
 
-  addItemInstance: AddItemComponent;
-
-  constructor(
-    private fridgeService: FridgeService,
-    private authService: AuthService
-  ) {
-    this.addItemInstance = new AddItemComponent(
-      this.fridgeService,
-      this.authService
-    );
-  }
+  constructor(private fridgeService: FridgeService) {}
 
   ngOnInit(): void {
     const fridgeId = '0';
@@ -61,5 +51,11 @@ export class ViewFridgeComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.fridgeItemsSubscription?.unsubscribe();
     this.authStateSubscription?.unsubscribe();
+  }
+
+  clearAddItemForm() {
+    if (this.addItemModal) {
+      this.addItemModal.clearForm();
+    }
   }
 }
