@@ -3,10 +3,10 @@ import { Component, OnDestroy } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { FridgeItem } from 'src/app/models/fridgeItem';
+import { AuthService } from 'src/app/shared/auth.service';
+import { FridgeService } from 'src/app/shared/fridge.service';
 import { v4 as uuidv4 } from 'uuid';
-import { FridgeItem } from '../../models/fridgeItem';
-import { AuthService } from '../../shared/auth.service';
-import { FridgeService } from '../../shared/fridge.service';
 
 @Component({
   standalone: true,
@@ -16,19 +16,19 @@ import { FridgeService } from '../../shared/fridge.service';
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
 })
 export class AddItemComponent implements OnDestroy {
+  authStateSubscription: Subscription | undefined;
+
   name: string | undefined;
   description: string | undefined;
   expirationDate: string | undefined;
   currentUser: User | null = null;
 
-  authStateSubscription: Subscription | undefined;
+  fridgeId: string = '0';
 
   constructor(
     private fridgeService: FridgeService,
     private authService: AuthService
-  ) {
-    this.clearForm();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.authStateSubscription = this.authService.authState$.subscribe(
@@ -36,6 +36,7 @@ export class AddItemComponent implements OnDestroy {
         this.currentUser = user;
       }
     );
+    this.clearForm();
   }
 
   ngOnDestroy(): void {
@@ -48,44 +49,48 @@ export class AddItemComponent implements OnDestroy {
     this.expirationDate = new Date().toISOString().split('T')[0];
   }
 
-  addItem(
-    itemName: string | undefined,
-    description: string | undefined,
-    expirationDate: string | undefined
-  ) {
-    if (!itemName) {
+  validateForm(): boolean {
+    if (!this.name) {
       alert('Item name is required');
-      return;
+      return false;
     }
 
-    if (!expirationDate) {
+    if (!this.expirationDate) {
       alert('Expiration date is required');
-      return;
+      return false;
     }
 
     if (this.currentUser?.displayName === undefined) {
       console.log(`Could not retrieve user name`);
+      return false;
+    }
+
+    this.name = this.name.trim();
+    this.description = this.description?.trim();
+
+    return true;
+  }
+
+  addItem() {
+    if (!this.validateForm()) {
       return;
     }
 
-    itemName = itemName.trim();
-    description = description?.trim();
     const dateNow = new Date().toISOString().split('T')[0];
 
     const item: FridgeItem = {
       id: uuidv4(),
-      name: itemName,
-      description: description,
-      expirationDate: expirationDate,
+      name: this.name!,
+      description: this.description,
+      expirationDate: this.expirationDate!,
       createdAt: dateNow,
       lastModified: dateNow,
-      lastModifiedBy: this.currentUser.displayName as string,
+      lastModifiedBy: this.currentUser!.displayName as string,
     };
-    this.fridgeService.addItemToFridge('0', item).then(
+
+    this.fridgeService.addItemToFridge(this.fridgeId, item).then(
       () => {
-        // Todo write in label
         console.log(`Item added successfully ${item.name}`);
-        this.name = 'xcz';
         this.clearForm();
       },
       (err) => {
