@@ -12,6 +12,7 @@ import {
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ToastComponent } from './component/toast/toast.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +20,7 @@ import { AppComponent } from './app.component';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    ToastComponent,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => {
       const auth = getAuth();

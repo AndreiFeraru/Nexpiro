@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FridgeItem } from 'src/app/models/fridgeItem';
 import { FridgeService } from 'src/app/shared/fridge.service';
+import { ToastService } from 'src/app/shared/toast.service';
 
 @Component({
   standalone: true,
@@ -17,10 +18,14 @@ export class EditItemComponent implements OnChanges {
 
   @Input() itemSelectedForEdit: FridgeItem | undefined;
 
-  constructor(private fridgeService: FridgeService) {}
+  fridgeId: string = '0';
+
+  constructor(
+    private fridgeService: FridgeService,
+    private toastService: ToastService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('ngOnChanges called with changes:', changes);
     if (
       !changes['itemSelectedForEdit'] ||
       !changes['itemSelectedForEdit'].currentValue
@@ -54,33 +59,35 @@ export class EditItemComponent implements OnChanges {
 
     this.updateSelectedForEdit();
 
-    this.fridgeService.updateItemInFridge('0', this.itemSelectedForEdit!).then(
-      () => {
-        console.log(
-          `Item updated successfully ${this.itemSelectedForEdit!.name}`
-        );
-        this.clearForm();
-        this.itemSelectedForEdit = undefined;
-      },
-      (err) => {
-        console.log(
-          `Error updating item ${this.itemSelectedForEdit!.name} ${err}`
-        );
-      }
-    );
+    this.fridgeService
+      .updateItemInFridge(this.fridgeId, this.itemSelectedForEdit!)
+      .then(
+        () => {
+          this.toastService.showSuccess(
+            `Item updated successfully ${this.itemSelectedForEdit!.name}`
+          );
+          this.clearForm();
+          this.itemSelectedForEdit = undefined;
+        },
+        (err) => {
+          this.toastService.showError(
+            `Error updating item ${this.itemSelectedForEdit!.name}: ${err}`
+          );
+        }
+      );
   }
 
   validateForm(): boolean {
     if (!this.itemSelectedForEdit) {
-      alert('No item selected for edit');
+      this.toastService.showError('No item selected for edit');
       return false;
     }
     if (!this.name) {
-      alert('Item name is required');
+      this.toastService.showError('Item name is required');
       return false;
     }
     if (!this.expirationDate) {
-      alert('Expiration date is required');
+      this.toastService.showError('Expiration date is required');
       return false;
     }
 

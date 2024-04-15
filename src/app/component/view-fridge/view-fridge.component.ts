@@ -6,6 +6,7 @@ import { AddItemComponent } from 'src/app/component/add-item/add-item.component'
 import { EditItemComponent } from 'src/app/component/edit-item/edit-item.component';
 import { FridgeItem } from 'src/app/models/fridgeItem';
 import { FridgeService } from 'src/app/shared/fridge.service';
+import { ToastService } from 'src/app/shared/toast.service';
 
 @Component({
   standalone: true,
@@ -29,7 +30,10 @@ export class ViewFridgeComponent implements OnDestroy {
   fridgeItems: FridgeItem[] | undefined;
   itemSelectedForEdit: FridgeItem | undefined;
 
-  constructor(private fridgeService: FridgeService) {}
+  constructor(
+    private fridgeService: FridgeService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     const fridgeId = '0';
@@ -40,11 +44,14 @@ export class ViewFridgeComponent implements OnDestroy {
           if (items) {
             this.fridgeItems = items;
           } else {
-            console.log('No fridge items available');
+            this.toastService.showInfo('No items found in fridge');
           }
         },
-        error: (e) => console.error(e),
-        complete: () => console.info('complete'),
+        error: (e) =>
+          this.toastService.showError('Could not load items in fridge'),
+        complete: () => {
+          this.fridgeItemsSubscription?.unsubscribe();
+        },
       });
   }
 

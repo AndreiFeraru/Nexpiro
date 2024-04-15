@@ -4,8 +4,10 @@ import { User } from '@angular/fire/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FridgeItem } from 'src/app/models/fridgeItem';
+import { ToastType } from 'src/app/models/toast';
 import { AuthService } from 'src/app/shared/auth.service';
 import { FridgeService } from 'src/app/shared/fridge.service';
+import { ToastService } from 'src/app/shared/toast.service';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
@@ -27,7 +29,8 @@ export class AddItemComponent implements OnDestroy {
 
   constructor(
     private fridgeService: FridgeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -51,17 +54,17 @@ export class AddItemComponent implements OnDestroy {
 
   validateForm(): boolean {
     if (!this.name) {
-      alert('Item name is required');
+      this.toastService.showError('Item name is required');
       return false;
     }
 
     if (!this.expirationDate) {
-      alert('Expiration date is required');
+      this.toastService.showError('Expiration date is required');
       return false;
     }
 
     if (this.currentUser?.displayName === undefined) {
-      console.log(`Could not retrieve user name`);
+      this.toastService.showError(`Could not retrieve user name`);
       return false;
     }
 
@@ -90,11 +93,11 @@ export class AddItemComponent implements OnDestroy {
 
     this.fridgeService.addItemToFridge(this.fridgeId, item).then(
       () => {
-        console.log(`Item added successfully ${item.name}`);
+        this.toastService.showSuccess(`Item added successfully ${item.name}`);
         this.clearForm();
       },
       (err) => {
-        console.log(`Error adding item ${item.name} ${err}`);
+        this.toastService.showError(`Error adding item ${item.name}`);
       }
     );
   }

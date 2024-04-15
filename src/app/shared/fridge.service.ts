@@ -1,14 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Database,
-  ref,
-  onValue,
-  set,
-  push,
-  getDatabase,
-  get,
-  child,
-} from '@angular/fire/database';
+import { Database, ref, onValue, set, get } from '@angular/fire/database';
 import { FridgeItem } from '../models/fridgeItem';
 import { Observable, ReplaySubject } from 'rxjs';
 
@@ -20,8 +11,7 @@ export class FridgeService {
 
   getItemsByFridgeId(fridgeId: string): Observable<FridgeItem[]> {
     if (!fridgeId) {
-      console.log('No fridge id!');
-      throw 'No fridge id!'; // TODO
+      throw 'Did not receive fridge id';
     }
     const fridgesRef = ref(this.db, `fridges/${fridgeId}`);
     const subject = new ReplaySubject<FridgeItem[]>(1);
@@ -30,19 +20,14 @@ export class FridgeService {
       fridgesRef,
       (snapshot) => {
         const data = snapshot.val();
-        if (!data) {
+        if (!data || !data.items) {
           subject.next([]);
           return;
         }
-        console.log(data);
-        const items = data.items;
-        console.log(items);
-        const itemsArray: FridgeItem[] = Object.values(items);
-        console.log(itemsArray);
+        const itemsArray: FridgeItem[] = Object.values(data.items);
         subject.next(itemsArray);
       },
       (err) => {
-        console.log(err);
         subject.error(err);
       }
     );
@@ -64,13 +49,11 @@ export class FridgeService {
         if (snapshot.exists() && snapshot.val()) {
           set(itemRef, item);
         } else {
-          // error: could not find item to update
-          console.log('No data available');
+          throw 'Item does not exist';
         }
       })
       .catch((error) => {
-        // error: could not update item
-        console.error(error);
+        throw 'Could not update item in fridge';
       });
   }
 }
