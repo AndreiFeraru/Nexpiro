@@ -1,0 +1,14 @@
+<div class="toast toast-top toast-center z-50 w-10/12">
+  <div *ngFor="let toast of toastService.toasts">
+    <div [ngClass]="'shadow-2xl alert alert-' + toast.type">
+      <span>{{ toast.message }}</span>
+      <button
+        class="btn btn-circle btn-ghost absolute right-6"
+        (click)="removeToast(toast)"
+      >
+        ✕
+      </button>
+    </div>
+    <div class="line-animation bg-red-700 h-2 -mt-2 rounded-b-lg"></div>
+  </div>
+</div>
