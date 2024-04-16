@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/shared/auth.service';
+import { ToastService } from 'src/app/shared/toast.service';
 
 @Component({
   standalone: true,
@@ -12,16 +13,19 @@ import { AuthService } from 'src/app/shared/auth.service';
   styleUrls: ['./login.component.css'],
   imports: [FormsModule, CommonModule],
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnDestroy {
   email: string = '';
   password: string = '';
-  isLoading: boolean = true;
 
   authStateSubscription: Subscription;
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private toastService: ToastService
+  ) {
     this.authStateSubscription = authService.authState$.subscribe((user) => {
-      if (user && !this.isLoading) {
+      if (user) {
         this.router.navigate(['/dashboard']);
       }
     });
@@ -31,24 +35,24 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authStateSubscription.unsubscribe();
   }
 
-  ngOnInit(): void {
-    this.isLoading = false;
-  }
-
   login() {
     if (!this.email) {
-      alert('Email is empty.');
+      this.toastService.showError('Email is empty');
       return;
     }
     if (!this.password) {
-      alert('Password is empty');
+      this.toastService.showError('Password is empty');
       return;
     }
     this.authService.login(this.email, this.password);
-    this.email = this.password = '';
+    this.clearForm();
   }
 
   signInWithGoogle() {
     this.authService.googleSignIn();
+  }
+
+  clearForm() {
+    this.email = this.password = '';
   }
 }
