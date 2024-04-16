@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from 'src/app/shared/auth.service';
+import { ToastService } from 'src/app/shared/toast.service';
 
 @Component({
   standalone: true,
@@ -13,18 +14,25 @@ export class RegisterComponent {
   email: string = '';
   password: string = '';
 
-  constructor(private auth: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private toastService: ToastService
+  ) {}
 
   register() {
     if (this.email == '') {
-      alert('Email is empty.');
+      this.toastService.showError('Email is empty');
       return;
     }
     if (this.password == '') {
-      alert('Password is empty');
+      this.toastService.showError('Password is empty');
       return;
     }
-    this.auth.register(this.email, this.password);
+    this.authService.register(this.email, this.password);
+    this.clearForm();
+  }
+
+  clearForm() {
     this.email = this.password = '';
   }
 }

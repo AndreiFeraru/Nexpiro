@@ -1,45 +1,84 @@
-<div class="container-fluid">
-  <div class="row mt-5">
-    <div class="col"></div>
-    <div class="col-4">
-      <div class="card">
-        <div class="card-body">
-          <form>
-            <div class="mb-3">
-              <h4 class="test-dark text-muted">Register</h4>
-            </div>
-            <div class="mb-3">
-              <label for="inputEmail" class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                name="email"
-                [(ngModel)]="email"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="inputPassword" class="form-label">Password</label>
-              <input
-                type="password"
-                class="form-control"
-                name="password"
-                [(ngModel)]="password"
-              />
-            </div>
-            <button type="button" class="btn btn-info" (click)="register()">
-              Register
-            </button>
-            <div class="mt-3">
-              <div class="col-md-6">
-                <a href="/login" style="text-decoration: none"
-                  >Already have an account?</a
-                >
-              </div>
-            </div>
-          </form>
+<div class="hero min-h-screen">
+  <div class="hero-content flex-col lg:flex-row-reverse">
+    <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100/75">
+      <form class="card-body font-bold">
+        <div class="flex justify-around">Create a new account</div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font">Email</span>
+          </label>
+          <input
+            type="email"
+            placeholder="email"
+            class="input input-bordered"
+            [(ngModel)]="email"
+            name="email"
+            required
+          />
         </div>
-      </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Password</span>
+          </label>
+          <input
+            type="password"
+            placeholder="password"
+            class="input input-bordered"
+            [(ngModel)]="password"
+            name="password"
+            required
+          />
+          <div>
+            <label class="label">
+              <a href="/login" class="label-text-alt link link-hover"
+                >Already have an account?</a
+              >
+            </label>
+          </div>
+        </div>
+        <div class="form-control mt-6">
+          <button class="btn btn-primary font-bold" (click)="register()">
+            Register
+          </button>
+        </div>
+        <div class="form-control mt-2 flex flex-row justify-around">
+          <button class="gsi-material-button" style="width: 181px">
+            <div class="gsi-material-button-state"></div>
+            <div class="gsi-material-button-content-wrapper">
+              <div class="gsi-material-button-icon">
+                <svg
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 48 48"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  style="display: block"
+                >
+                  <path
+                    fill="#EA4335"
+                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                  ></path>
+                  <path
+                    fill="#4285F4"
+                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+                  ></path>
+                  <path
+                    fill="#FBBC05"
+                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+                  ></path>
+                  <path
+                    fill="#34A853"
+                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                  ></path>
+                  <path fill="none" d="M0 0h48v48H0z"></path>
+                </svg>
+              </div>
+              <span class="gsi-material-button-contents"
+                >Sign in with Google</span
+              >
+            </div>
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="col"></div>
   </div>
 </div>
