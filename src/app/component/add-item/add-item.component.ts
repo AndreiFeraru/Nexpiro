@@ -4,7 +4,6 @@ import { User } from '@angular/fire/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FridgeItem } from 'src/app/models/fridgeItem';
-import { ToastType } from 'src/app/models/toast';
 import { AuthService } from 'src/app/shared/auth.service';
 import { FridgeService } from 'src/app/shared/fridge.service';
 import { ToastService } from 'src/app/shared/toast.service';
@@ -14,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
   standalone: true,
   selector: 'app-add-item',
   templateUrl: './add-item.component.html',
-  styleUrls: ['./add-item.component.sass'],
+  styleUrls: ['./add-item.component.css'],
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
 })
 export class AddItemComponent implements OnDestroy {

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { ToastService } from 'src/app/shared/toast.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { ToastService } from 'src/app/shared/toast.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './toast.component.html',
-  styleUrls: ['./toast.component.sass'],
+  styleUrls: ['./toast.component.css'],
 })
 export class ToastComponent {
   constructor(public toastService: ToastService) {}

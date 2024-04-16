@@ -8,7 +8,7 @@ import { ToastService } from 'src/app/shared/toast.service';
   standalone: true,
   selector: 'app-edit-item',
   templateUrl: './edit-item.component.html',
-  styleUrls: ['./edit-item.component.sass'],
+  styleUrls: ['./edit-item.component.css'],
   imports: [FormsModule],
 })
 export class EditItemComponent implements OnChanges {
