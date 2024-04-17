@@ -43,7 +43,6 @@ export class AuthService implements OnDestroy {
   async login(email: string, password: string) {
     await signInWithEmailAndPassword(this.authService, email, password).then(
       async (res) => {
-        this.toastService.showSuccess('Logged in successfully');
         if (res.user?.emailVerified == false) {
           this.router.navigate(['/verify-email']);
         } else {
@@ -55,22 +54,17 @@ export class AuthService implements OnDestroy {
   }
 
   async googleSignIn() {
-    await signInWithPopup(this.authService, new GoogleAuthProvider()).then(
-      () => {
-        this.toastService.showSuccess('Logged in successfully');
-        this.authService.setPersistence(browserLocalPersistence);
-      }
-    );
+    await signInWithPopup(this.authService, new GoogleAuthProvider());
+    await this.authService.setPersistence(browserLocalPersistence);
   }
 
   async register(email: string, password: string) {
-    await createUserWithEmailAndPassword(
+    const res = await createUserWithEmailAndPassword(
       this.authService,
       email,
       password
-    ).then((res) => {
-      this.sendEmailForVerification(res.user);
-    });
+    );
+    this.sendEmailForVerification(res.user);
   }
 
   async logout() {
