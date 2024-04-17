@@ -44,16 +44,26 @@ export class LoginComponent implements OnDestroy {
       this.toastService.showError('Password is empty');
       return;
     }
-    this.authService.login(this.email, this.password).catch((err) => {
-      `Something went wrong while singing in: ${err.message}`;
-    });
+    this.authService.login(this.email, this.password).then(
+      () => {
+        this.toastService.showSuccess('Logged in successfully');
+      },
+      (err) => {
+        `Something went wrong while singing in: ${err.message}`;
+      }
+    );
     this.clearForm();
   }
 
   signInWithGoogle() {
-    this.authService.googleSignIn().catch((err) => {
-      `Something went wrong while signing in with Google: ${err.message}`;
-    });
+    this.authService.googleSignIn().then(
+      () => {
+        this.toastService.showSuccess('Logged in successfully');
+      },
+      (err) => {
+        `Something went wrong while signing in with Google: ${err.message}`;
+      }
+    );
   }
 
   clearForm() {
