@@ -40,85 +40,56 @@ export class AuthService implements OnDestroy {
     this.authStateSubscription.unsubscribe();
   }
 
-  login(email: string, password: string) {
-    signInWithEmailAndPassword(this.authService, email, password).then(
+  async login(email: string, password: string) {
+    await signInWithEmailAndPassword(this.authService, email, password).then(
       async (res) => {
+        this.toastService.showSuccess('Logged in successfully');
         if (res.user?.emailVerified == false) {
           this.router.navigate(['/verify-email']);
         } else {
           await this.authService.setPersistence(browserLocalPersistence);
           this.router.navigate(['/dashboard']);
         }
-      },
-      (err) => {
-        this.toastService.showError(
-          `Something went wrong while singing in: ${err.message}`
-        );
       }
     );
   }
 
-  googleSignIn() {
-    signInWithPopup(this.authService, new GoogleAuthProvider()).then(
-      async () => {
-        await this.authService.setPersistence(browserLocalPersistence);
-        this.router.navigate(['/dashboard']);
-      },
-      (err) => {
-        this.toastService.showError(
-          `Something went wrong while signing in with Google: ${err.message}`
-        );
-      }
-    );
-  }
-
-  register(email: string, password: string) {
-    createUserWithEmailAndPassword(this.authService, email, password).then(
-      (res) => {
-        this.sendEmailForVerification(res.user);
-        this.toastService.showSuccess(
-          'Registration successful. Please check your email to verify your account.'
-        );
-      },
-      (err) => {
-        this.toastService.showError(
-          `Something went wrong while registering: ${err.message}`
-        );
-      }
-    );
-  }
-
-  logout() {
-    signOut(this.authService).then(
+  async googleSignIn() {
+    await signInWithPopup(this.authService, new GoogleAuthProvider()).then(
       () => {
-        this.router.navigate(['/login']);
-      },
-      (err) => {
-        alert(`Something went wrong while signing out: ${err.message}`);
+        this.toastService.showSuccess('Logged in successfully');
+        this.authService.setPersistence(browserLocalPersistence);
       }
     );
   }
 
-  forgotPassword(email: string) {
-    sendPasswordResetEmail(this.authService, email).then(
-      () => {
-        this.router.navigate(['/verify-email']);
-      },
-      (err) => {
-        alert('Something went wrong!');
-      }
-    );
+  async register(email: string, password: string) {
+    await createUserWithEmailAndPassword(
+      this.authService,
+      email,
+      password
+    ).then((res) => {
+      this.sendEmailForVerification(res.user);
+    });
   }
 
-  sendEmailForVerification(user: User) {
+  async logout() {
+    await signOut(this.authService).then(() => {
+      this.router.navigate(['/login']);
+    });
+  }
+
+  async forgotPassword(email: string) {
+    sendPasswordResetEmail(this.authService, email);
+  }
+
+  private sendEmailForVerification(user: User) {
     sendEmailVerification(user).then(
-      (res: any) => {
+      () => {
         this.router.navigate(['/verify-email']);
       },
-      (err: any) => {
-        alert(
-          'Something went wrong! Could not send email to to verify account.'
-        );
+      (err) => {
+        throw `Something went wrong! Could not send email to to verify account. ${err.message}`;
       }
     );
   }

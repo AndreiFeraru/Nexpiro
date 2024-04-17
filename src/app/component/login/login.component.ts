@@ -44,12 +44,16 @@ export class LoginComponent implements OnDestroy {
       this.toastService.showError('Password is empty');
       return;
     }
-    this.authService.login(this.email, this.password);
+    this.authService.login(this.email, this.password).catch((err) => {
+      `Something went wrong while singing in: ${err.message}`;
+    });
     this.clearForm();
   }
 
   signInWithGoogle() {
-    this.authService.googleSignIn();
+    this.authService.googleSignIn().catch((err) => {
+      `Something went wrong while signing in with Google: ${err.message}`;
+    });
   }
 
   clearForm() {

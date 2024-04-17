@@ -36,7 +36,9 @@ export class FridgeService {
   }
 
   async addItemToFridge(fridgeId: string, item: FridgeItem) {
-    const newItemRef = ref(this.db, `fridges/${fridgeId}/items/${item.id}`);
+    const itemPath = `fridges/${fridgeId}/items/${item.id}`;
+    const newItemRef = ref(this.db, itemPath);
+
     await set(newItemRef, item);
   }
 
@@ -44,16 +46,12 @@ export class FridgeService {
     const itemPath = `fridges/${fridgeId}/items/${item.id}`;
     const itemRef = ref(this.db, itemPath);
 
-    await get(itemRef)
-      .then((snapshot) => {
-        if (snapshot.exists() && snapshot.val()) {
-          set(itemRef, item);
-        } else {
-          throw 'Item does not exist';
-        }
-      })
-      .catch((error) => {
-        throw 'Could not update item in fridge';
-      });
+    await get(itemRef).then((snapshot) => {
+      if (snapshot.exists() && snapshot.val()) {
+        set(itemRef, item);
+      } else {
+        throw 'Item does not exist';
+      }
+    });
   }
 }

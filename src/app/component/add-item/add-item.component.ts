@@ -92,11 +92,11 @@ export class AddItemComponent implements OnDestroy {
 
     this.fridgeService.addItemToFridge(this.fridgeId, item).then(
       () => {
-        this.toastService.showSuccess(`Item added successfully ${item.name}`);
+        this.toastService.showSuccess(`Item added successfully '${item.name}'`);
         this.clearForm();
       },
       (err) => {
-        this.toastService.showError(`Error adding item ${item.name}`);
+        this.toastService.showError(`Error adding item '${item.name}': ${err}`);
       }
     );
   }

@@ -64,14 +64,14 @@ export class EditItemComponent implements OnChanges {
       .then(
         () => {
           this.toastService.showSuccess(
-            `Item updated successfully ${this.itemSelectedForEdit!.name}`
+            `Item updated successfully '${this.itemSelectedForEdit!.name}'`
           );
           this.clearForm();
           this.itemSelectedForEdit = undefined;
         },
         (err) => {
           this.toastService.showError(
-            `Error updating item ${this.itemSelectedForEdit!.name}: ${err}`
+            `Error updating item '${this.itemSelectedForEdit!.name}': ${err}`
           );
         }
       );

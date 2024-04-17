@@ -47,8 +47,8 @@ export class ViewFridgeComponent implements OnDestroy {
             this.toastService.showInfo('No items found in fridge');
           }
         },
-        error: (e) =>
-          this.toastService.showError('Could not load items in fridge'),
+        error: (err) =>
+          this.toastService.showError(`Could not load items in fridge ${err}`),
         complete: () => {
           this.fridgeItemsSubscription?.unsubscribe();
         },

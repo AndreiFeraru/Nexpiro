@@ -7,12 +7,14 @@ import { Toast, ToastType } from '../models/toast';
 export class ToastService {
   toasts: Toast[] = [];
 
+  private readonly DEFAULT_TOAST_TIME: number = 4000;
+
   constructor() {}
 
   show(message: string, type: ToastType) {
     const toast: Toast = { message: message, type: type };
     this.toasts.push(toast);
-    setTimeout(() => this.toasts.shift(), 4000);
+    setTimeout(() => this.toasts.shift(), this.DEFAULT_TOAST_TIME);
   }
 
   showInfo(message: string) {
