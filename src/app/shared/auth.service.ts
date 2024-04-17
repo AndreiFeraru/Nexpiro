@@ -14,6 +14,7 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,8 +23,12 @@ export class AuthService implements OnDestroy {
   authState$: Observable<User | null>;
   authStateSubscription: Subscription;
 
-  constructor(private router: Router, private auth: Auth) {
-    this.authState$ = authState(auth);
+  constructor(
+    private router: Router,
+    private authService: Auth,
+    private toastService: ToastService
+  ) {
+    this.authState$ = authState(authService);
     this.authStateSubscription = this.authState$.subscribe(
       (aUser: User | null) => {
         //handle auth state changes here. Note, that user will be null if there is no currently logged in user.
@@ -36,49 +41,55 @@ export class AuthService implements OnDestroy {
   }
 
   login(email: string, password: string) {
-    signInWithEmailAndPassword(this.auth, email, password).then(
+    signInWithEmailAndPassword(this.authService, email, password).then(
       async (res) => {
         if (res.user?.emailVerified == false) {
           this.router.navigate(['/verify-email']);
         } else {
-          await this.auth.setPersistence(browserLocalPersistence);
+          await this.authService.setPersistence(browserLocalPersistence);
           this.router.navigate(['/dashboard']);
         }
       },
       (err) => {
-        alert(`Something went wrong while singing in: ${err.message}`);
-        this.router.navigate(['/login']); // TODO Remove?
+        this.toastService.showError(
+          `Something went wrong while singing in: ${err.message}`
+        );
       }
     );
   }
 
   googleSignIn() {
-    signInWithPopup(this.auth, new GoogleAuthProvider()).then(
-      async (result) => {
-        await this.auth.setPersistence(browserLocalPersistence);
+    signInWithPopup(this.authService, new GoogleAuthProvider()).then(
+      async () => {
+        await this.authService.setPersistence(browserLocalPersistence);
         this.router.navigate(['/dashboard']);
       },
-      (error) => {
-        alert('Something went wrong' + error);
+      (err) => {
+        this.toastService.showError(
+          `Something went wrong while signing in with Google: ${err.message}`
+        );
       }
     );
   }
 
   register(email: string, password: string) {
-    createUserWithEmailAndPassword(this.auth, email, password).then(
+    createUserWithEmailAndPassword(this.authService, email, password).then(
       (res) => {
         this.sendEmailForVerification(res.user);
-        alert('Registration successful.');
+        this.toastService.showSuccess(
+          'Registration successful. Please check your email to verify your account.'
+        );
       },
       (err) => {
-        alert(`Something went wrong while registering: ${err.message}`);
-        this.router.navigate(['/login']);
+        this.toastService.showError(
+          `Something went wrong while registering: ${err.message}`
+        );
       }
     );
   }
 
   logout() {
-    signOut(this.auth).then(
+    signOut(this.authService).then(
       () => {
         this.router.navigate(['/login']);
       },
@@ -89,7 +100,7 @@ export class AuthService implements OnDestroy {
   }
 
   forgotPassword(email: string) {
-    sendPasswordResetEmail(this.auth, email).then(
+    sendPasswordResetEmail(this.authService, email).then(
       () => {
         this.router.navigate(['/verify-email']);
       },
