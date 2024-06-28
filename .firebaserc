@@ -2,7 +2,7 @@
   "targets": {
     "nexpiro-firebase": {
       "hosting": {
-        "NexpiroAngular": [
+        "Nexpiro": [
           "nexpiro-firebase"
         ]
       }

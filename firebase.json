@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "target": "NexpiroAngular",
+      "target": "Nexpiro",
       "source": ".",
       "frameworksBackend": {}
     }
