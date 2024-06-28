@@ -18,7 +18,7 @@ export class EditItemComponent implements OnChanges {
 
   @Input() itemSelectedForEdit: FridgeItem | undefined;
 
-  fridgeId: string = '0';
+  fridgeId: string = '0'; // TODO get fridge id from user
 
   constructor(
     private fridgeService: FridgeService,

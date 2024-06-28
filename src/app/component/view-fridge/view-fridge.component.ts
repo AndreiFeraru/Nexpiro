@@ -36,7 +36,7 @@ export class ViewFridgeComponent implements OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const fridgeId = '0';
+    const fridgeId = '0'; // TODO get fridge id from user
     this.fridgeItemsSubscription = this.fridgeService
       .getItemsByFridgeId(fridgeId)
       .subscribe({

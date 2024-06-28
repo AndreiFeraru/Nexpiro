@@ -24,7 +24,7 @@ export class AddItemComponent implements OnDestroy {
   expirationDate: string | undefined;
   currentUser: User | null = null;
 
-  fridgeId: string = '0';
+  fridgeId: string = '0'; // TODO get fridge id from user
 
   constructor(
     private fridgeService: FridgeService,
