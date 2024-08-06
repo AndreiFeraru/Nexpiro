@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, Subscription } from 'rxjs';
 import { AddItemComponent } from 'src/app/component/add-item/add-item.component';
 import { EditItemComponent } from 'src/app/component/edit-item/edit-item.component';
 import { FridgeItem } from 'src/app/models/fridgeItem';
@@ -27,8 +27,12 @@ export class ViewFridgeComponent implements OnDestroy {
 
   @ViewChild(AddItemComponent) addItemModal!: AddItemComponent | null;
 
+  searchControl: FormControl = new FormControl('');
+
   fridgeItems: FridgeItem[] | undefined;
+  filteredItems: FridgeItem[] | undefined;
   itemSelectedForEdit: FridgeItem | undefined;
+  searchQuery: string = '';
 
   constructor(
     private fridgeService: FridgeService,
@@ -38,11 +42,12 @@ export class ViewFridgeComponent implements OnDestroy {
   ngOnInit(): void {
     const fridgeId = '0'; // TODO get fridge id from user
     this.fridgeItemsSubscription = this.fridgeService
-      .getItemsByFridgeId(fridgeId)
+      .getItemsByFridgeId(fridgeId, this.searchQuery)
       .subscribe({
         next: (items) => {
           if (items) {
             this.fridgeItems = items;
+            this.filteredItems = this.fridgeItems;
           } else {
             this.toastService.showInfo('No items found in fridge');
           }
@@ -52,6 +57,15 @@ export class ViewFridgeComponent implements OnDestroy {
         complete: () => {
           this.fridgeItemsSubscription?.unsubscribe();
         },
+      });
+
+    this.searchControl.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe((query) => {
+        if (!this.fridgeItems) return;
+        this.filteredItems = this.fridgeItems.filter((item) =>
+          item.name.toLowerCase().includes(query.trim().toLowerCase())
+        );
       });
   }
 

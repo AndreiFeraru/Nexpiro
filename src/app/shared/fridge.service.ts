@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Database, ref, onValue, set, get } from '@angular/fire/database';
-import { FridgeItem } from '../models/fridgeItem';
+import { Database, get, onValue, ref, set } from '@angular/fire/database';
 import { Observable, ReplaySubject } from 'rxjs';
+import { FridgeItem } from '../models/fridgeItem';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,10 @@ import { Observable, ReplaySubject } from 'rxjs';
 export class FridgeService {
   constructor(private db: Database) {}
 
-  getItemsByFridgeId(fridgeId: string): Observable<FridgeItem[]> {
+  getItemsByFridgeId(
+    fridgeId: string,
+    query: string
+  ): Observable<FridgeItem[]> {
     if (!fridgeId) {
       throw 'Did not receive fridge id';
     }

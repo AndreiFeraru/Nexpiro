@@ -1,33 +1,41 @@
 <div>
+  <div class="relative w-full mb-2">
+    <i
+      class="fas fa-search text-lg absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+    ></i>
+    <input
+      type="text"
+      class="input input-primary pl-10 pr-4 py-2 w-full"
+      [formControl]="searchControl"
+      placeholder="Search fridge items"
+    />
+  </div>
+
   <button
-    class="btn btn-primary mb-3"
+    class="btn btn-accent z-40 fixed bottom-20 right-6 shadow-md"
     onclick="add_item_modal.showModal()"
     (click)="clearAddItemForm()"
   >
-    Add item
+    <i class="fa-solid fa-plus text-lg"></i>
   </button>
 
   <div class="join join-vertical w-full shadow-xl">
-    <div *ngFor="let fridgeItem of fridgeItems">
+    <div *ngFor="let fridgeItem of filteredItems">
       <div
         class="collapse collapse-arrow join-item glass bg-base-100/75 px-5 shadow-xl"
       >
         <input type="radio" name="fridge_items_accordion" />
         <!-- <input type="checkbox" /> -->
-        <div class="collapse-title text-l font-medium">
-          <div class="flex justify-between">
-            <div>
-              {{ fridgeItem.name }}
-            </div>
-            <div>
-              <button
-                class="btn btn-sm btn-ghost"
-                onclick="edit_item_modal.showModal()"
-                (click)="itemSelectedForEdit = fridgeItem"
-              >
-                Edit
-              </button>
-            </div>
+        <div class="collapse-title text-l font-normal">
+          <div class="flex justify-between items-center">
+            <span>{{ fridgeItem.name }}</span>
+            <button
+              class="btn btn-sm btn-ghost"
+              onclick="edit_item_modal.showModal()"
+              (click)="itemSelectedForEdit = fridgeItem"
+            >
+              <i class="fa-solid fa-pencil"></i>
+            </button>
           </div>
         </div>
         <div class="collapse-content">
