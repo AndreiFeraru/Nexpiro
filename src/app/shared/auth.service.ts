@@ -4,16 +4,16 @@ import {
   GoogleAuthProvider,
   User,
   authState,
+  browserLocalPersistence,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  browserLocalPersistence,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -21,7 +21,6 @@ import { ToastService } from './toast.service';
 })
 export class AuthService implements OnDestroy {
   authState$: Observable<User | null>;
-  authStateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -29,62 +28,88 @@ export class AuthService implements OnDestroy {
     private toastService: ToastService
   ) {
     this.authState$ = authState(authService);
-    this.authStateSubscription = this.authState$.subscribe(
-      (aUser: User | null) => {
-        //handle auth state changes here. Note, that user will be null if there is no currently logged in user.
-      }
-    );
   }
 
-  ngOnDestroy() {
-    this.authStateSubscription.unsubscribe();
-  }
+  ngOnDestroy() {}
 
-  async login(email: string, password: string) {
-    await signInWithEmailAndPassword(this.authService, email, password).then(
-      async (res) => {
-        if (res.user?.emailVerified == false) {
-          this.router.navigate(['/verify-email']);
-        } else {
-          await this.authService.setPersistence(browserLocalPersistence);
-          this.router.navigate(['/dashboard']);
-        }
-      }
-    );
-  }
-
-  async googleSignIn() {
-    await signInWithPopup(this.authService, new GoogleAuthProvider());
-    await this.authService.setPersistence(browserLocalPersistence);
-  }
-
-  async register(email: string, password: string) {
-    const res = await createUserWithEmailAndPassword(
-      this.authService,
-      email,
-      password
-    );
-    this.sendEmailForVerification(res.user);
-  }
-
-  async logout() {
-    await signOut(this.authService).then(() => {
-      this.router.navigate(['/login']);
-    });
-  }
-
-  async forgotPassword(email: string) {
-    sendPasswordResetEmail(this.authService, email);
-  }
-
-  private sendEmailForVerification(user: User) {
-    sendEmailVerification(user).then(
-      () => {
+  async login(email: string, password: string): Promise<void> {
+    try {
+      const res = await signInWithEmailAndPassword(
+        this.authService,
+        email,
+        password
+      );
+      if (res.user?.emailVerified == false) {
         this.router.navigate(['/verify-email']);
-      },
-      (err) => {
-        throw `Something went wrong! Could not send email to to verify account. ${err.message}`;
+      } else {
+        await this.authService.setPersistence(browserLocalPersistence);
+        this.router.navigate(['/dashboard']);
       }
-    );
+    } catch (error) {
+      this.toastService.showError(
+        'Login failed. Please check your username/password and try again'
+      );
+      console.error('Login error:', error);
+    }
+  }
+
+  async googleSignIn(): Promise<void> {
+    try {
+      await signInWithPopup(this.authService, new GoogleAuthProvider());
+      await this.authService.setPersistence(browserLocalPersistence);
+    } catch (error) {
+      this.toastService.showError('Google sign-in failed. Please try again.');
+      console.error('Google sign-in error:', error);
+    }
+  }
+
+  async register(email: string, password: string): Promise<void> {
+    try {
+      const res = await createUserWithEmailAndPassword(
+        this.authService,
+        email,
+        password
+      );
+      this.sendEmailForVerification(res.user);
+    } catch (error) {
+      this.toastService.showError('Registration failed. Please try again.');
+      console.error('Registration error:', error);
+    }
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await signOut(this.authService);
+      this.router.navigate(['/login']);
+    } catch (error) {
+      this.toastService.showError('Logout failed. Please try again.');
+      console.error('Logout error:', error);
+    }
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    try {
+      await sendPasswordResetEmail(this.authService, email);
+      this.toastService.showInfo(
+        'Password reset email sent. Please check your inbox.'
+      );
+    } catch (error) {
+      this.toastService.showError(
+        'Failed to send password reset email. Please try again.'
+      );
+      console.error('Password reset error:', error);
+    }
+  }
+
+  private async sendEmailForVerification(user: User): Promise<void> {
+    try {
+      await sendEmailVerification(user);
+      this.router.navigate(['/verify-email']);
+    } catch (err) {
+      this.toastService.showError(
+        'Failed to send verification email. Please try again.'
+      );
+      console.error('Verification email error:', err);
+    }
   }
 }

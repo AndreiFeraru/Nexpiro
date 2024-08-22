@@ -15,19 +15,9 @@ export class ForgotPasswordComponent {
 
   constructor(private auth: AuthService, private toastService: ToastService) {}
 
-  forgotPassword() {
-    this.auth.forgotPassword(this.email).then(
-      () => {
-        this.toastService.showInfo(
-          'Password reset email sent. Please check your inbox.'
-        );
-      },
-      (err) => {
-        this.toastService.showError(
-          `Something went wrong while resetting password: ${err.message}`
-        );
-      }
-    );
+  async forgotPassword() {
+    await this.auth.forgotPassword(this.email);
+    this.auth.forgotPassword(this.email);
     this.email = '';
   }
 }

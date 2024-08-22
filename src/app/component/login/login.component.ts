@@ -35,7 +35,7 @@ export class LoginComponent implements OnDestroy {
     this.authStateSubscription.unsubscribe();
   }
 
-  login() {
+  async login() {
     if (!this.email) {
       this.toastService.showError('Email is empty');
       return;
@@ -44,26 +44,14 @@ export class LoginComponent implements OnDestroy {
       this.toastService.showError('Password is empty');
       return;
     }
-    this.authService.login(this.email, this.password).then(
-      () => {
-        this.toastService.showSuccess('Logged in successfully');
-      },
-      (err) => {
-        `Something went wrong while singing in: ${err.message}`;
-      }
-    );
+
+    await this.authService.login(this.email, this.password);
+
     this.clearForm();
   }
 
-  signInWithGoogle() {
-    this.authService.googleSignIn().then(
-      () => {
-        this.toastService.showSuccess('Logged in successfully');
-      },
-      (err) => {
-        `Something went wrong while signing in with Google: ${err.message}`;
-      }
-    );
+  async signInWithGoogle() {
+    await this.authService.googleSignIn();
   }
 
   clearForm() {

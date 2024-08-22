@@ -19,7 +19,7 @@ export class RegisterComponent {
     private toastService: ToastService
   ) {}
 
-  register() {
+  async register() {
     if (this.email == '') {
       this.toastService.showError('Email is empty');
       return;
@@ -28,16 +28,7 @@ export class RegisterComponent {
       this.toastService.showError('Password is empty');
       return;
     }
-    this.authService.register(this.email, this.password).then(
-      () => {
-        this.toastService.showSuccess(
-          'Registration successful. Please check your email to verify your account.'
-        );
-      },
-      (err) => {
-        this.toastService.showError(`Registration failed: ${err.message}`);
-      }
-    );
+    await this.authService.register(this.email, this.password);
     this.clearForm();
   }
 
