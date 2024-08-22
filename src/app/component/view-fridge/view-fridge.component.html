@@ -5,14 +5,14 @@
     ></i>
     <input
       type="text"
-      class="input input-primary pl-10 pr-4 py-2 w-full"
+      class="input input-primary pl-10 pr-4 py-2 w-full border-gray-500 border-2"
       [formControl]="searchControl"
       placeholder="Search fridge items"
     />
   </div>
 
   <button
-    class="btn btn-accent z-40 fixed bottom-20 right-6 shadow-md"
+    class="btn bg-orange-100 border-orange-100 z-40 absolute bottom-20 right-6 shadow-md"
     onclick="add_item_modal.showModal()"
     (click)="clearAddItemForm()"
   >
@@ -28,7 +28,13 @@
         <!-- <input type="checkbox" /> -->
         <div class="collapse-title text-l font-normal">
           <div class="flex justify-between items-center">
-            <span>{{ fridgeItem.name }}</span>
+            <div class="flex">
+              <div
+                class="h-5 w-5 mr-4 rounded-full shadow-xl border-gray-500 border-2"
+                [ngClass]="getBackgroundColor(fridgeItem)"
+              ></div>
+              <span class="font-semibold">{{ fridgeItem.name }}</span>
+            </div>
             <button
               class="btn btn-sm btn-ghost"
               onclick="edit_item_modal.showModal()"
@@ -39,10 +45,24 @@
           </div>
         </div>
         <div class="collapse-content">
-          <p>Expiration date: {{ fridgeItem.expirationDate }}</p>
-          <p>Added on: {{ fridgeItem.createdAt }}</p>
-          <p>Added by: {{ fridgeItem.lastModifiedBy }}</p>
-          <p>Description: {{ fridgeItem.description }}</p>
+          <p
+            class="font-semibold font-dot-matrix"
+            style="letter-spacing: 0.2rem"
+          >
+            EXP: {{ fridgeItem.expirationDate }}
+          </p>
+          <div
+            class="my-3 border-gray-500 border-dashed border-2 h-1 w-full"
+          ></div>
+          <p class="my-1 text-sm">
+            <i class="fa-solid fa-user"></i> {{ fridgeItem.lastModifiedBy }}
+          </p>
+          <p class="my-1 text-sm">
+            <i class="fa-solid fa-calendar-plus"></i> {{ fridgeItem.createdAt }}
+          </p>
+          <p class="my-1 font-thin">
+            {{ fridgeItem.description }}
+          </p>
         </div>
       </div>
     </div>

@@ -79,4 +79,19 @@ export class ViewFridgeComponent implements OnDestroy {
       this.addItemModal.clearForm();
     }
   }
+
+  getBackgroundColor(fridgeItem: any): string {
+    const today = new Date();
+    const expirationDate = new Date(fridgeItem.expirationDate);
+    const timeDiff = expirationDate.getTime() - today.getTime();
+    const daysToExpire = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    if (daysToExpire <= 1) {
+      return 'bg-gradient-to-b from-red-50 to-red-200';
+    } else if (daysToExpire <= 4) {
+      return 'bg-gradient-to-b from-yellow-50 to-orange-200';
+    } else {
+      return 'bg-gradient-to-b from-green-50 to-green-200';
+    }
+  }
 }
