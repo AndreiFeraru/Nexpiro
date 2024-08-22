@@ -1,6 +1,9 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { User } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { FridgeItem } from 'src/app/models/fridgeItem';
+import { AuthService } from 'src/app/shared/auth.service';
 import { FridgeService } from 'src/app/shared/fridge.service';
 import { ToastService } from 'src/app/shared/toast.service';
 
@@ -22,8 +25,25 @@ export class EditItemComponent implements OnChanges {
 
   constructor(
     private fridgeService: FridgeService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private authService: AuthService
   ) {}
+
+  authStateSubscription: Subscription | undefined;
+  currentUser: User | null = null;
+
+  ngOnInit(): void {
+    this.authStateSubscription = this.authService.authState$.subscribe(
+      (user) => {
+        this.currentUser = user;
+      }
+    );
+    this.clearForm();
+  }
+
+  ngOnDestroy(): void {
+    this.authStateSubscription?.unsubscribe();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -34,10 +54,6 @@ export class EditItemComponent implements OnChanges {
     }
     this.itemSelectedForEdit = changes['itemSelectedForEdit'].currentValue;
     this.updateFormValues(this.itemSelectedForEdit);
-  }
-
-  ngOnInit(): void {
-    this.clearForm();
   }
 
   clearForm() {
@@ -91,6 +107,16 @@ export class EditItemComponent implements OnChanges {
       return false;
     }
 
+    if (
+      (this.currentUser?.displayName === undefined ||
+        this.currentUser?.displayName === null) &&
+      (this.currentUser?.email === undefined ||
+        this.currentUser?.email === null)
+    ) {
+      this.toastService.showError(`Could not retrieve user name or email`);
+      return false;
+    }
+
     this.name = this.name.trim();
     this.description = this.description?.trim();
 
@@ -104,5 +130,7 @@ export class EditItemComponent implements OnChanges {
     this.itemSelectedForEdit.expirationDate = this.expirationDate as string;
     const dateNow = new Date().toISOString().split('T')[0];
     this.itemSelectedForEdit.lastModified = dateNow;
+    this.itemSelectedForEdit.lastModifiedBy =
+      this.currentUser?.displayName ?? this.currentUser?.email ?? '';
   }
 }

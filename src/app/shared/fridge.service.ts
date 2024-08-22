@@ -49,12 +49,11 @@ export class FridgeService {
     const itemPath = `fridges/${fridgeId}/items/${item.id}`;
     const itemRef = ref(this.db, itemPath);
 
-    await get(itemRef).then((snapshot) => {
-      if (snapshot.exists() && snapshot.val()) {
-        set(itemRef, item);
-      } else {
-        throw 'Item does not exist';
-      }
-    });
+    const snapshot = await get(itemRef);
+    if (snapshot.exists() && snapshot.val()) {
+      set(itemRef, item);
+    } else {
+      throw 'Item does not exist';
+    }
   }
 }

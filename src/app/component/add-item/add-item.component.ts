@@ -62,8 +62,13 @@ export class AddItemComponent implements OnDestroy {
       return false;
     }
 
-    if (this.currentUser?.displayName === undefined) {
-      this.toastService.showError(`Could not retrieve user name`);
+    if (
+      (this.currentUser?.displayName === undefined ||
+        this.currentUser?.displayName === null) &&
+      (this.currentUser?.email === undefined ||
+        this.currentUser?.email === null)
+    ) {
+      this.toastService.showError(`Could not retrieve user name or email`);
       return false;
     }
 
@@ -87,7 +92,8 @@ export class AddItemComponent implements OnDestroy {
       expirationDate: this.expirationDate!,
       createdAt: dateNow,
       lastModified: dateNow,
-      lastModifiedBy: this.currentUser!.displayName as string,
+      lastModifiedBy:
+        this.currentUser?.displayName ?? this.currentUser?.email ?? '',
     };
 
     this.fridgeService.addItemToFridge(this.fridgeId, item).then(
