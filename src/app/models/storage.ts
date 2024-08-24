@@ -1,6 +1,6 @@
 import { UserPermission } from './userPermission';
 
-export interface Fridge {
+export interface Storage {
   id: number;
   name: string;
   createdAt: string;

@@ -1,4 +1,4 @@
-export interface FridgeItem {
+export interface StorageItem {
   id: string;
   name: string;
   description: string | undefined;

@@ -3,9 +3,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { FridgeItem } from 'src/app/models/fridgeItem';
+import { StorageItem } from 'src/app/models/storageItem';
 import { AuthService } from 'src/app/shared/auth.service';
-import { FridgeService } from 'src/app/shared/fridge.service';
+import { StorageService } from 'src/app/shared/storage.service';
 import { ToastService } from 'src/app/shared/toast.service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -24,10 +24,10 @@ export class AddItemComponent implements OnDestroy {
   expirationDate: string | undefined;
   currentUser: User | null = null;
 
-  fridgeId: string = '0'; // TODO get fridge id from user
+  storageId: string = '0'; // TODO get storage id from user
 
   constructor(
-    private fridgeService: FridgeService,
+    private storageService: StorageService,
     private authService: AuthService,
     private toastService: ToastService
   ) {}
@@ -85,7 +85,7 @@ export class AddItemComponent implements OnDestroy {
 
     const dateNow = new Date().toISOString().split('T')[0];
 
-    const item: FridgeItem = {
+    const item: StorageItem = {
       id: uuidv4(),
       name: this.name!,
       description: this.description,
@@ -96,7 +96,7 @@ export class AddItemComponent implements OnDestroy {
         this.currentUser?.displayName ?? this.currentUser?.email ?? '',
     };
 
-    this.fridgeService.addItemToFridge(this.fridgeId, item).then(
+    this.storageService.addItemToStorage(this.storageId, item).then(
       () => {
         this.toastService.showSuccess(`Item added successfully '${item.name}'`);
         this.clearForm();

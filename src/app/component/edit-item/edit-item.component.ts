@@ -2,9 +2,9 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { FridgeItem } from 'src/app/models/fridgeItem';
+import { StorageItem } from 'src/app/models/storageItem';
 import { AuthService } from 'src/app/shared/auth.service';
-import { FridgeService } from 'src/app/shared/fridge.service';
+import { StorageService } from 'src/app/shared/storage.service';
 import { ToastService } from 'src/app/shared/toast.service';
 
 @Component({
@@ -19,12 +19,12 @@ export class EditItemComponent implements OnChanges {
   description: string | undefined;
   expirationDate: string | undefined;
 
-  @Input() itemSelectedForEdit: FridgeItem | undefined;
+  @Input() itemSelectedForEdit: StorageItem | undefined;
 
-  fridgeId: string = '0'; // TODO get fridge id from user
+  storageId: string = '0'; // TODO get storage id from user
 
   constructor(
-    private fridgeService: FridgeService,
+    private storageService: StorageService,
     private toastService: ToastService,
     private authService: AuthService
   ) {}
@@ -62,7 +62,7 @@ export class EditItemComponent implements OnChanges {
     this.expirationDate = new Date().toISOString().split('T')[0];
   }
 
-  updateFormValues(itemSelectedForEdit: FridgeItem | undefined) {
+  updateFormValues(itemSelectedForEdit: StorageItem | undefined) {
     this.name = itemSelectedForEdit?.name;
     this.description = itemSelectedForEdit?.description;
     this.expirationDate = itemSelectedForEdit?.expirationDate;
@@ -75,8 +75,8 @@ export class EditItemComponent implements OnChanges {
 
     this.updateSelectedForEdit();
 
-    this.fridgeService
-      .updateItemInFridge(this.fridgeId, this.itemSelectedForEdit!)
+    this.storageService
+      .updateItemInStorage(this.storageId, this.itemSelectedForEdit!)
       .then(
         () => {
           this.toastService.showSuccess(

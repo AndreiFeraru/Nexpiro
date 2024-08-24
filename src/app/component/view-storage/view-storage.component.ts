@@ -4,15 +4,15 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddItemComponent } from 'src/app/component/add-item/add-item.component';
 import { EditItemComponent } from 'src/app/component/edit-item/edit-item.component';
-import { FridgeItem } from 'src/app/models/fridgeItem';
-import { FridgeService } from 'src/app/shared/fridge.service';
+import { StorageItem } from 'src/app/models/storageItem';
+import { StorageService } from 'src/app/shared/storage.service';
 import { ToastService } from 'src/app/shared/toast.service';
 
 @Component({
   standalone: true,
-  selector: 'app-view-fridge',
-  templateUrl: 'view-fridge.component.html',
-  styleUrls: ['view-fridge.component.css'],
+  selector: 'app-view-storage',
+  templateUrl: 'view-storage.component.html',
+  styleUrls: ['view-storage.component.css'],
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -21,56 +21,57 @@ import { ToastService } from 'src/app/shared/toast.service';
     EditItemComponent,
   ],
 })
-export class ViewFridgeComponent implements OnDestroy {
+export class ViewStorageComponent implements OnDestroy {
   authStateSubscription: Subscription | undefined;
-  fridgeItemsSubscription: Subscription | undefined;
+  storageItemSubscription: Subscription | undefined;
 
   @ViewChild(AddItemComponent) addItemModal!: AddItemComponent | null;
 
   searchControl: FormControl = new FormControl('');
 
-  fridgeItems: FridgeItem[] | undefined;
-  filteredItems: FridgeItem[] | undefined;
-  itemSelectedForEdit: FridgeItem | undefined;
+  storageItems: StorageItem[] | undefined;
+  filteredItems: StorageItem[] | undefined;
+  itemSelectedForEdit: StorageItem | undefined;
   searchQuery: string = '';
 
   constructor(
-    private fridgeService: FridgeService,
+    private storageService: StorageService,
     private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
-    const fridgeId = '0'; // TODO get fridge id from user
-    this.fridgeItemsSubscription = this.fridgeService
-      .getItemsByFridgeId(fridgeId, this.searchQuery)
+    const storageId = '0'; // TODO get storage id from user
+
+    this.storageItemSubscription = this.storageService
+      .getItemsByStorageId(storageId, this.searchQuery)
       .subscribe({
         next: (items) => {
           if (items) {
-            this.fridgeItems = items;
-            this.filteredItems = this.fridgeItems;
+            this.storageItems = items;
+            this.filteredItems = this.storageItems;
           } else {
-            this.toastService.showInfo('No items found in fridge');
+            this.toastService.showInfo('No items found in storage');
           }
         },
         error: (err) =>
-          this.toastService.showError(`Could not load items in fridge ${err}`),
+          this.toastService.showError(`Could not load items in storage ${err}`),
         complete: () => {
-          this.fridgeItemsSubscription?.unsubscribe();
+          this.storageItemSubscription?.unsubscribe();
         },
       });
 
     this.searchControl.valueChanges
       .pipe(debounceTime(500))
       .subscribe((query) => {
-        if (!this.fridgeItems) return;
-        this.filteredItems = this.fridgeItems.filter((item) =>
+        if (!this.storageItems) return;
+        this.filteredItems = this.storageItems.filter((item) =>
           item.name.toLowerCase().includes(query.trim().toLowerCase())
         );
       });
   }
 
   ngOnDestroy(): void {
-    this.fridgeItemsSubscription?.unsubscribe();
+    this.storageItemSubscription?.unsubscribe();
     this.authStateSubscription?.unsubscribe();
   }
 
@@ -80,9 +81,9 @@ export class ViewFridgeComponent implements OnDestroy {
     }
   }
 
-  getBackgroundColor(fridgeItem: any): string {
+  getBackgroundColor(storageItem: any): string {
     const today = new Date();
-    const expirationDate = new Date(fridgeItem.expirationDate);
+    const expirationDate = new Date(storageItem.expirationDate);
     const timeDiff = expirationDate.getTime() - today.getTime();
     const daysToExpire = Math.ceil(timeDiff / (1000 * 3600 * 24));
 

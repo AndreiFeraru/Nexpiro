@@ -7,7 +7,7 @@
       type="text"
       class="input input-primary pl-10 pr-4 py-2 w-full border-gray-500 border-2"
       [formControl]="searchControl"
-      placeholder="Search fridge items"
+      placeholder="Search items"
     />
   </div>
 
@@ -20,25 +20,25 @@
   </button>
 
   <div class="join join-vertical w-full shadow-xl">
-    <div *ngFor="let fridgeItem of filteredItems">
+    <div *ngFor="let storageItem of filteredItems">
       <div
         class="collapse collapse-arrow join-item glass bg-base-100/75 px-5 shadow-xl"
       >
-        <input type="radio" name="fridge_items_accordion" />
+        <input type="radio" name="storage_items_accordion" />
         <!-- <input type="checkbox" /> -->
         <div class="collapse-title text-l font-normal">
           <div class="flex justify-between items-center">
             <div class="flex">
               <div
                 class="h-5 w-5 mr-4 rounded-full shadow-xl border-gray-500 border-2"
-                [ngClass]="getBackgroundColor(fridgeItem)"
+                [ngClass]="getBackgroundColor(storageItem)"
               ></div>
-              <span class="font-semibold">{{ fridgeItem.name }}</span>
+              <span class="font-semibold">{{ storageItem.name }}</span>
             </div>
             <button
               class="btn btn-sm btn-ghost"
               onclick="edit_item_modal.showModal()"
-              (click)="itemSelectedForEdit = fridgeItem"
+              (click)="itemSelectedForEdit = storageItem"
             >
               <i class="fa-solid fa-pencil"></i>
             </button>
@@ -49,19 +49,20 @@
             class="font-semibold font-dot-matrix"
             style="letter-spacing: 0.2rem"
           >
-            EXP: {{ fridgeItem.expirationDate }}
+            EXP: {{ storageItem.expirationDate }}
           </p>
           <div
             class="my-3 border-gray-500 border-dashed border-2 h-1 w-full"
           ></div>
           <p class="my-1 text-sm">
-            <i class="fa-solid fa-user"></i> {{ fridgeItem.lastModifiedBy }}
+            <i class="fa-solid fa-user"></i> {{ storageItem.lastModifiedBy }}
           </p>
           <p class="my-1 text-sm">
-            <i class="fa-solid fa-calendar-plus"></i> {{ fridgeItem.createdAt }}
+            <i class="fa-solid fa-calendar-plus"></i>
+            {{ storageItem.createdAt }}
           </p>
           <p class="my-1 font-thin">
-            {{ fridgeItem.description }}
+            {{ storageItem.description }}
           </p>
         </div>
       </div>
