@@ -1,32 +1,33 @@
 <div>
-  <div class="relative w-full mb-2">
-    <i
-      class="fas fa-search text-lg absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-    ></i>
-    <input
-      type="text"
-      class="input input-primary pl-10 pr-4 py-2 w-full border-gray-500 border-2"
-      [formControl]="searchControl"
-      placeholder="Search items"
-    />
+  <div class="flex mb-2">
+    <div class="relative w-full mb-2">
+      <i
+        class="fas fa-search text-lg absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+      ></i>
+      <input
+        type="text"
+        class="input input-primary pl-10 pr-4 w-full border-orange-300 border-2"
+        [formControl]="searchControl"
+        placeholder="Search fridge items"
+      />
+    </div>
+    <button
+      class="btn bg-orange-100 border-orange-300 border-2 z-40 ml-2 text-gray-700"
+      onclick="add_item_modal.showModal()"
+      (click)="clearAddItemForm()"
+    >
+      <i class="fa-solid fa-plus text-lg"></i>
+    </button>
   </div>
 
-  <button
-    class="btn bg-orange-100 border-orange-100 z-40 absolute bottom-20 right-6 shadow-md"
-    onclick="add_item_modal.showModal()"
-    (click)="clearAddItemForm()"
-  >
-    <i class="fa-solid fa-plus text-lg"></i>
-  </button>
-
-  <div class="join join-vertical w-full shadow-xl">
+  <div class="join join-vertical w-full shadow-xl border-orange-300 border-2">
     <div *ngFor="let storageItem of filteredItems">
       <div
-        class="collapse collapse-arrow join-item glass bg-base-100/75 px-5 shadow-xl"
+        class="collapse collapse-arrow join-item glass bg-base-100/50 px-3 shadow-xl"
       >
         <input type="radio" name="storage_items_accordion" />
         <!-- <input type="checkbox" /> -->
-        <div class="collapse-title text-l font-normal">
+        <div class="collapse-title text-l">
           <div class="flex justify-between items-center">
             <div class="flex">
               <div
