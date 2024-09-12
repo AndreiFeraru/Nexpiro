@@ -1,75 +1,102 @@
 <div>
-  <div class="flex mb-2">
-    <div class="relative w-full mb-2">
-      <i
-        class="fas fa-search text-lg absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-      ></i>
-      <input
-        type="text"
-        class="input input-primary pl-10 pr-4 w-full border-orange-300 border-2"
-        [formControl]="searchControl"
-        placeholder="Search fridge items"
-      />
-    </div>
-    <button
-      class="btn bg-orange-100 border-orange-300 border-2 z-40 ml-2 text-gray-700"
-      onclick="add_item_modal.showModal()"
-      (click)="clearAddItemForm()"
-    >
-      <i class="fa-solid fa-plus text-lg"></i>
-    </button>
-  </div>
-
-  <div class="join join-vertical w-full shadow-xl border-orange-300 border-2">
-    <div *ngFor="let storageItem of filteredItems">
-      <div
-        class="collapse collapse-arrow join-item glass bg-base-100/50 px-3 shadow-xl"
+  <div>
+    <div class="flex mb-2 space-x-2">
+      <div class="relative">
+        <i
+          class="fas fa-search text-lg absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+        ></i>
+        <input
+          type="text"
+          class="input input-primary pl-10 pr-4 w-full border-orange-300 border-2"
+          [formControl]="searchControl"
+          placeholder="Search items"
+        />
+      </div>
+      <button
+        class="btn text-gray-700 bg-orange-100 border-orange-300 border-2"
+        onclick="add_item_modal.showModal()"
+        (click)="clearAddItemForm()"
       >
-        <input type="radio" name="storage_items_accordion" />
-        <!-- <input type="checkbox" /> -->
-        <div class="collapse-title text-l">
-          <div class="flex justify-between items-center">
-            <div class="flex">
-              <div
-                class="h-5 w-5 mr-4 rounded-full shadow-xl border-gray-500 border-2"
-                [ngClass]="getBackgroundColor(storageItem)"
-              ></div>
-              <span class="font-semibold">{{ storageItem.name }}</span>
-            </div>
-            <button
-              class="btn btn-sm btn-ghost"
-              onclick="edit_item_modal.showModal()"
-              (click)="itemSelectedForEdit = storageItem"
+        <i class="fa-solid fa-plus text-lg"></i>
+      </button>
+      <div *ngIf="storages?.length">
+        <details
+          class="dropdown dropdown-bottom dropdown-end z-50"
+          #storageDropdown
+        >
+          <summary class="btn bg-orange-100 border-orange-300 border-2">
+            <i class="fa-solid fa-box-open"></i>
+          </summary>
+          <ul class="p-2 shadow-xl dropdown-content bg-base-100 rounded-box">
+            <li
+              *ngFor="let storage of storages"
+              class="rounded-box menu-title w-full"
+              (click)="storageDropdownClicked(storage, storageDropdown)"
+              [ngClass]="{
+                'bg-orange-300': storage.id === selectedStorage?.id
+              }"
             >
-              <i class="fa-solid fa-pencil"></i>
-            </button>
+              {{ storage.name }}
+            </li>
+          </ul>
+        </details>
+      </div>
+    </div>
+
+    <div
+      *ngIf="filteredItems?.length"
+      class="join join-vertical w-full shadow-xl border-orange-300 border-2"
+    >
+      <div *ngFor="let storageItem of filteredItems">
+        <div
+          class="collapse collapse-arrow join-item glass bg-base-100/50 px-3 shadow-xl"
+        >
+          <input type="radio" name="storage_items_accordion" />
+          <!-- <input type="checkbox" /> -->
+          <div class="collapse-title text-l">
+            <div class="flex justify-between items-center">
+              <div class="flex">
+                <div
+                  class="h-5 w-5 mr-4 rounded-full shadow-xl border-gray-500 border-2"
+                  [ngClass]="getBackgroundColor(storageItem)"
+                ></div>
+                <span class="font-semibold">{{ storageItem.name }}</span>
+              </div>
+              <button
+                class="btn btn-sm btn-ghost"
+                onclick="edit_item_modal.showModal()"
+                (click)="itemSelectedForEdit = storageItem"
+              >
+                <i class="fa-solid fa-pencil"></i>
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="collapse-content">
-          <p
-            class="font-semibold font-dot-matrix"
-            style="letter-spacing: 0.2rem"
-          >
-            EXP: {{ storageItem.expirationDate }}
-          </p>
-          <div
-            class="my-3 border-gray-500 border-dashed border-2 h-1 w-full"
-          ></div>
-          <p class="my-1 text-sm">
-            <i class="fa-solid fa-user"></i> {{ storageItem.lastModifiedBy }}
-          </p>
-          <p class="my-1 text-sm">
-            <i class="fa-solid fa-calendar-plus"></i>
-            {{ storageItem.createdAt }}
-          </p>
-          <p class="my-1 font-thin">
-            {{ storageItem.description }}
-          </p>
+          <div class="collapse-content">
+            <p
+              class="font-semibold font-dot-matrix"
+              style="letter-spacing: 0.2rem"
+            >
+              EXP: {{ storageItem.expirationDate }}
+            </p>
+            <div
+              class="my-3 border-gray-500 border-dashed border-2 h-1 w-full"
+            ></div>
+            <p class="my-1 text-sm">
+              <i class="fa-solid fa-user"></i> {{ storageItem.lastModifiedBy }}
+            </p>
+            <p class="my-1 text-sm">
+              <i class="fa-solid fa-calendar-plus"></i>
+              {{ storageItem.createdAt }}
+            </p>
+            <p class="my-1 font-thin">
+              {{ storageItem.description }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<app-add-item></app-add-item>
-<app-edit-item [itemSelectedForEdit]="itemSelectedForEdit"></app-edit-item>
+  <app-add-item [selectedStorageId]="selectedStorage?.id"></app-add-item>
+  <app-edit-item [itemSelectedForEdit]="itemSelectedForEdit"></app-edit-item>
+</div>

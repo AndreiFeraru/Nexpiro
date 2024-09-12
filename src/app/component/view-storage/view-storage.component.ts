@@ -4,8 +4,11 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddItemComponent } from 'src/app/component/add-item/add-item.component';
 import { EditItemComponent } from 'src/app/component/edit-item/edit-item.component';
+import { Storage } from 'src/app/models/storage';
 import { StorageItem } from 'src/app/models/storageItem';
+import { AuthService } from 'src/app/shared/auth.service';
 import { StorageService } from 'src/app/shared/storage.service';
+import { StorageItemService } from 'src/app/shared/storageItem.service';
 import { ToastService } from 'src/app/shared/toast.service';
 
 @Component({
@@ -22,27 +25,97 @@ import { ToastService } from 'src/app/shared/toast.service';
   ],
 })
 export class ViewStorageComponent implements OnDestroy {
-  authStateSubscription: Subscription | undefined;
-  storageItemSubscription: Subscription | undefined;
-
   @ViewChild(AddItemComponent) addItemModal!: AddItemComponent | null;
 
-  searchControl: FormControl = new FormControl('');
+  authStateSubscription: Subscription | undefined;
 
+  storages: Storage[] | undefined;
+
+  storageItemSubscription: Subscription | undefined;
   storageItems: StorageItem[] | undefined;
   filteredItems: StorageItem[] | undefined;
-  itemSelectedForEdit: StorageItem | undefined;
+
+  searchControl: FormControl = new FormControl('');
   searchQuery: string = '';
 
+  itemSelectedForEdit: StorageItem | undefined;
+  selectedStorage: Storage | undefined;
+
   constructor(
+    private authService: AuthService,
+    private toastService: ToastService,
     private storageService: StorageService,
-    private toastService: ToastService
+    private storageItemService: StorageItemService
   ) {}
 
   ngOnInit(): void {
-    const storageId = '0'; // TODO get storage id from user
+    this.authStateSubscription = this.authService.authState$.subscribe({
+      next: async (user) => {
+        if (!user) {
+          this.toastService.showError('User not found');
+          return;
+        }
 
-    this.storageItemSubscription = this.storageService
+        try {
+          await this.loadStorages(user!.uid);
+          if (!this.storages || this.storages.length === 0) {
+            this.toastService.showInfo('No storages found');
+            return;
+          }
+
+          const lastUsedStorageId = localStorage.getItem('lastUsedStorageId');
+
+          if (!lastUsedStorageId) {
+            this.selectStorageAndLoadItems(this.storages[0]);
+            return;
+          }
+
+          const storage = this.storages.find(
+            (storage) => storage.id === lastUsedStorageId
+          );
+          if (!storage) {
+            this.selectStorageAndLoadItems(this.storages[0]);
+            return;
+          }
+
+          this.selectStorageAndLoadItems(storage);
+        } catch (err) {
+          this.toastService.showError(`Could not load storages ${err}`);
+        }
+      },
+      error: (err) => {
+        this.toastService.showError(`An error occurred ${err}`);
+      },
+    });
+
+    this.InitSearch();
+  }
+
+  private InitSearch() {
+    this.searchControl.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe((query) => {
+        if (!this.storageItems) return;
+        this.filteredItems = this.storageItems.filter((item) =>
+          item.name.toLowerCase().includes(query.trim().toLowerCase())
+        );
+      });
+  }
+
+  async loadStorages(userId: string) {
+    try {
+      const storages = await this.storageService.getStoragesForUser(userId);
+      if (!storages || storages.length === 0) {
+        this.toastService.showInfo('No storages found');
+      }
+      this.storages = storages;
+    } catch (err) {
+      this.toastService.showError(`Could not load storages ${err}`);
+    }
+  }
+
+  loadStorageItems(storageId: string) {
+    this.storageItemSubscription = this.storageItemService
       .getItemsByStorageId(storageId, this.searchQuery)
       .subscribe({
         next: (items) => {
@@ -58,15 +131,6 @@ export class ViewStorageComponent implements OnDestroy {
         complete: () => {
           this.storageItemSubscription?.unsubscribe();
         },
-      });
-
-    this.searchControl.valueChanges
-      .pipe(debounceTime(500))
-      .subscribe((query) => {
-        if (!this.storageItems) return;
-        this.filteredItems = this.storageItems.filter((item) =>
-          item.name.toLowerCase().includes(query.trim().toLowerCase())
-        );
       });
   }
 
@@ -94,5 +158,16 @@ export class ViewStorageComponent implements OnDestroy {
     } else {
       return 'bg-gradient-to-b from-green-50 to-green-200';
     }
+  }
+
+  storageDropdownClicked(selectedItem: Storage, dropdown: HTMLDetailsElement) {
+    dropdown.open = false;
+    this.selectStorageAndLoadItems(selectedItem);
+  }
+
+  selectStorageAndLoadItems(storage: Storage) {
+    this.selectedStorage = storage;
+    localStorage.setItem('lastUsedStorageId', storage.id);
+    this.loadStorageItems(storage.id);
   }
 }
