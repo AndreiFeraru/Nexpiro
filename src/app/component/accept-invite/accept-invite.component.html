@@ -1,0 +1,26 @@
+<div class="modal-box m-4 w-fit">
+  <form method="dialog">
+    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+      ✕
+    </button>
+  </form>
+  <h3 class="font-bold text-lg">Invite</h3>
+
+  <div>
+    {{ this.shareToken?.sharedByUserName }} has shared the '{{
+      this.shareToken?.storageName
+    }}' storage with you. Do you want to accept the invitation?
+  </div>
+
+  <div class="modal-action">
+    <form id="modal_action_dialog_form" method="dialog">
+      <button class="btn btn-ghost mr-1">Cancel</button>
+      <button type="submit" class="btn btn-primary" (click)="acceptInvite()">
+        Accept
+      </button>
+    </form>
+  </div>
+</div>
+<form method="dialog" class="modal-backdrop">
+  <button>close</button>
+</form>
