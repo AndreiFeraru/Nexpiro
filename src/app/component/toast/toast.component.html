@@ -6,7 +6,7 @@
     >
       <span class="text-wrap">{{ toast.message }}</span>
       <button
-        class="btn btn-circle btn-neutral bg-black/30 text-white border-0 absolute right-1 top-1"
+        class="btn btn-circle btn-neutral bg-black/30 text-white/70 border-0 absolute right-1 top-1"
         (click)="this.toastService.removeSticky(toast)"
       >
         ✕
@@ -20,7 +20,7 @@
     >
       <span>{{ toast.message }}</span>
       <button
-        class="btn btn-circle btn-neutral bg-black/30 text-white border-0 absolute right-1 top-1"
+        class="btn btn-circle btn-neutral bg-black/30 text-white/70 border-0 absolute right-1 top-1"
         (click)="this.toastService.remove(toast)"
       >
         ✕
