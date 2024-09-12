@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { StorageItem } from 'src/app/models/storageItem';
 import { AuthService } from 'src/app/shared/auth.service';
-import { StorageService } from 'src/app/shared/storage.service';
+import { StorageItemService } from 'src/app/shared/storageItem.service';
 import { ToastService } from 'src/app/shared/toast.service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -24,10 +24,10 @@ export class AddItemComponent implements OnDestroy {
   expirationDate: string | undefined;
   currentUser: User | null = null;
 
-  storageId: string = '0'; // TODO get storage id from user
+  @Input() selectedStorageId: string | undefined;
 
   constructor(
-    private storageService: StorageService,
+    private storageItemService: StorageItemService,
     private authService: AuthService,
     private toastService: ToastService
   ) {}
@@ -82,8 +82,13 @@ export class AddItemComponent implements OnDestroy {
     if (!this.validateForm()) {
       return;
     }
+    if (!this.selectedStorageId) {
+      this.toastService.showError('Storage not selected');
+      return;
+    }
 
     const dateNow = new Date().toISOString().split('T')[0];
+    // TODO insert full date and format on reads
 
     const item: StorageItem = {
       id: uuidv4(),
@@ -96,7 +101,7 @@ export class AddItemComponent implements OnDestroy {
         this.currentUser?.displayName ?? this.currentUser?.email ?? '',
     };
 
-    this.storageService.addItemToStorage(this.storageId, item).then(
+    this.storageItemService.addItemToStorage(this.selectedStorageId, item).then(
       () => {
         this.toastService.showSuccess(`Item added successfully '${item.name}'`);
         this.clearForm();

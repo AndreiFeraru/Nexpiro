@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { StorageItem } from 'src/app/models/storageItem';
 import { AuthService } from 'src/app/shared/auth.service';
-import { StorageService } from 'src/app/shared/storage.service';
+import { StorageItemService } from 'src/app/shared/storageItem.service';
 import { ToastService } from 'src/app/shared/toast.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class EditItemComponent implements OnChanges {
   storageId: string = '0'; // TODO get storage id from user
 
   constructor(
-    private storageService: StorageService,
+    private storageItemService: StorageItemService,
     private toastService: ToastService,
     private authService: AuthService
   ) {}
@@ -75,7 +75,7 @@ export class EditItemComponent implements OnChanges {
 
     this.updateSelectedForEdit();
 
-    this.storageService
+    this.storageItemService
       .updateItemInStorage(this.storageId, this.itemSelectedForEdit!)
       .then(
         () => {
@@ -128,6 +128,8 @@ export class EditItemComponent implements OnChanges {
     this.itemSelectedForEdit.name = this.name as string;
     this.itemSelectedForEdit.description = this.description;
     this.itemSelectedForEdit.expirationDate = this.expirationDate as string;
+
+    // TODO insert full date and format on reads
     const dateNow = new Date().toISOString().split('T')[0];
     this.itemSelectedForEdit.lastModified = dateNow;
     this.itemSelectedForEdit.lastModifiedBy =
