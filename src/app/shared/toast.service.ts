@@ -11,6 +11,8 @@ export class ToastService {
 
   constructor() {}
 
+  // TODO add sticky toasts
+
   show(message: string, type: ToastType) {
     const toast: Toast = { message: message, type: type };
     this.toasts.push(toast);
