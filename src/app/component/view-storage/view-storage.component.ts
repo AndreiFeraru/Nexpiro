@@ -68,7 +68,6 @@ export class ViewStorageComponent implements OnDestroy {
         try {
           await this.loadStorages(user!.uid);
           if (!this.storages || this.storages.length === 0) {
-            this.toastService.showInfo('No storages found');
             return;
           }
 
@@ -115,7 +114,7 @@ export class ViewStorageComponent implements OnDestroy {
     try {
       const storages = await this.storageService.getStoragesForUser(userId);
       if (!storages || storages.length === 0) {
-        this.toastService.showInfo('No storages found');
+        this.toastService.showWarning('No storages found');
       }
       this.storages = storages;
     } catch (err) {
