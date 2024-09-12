@@ -1,7 +1,9 @@
 export interface UserPermission {
-  uid: string;
-  read: boolean;
-  create: boolean;
-  update: boolean;
-  delete: boolean;
+  userId: string;
+  userName: string;
+  canManageStorage: boolean;
+  canReadItems: boolean;
+  canCreateItems: boolean;
+  canUpdateItems: boolean;
+  canDeleteItems: boolean;
 }

@@ -1,8 +1,8 @@
 import { UserPermission } from './userPermission';
 
 export interface Storage {
-  id: number;
+  id: string;
   name: string;
   createdAt: string;
-  users: UserPermission[];
+  userPermissions: UserPermission[];
 }
