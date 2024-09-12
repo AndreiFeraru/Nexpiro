@@ -1,18 +1,27 @@
-<div class="flex">
-  <input
-    type="text"
-    placeholder="Name"
-    class="input w-full mx-2"
-    [(ngModel)]="newStorageName"
-  />
-  <button type="submit" class="btn btn-primary mx-2" (click)="addStorage()">
-    <i class="fa-solid fa-plus"></i>
-  </button>
+<div
+  class="mb-3 flex flex-col p-4 rounded-badge bg-base-100/50 border-orange-300 border-2 shadow-xl"
+>
+  <span class="mx-4 my-1 text-gray-700 font-semibold">Add new storage</span>
+  <div class="flex">
+    <input
+      type="text"
+      placeholder="Name"
+      class="input w-full border-orange-300 border-2"
+      [(ngModel)]="newStorageName"
+    />
+    <button
+      type="submit"
+      class="btn ml-2 btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
+      (click)="addStorage()"
+    >
+      <i class="fa-solid fa-plus text-lg"></i>
+    </button>
+  </div>
 </div>
 
 <div
   *ngIf="storages?.length"
-  class="join join-vertical w-full shadow-xl border-orange-300 border-2 mt-4"
+  class="join join-vertical w-full shadow-xl border-orange-300 border-2"
 >
   <div *ngFor="let storage of storages">
     <div
@@ -20,21 +29,19 @@
     >
       <input type="radio" name="storage_items_accordion" />
       <div class="collapse-title text-l flex justify-between items-center">
-        <span class="font-semibold">{{ storage.name }}</span>
+        <span class="grow font-semibold">{{ storage.name }}</span>
 
         <button
           type="submit"
-          class="btn btn-primary mx-2"
+          class="mx-2"
           (click)="shareStorage(storage.id, storage.name)"
         >
           <i class="fa-solid fa-share"></i>
         </button>
 
         <div *ngIf="currentUserCanEdit(storage)">
-          <button
-            class="btn btn-sm btn-ghost"
-            onclick="edit_item_modal.showModal()"
-          >
+          <!-- TODO: Implement edit storage -->
+          <button class="btn btn-sm btn-ghost">
             <i class="fa-solid fa-pencil"></i>
           </button>
         </div>

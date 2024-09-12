@@ -1,6 +1,6 @@
 <div>
   <div>
-    <div class="flex mb-2 space-x-2">
+    <div class="flex mb-3 space-x-2">
       <div class="relative">
         <i
           class="fas fa-search text-lg absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -13,19 +13,22 @@
         />
       </div>
       <button
-        class="btn text-gray-700 bg-orange-100 border-orange-300 border-2"
+        class="btn btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
         onclick="add_item_modal.showModal()"
         (click)="clearAddItemForm()"
       >
         <i class="fa-solid fa-plus text-lg"></i>
       </button>
-      <div *ngIf="storages?.length">
+      <div>
         <details
           class="dropdown dropdown-bottom dropdown-end z-50"
           #storageDropdown
         >
-          <summary class="btn bg-orange-100 border-orange-300 border-2">
-            <i class="fa-solid fa-box-open"></i>
+          <summary
+            class="btn btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
+            [attr.disabled]="storages?.length === 0 ? true : null"
+          >
+            <i class="fa-solid fa-box-open text-lg"></i>
           </summary>
           <ul
             class="mt-1 p-2 shadow-xl dropdown-content bg-base-100 rounded-box border-orange-300 border-2"
@@ -48,8 +51,10 @@
           class="dropdown dropdown-bottom dropdown-end z-50"
           #sortDropdown
         >
-          <summary class="btn bg-orange-100 border-orange-300 border-2">
-            <i class="fa-solid fa-sort"></i>
+          <summary
+            class="btn btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
+          >
+            <i class="fa-solid fa-sort text-lg"></i>
           </summary>
           <ul
             class="mt-1 p-2 shadow-xl dropdown-content bg-base-100 rounded-box border-orange-300 border-2"
@@ -86,13 +91,11 @@
           <!-- <input type="checkbox" /> -->
           <div class="collapse-title text-l">
             <div class="flex justify-between items-center">
-              <div class="flex items-center">
-                <div
-                  class="h-5 w-5 mr-4 rounded-full shadow-xl border-gray-500 border-2"
-                  [ngClass]="getStatusCircleColorClass(storageItem)"
-                ></div>
-                <span class="font-semibold">{{ storageItem.name }}</span>
-              </div>
+              <div
+                class="h-5 w-5 mr-4 rounded-full shadow-xl border-gray-500 border-2"
+                [ngClass]="getStatusCircleColorClass(storageItem)"
+              ></div>
+              <span class="grow font-semibold">{{ storageItem.name }}</span>
               <button
                 class="btn btn-sm btn-ghost"
                 onclick="edit_item_modal.showModal()"

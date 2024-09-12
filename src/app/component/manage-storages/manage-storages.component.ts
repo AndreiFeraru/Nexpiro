@@ -53,9 +53,6 @@ export class ManageStoragesComponent {
   async loadStorages(userId: string): Promise<void> {
     try {
       const storages = await this.storageService.getStoragesForUser(userId);
-      if (!storages || storages.length === 0) {
-        this.toastService.showInfo('No storages found');
-      }
       this.storages = storages;
     } catch (err) {
       this.toastService.showError(`Could not load storages ${err}`);
@@ -125,9 +122,7 @@ export class ManageStoragesComponent {
 
   shareStorage(storageId: string, storageName: string) {
     const token = uuidv4();
-    // const expirationDate = Date.now() + 1000 * 60 * 60 * 24; // 24 hours
-
-    const expirationDate = Date.now() + 1000 * 60 * 5; // 5 minutes
+    const expirationDate = Date.now() + 1000 * 60 * 60 * 24; // 24 hours
 
     const shareToken: ShareToken = {
       token: token,
@@ -145,6 +140,7 @@ export class ManageStoragesComponent {
         const message = `Storage shared: ${link}`;
         console.log(message);
         this.toastService.showSuccess(message);
+        // TODO Add copy button to toast
       })
       .catch((err) => {
         this.toastService.showError(`Could not share storage: ${err}`);

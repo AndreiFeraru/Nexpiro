@@ -110,9 +110,7 @@ export class ViewStorageComponent implements OnDestroy {
   async loadStorages(userId: string) {
     try {
       const storages = await this.storageService.getStoragesForUser(userId);
-      if (!storages || storages.length === 0) {
-        this.toastService.showWarning('No storages found');
-      }
+
       this.storages = storages;
     } catch (err) {
       this.toastService.showError(`Could not load storages ${err}`);
