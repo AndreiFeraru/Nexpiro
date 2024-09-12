@@ -129,8 +129,7 @@ export class EditItemComponent implements OnChanges {
     this.itemSelectedForEdit.description = this.description;
     this.itemSelectedForEdit.expirationDate = this.expirationDate as string;
 
-    // TODO insert full date and format on reads
-    const dateNow = new Date().toISOString().split('T')[0];
+    const dateNow = new Date().toISOString();
     this.itemSelectedForEdit.lastModified = dateNow;
     this.itemSelectedForEdit.lastModifiedBy =
       this.currentUser?.displayName ?? this.currentUser?.email ?? '';

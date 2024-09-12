@@ -87,8 +87,7 @@ export class AddItemComponent implements OnDestroy {
       return;
     }
 
-    const dateNow = new Date().toISOString().split('T')[0];
-    // TODO insert full date and format on reads
+    const dateNow = new Date().toISOString();
 
     const item: StorageItem = {
       id: uuidv4(),

@@ -12,8 +12,6 @@ export class ToastService {
 
   constructor() {}
 
-  // TODO add sticky toasts
-
   show(message: string, type: ToastType, isSticky: boolean = false) {
     const toast: Toast = { message: message, type: type, isSticky: isSticky };
     if (toast.isSticky) {

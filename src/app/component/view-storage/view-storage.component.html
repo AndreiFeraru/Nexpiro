@@ -107,18 +107,22 @@
               class="font-semibold font-dot-matrix"
               style="letter-spacing: 0.2rem"
             >
-              EXP: {{ storageItem.expirationDate }}
+              EXP: {{ getDateFormatted(storageItem.expirationDate) }}
             </p>
             <div
               class="my-3 border-gray-500 border-dashed border-2 h-1 w-full"
             ></div>
-            <p class="my-1 text-sm">
-              <i class="fa-solid fa-user"></i> {{ storageItem.lastModifiedBy }}
-            </p>
-            <p class="my-1 text-sm">
-              <i class="fa-solid fa-calendar-plus"></i>
-              {{ storageItem.createdAt }}
-            </p>
+            <div class="flex content-center">
+              <p class="my-1 text-sm">
+                <i class="fa-solid fa-calendar-plus"></i>
+                {{ getDateFormatted(storageItem.createdAt) }}
+              </p>
+              <p class="ml-3 my-1 text-sm">
+                <i class="fa-solid fa-user"></i>
+                {{ storageItem.lastModifiedBy.substring(0, 28) }}
+              </p>
+            </div>
+
             <p class="my-1 font-thin">
               {{ storageItem.description }}
             </p>

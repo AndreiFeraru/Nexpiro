@@ -72,12 +72,10 @@ export class ViewStorageComponent implements OnDestroy {
           }
 
           const lastUsedStorageId = localStorage.getItem('lastUsedStorageId');
-
           if (!lastUsedStorageId) {
             this.selectStorageAndLoadItems(this.storages[0]);
             return;
           }
-
           const storage = this.storages.find(
             (storage) => storage.id === lastUsedStorageId
           );
@@ -85,7 +83,6 @@ export class ViewStorageComponent implements OnDestroy {
             this.selectStorageAndLoadItems(this.storages[0]);
             return;
           }
-
           this.selectStorageAndLoadItems(storage);
         } catch (err) {
           this.toastService.showError(`Could not load storages ${err}`);
@@ -202,10 +199,9 @@ export class ViewStorageComponent implements OnDestroy {
   }
 
   getStatusCircleColorClass(storageItem: any): string {
-    const today = new Date();
-    const expirationDate = new Date(storageItem.expirationDate);
-    const timeDiff = expirationDate.getTime() - today.getTime();
-    const daysToExpire = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    const timeDiff =
+      new Date(storageItem.expirationDate).getTime() - new Date().getTime();
+    const daysToExpire = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
     if (daysToExpire <= 1) {
       return 'bg-gradient-to-b from-red-50 to-red-200';
@@ -220,5 +216,9 @@ export class ViewStorageComponent implements OnDestroy {
     return this.selectedSortDirection === SortDirection.Ascending
       ? 'fa-sort-asc'
       : 'fa-sort-desc';
+  }
+
+  getDateFormatted(date: string): string {
+    return date.split('T')[0];
   }
 }
