@@ -27,16 +27,47 @@
           <summary class="btn bg-orange-100 border-orange-300 border-2">
             <i class="fa-solid fa-box-open"></i>
           </summary>
-          <ul class="p-2 shadow-xl dropdown-content bg-base-100 rounded-box">
+          <ul
+            class="mt-1 p-2 shadow-xl dropdown-content bg-base-100 rounded-box border-orange-300 border-2"
+          >
             <li
               *ngFor="let storage of storages"
-              class="rounded-box menu-title w-full"
-              (click)="storageDropdownClicked(storage, storageDropdown)"
+              class="rounded-xl menu-title w-full"
+              (click)="storageDropdownClicked(storage)"
               [ngClass]="{
                 'bg-orange-300': storage.id === selectedStorage?.id
               }"
             >
               {{ storage.name }}
+            </li>
+          </ul>
+        </details>
+      </div>
+      <div>
+        <details
+          class="dropdown dropdown-bottom dropdown-end z-50"
+          #sortDropdown
+        >
+          <summary class="btn bg-orange-100 border-orange-300 border-2">
+            <i class="fa-solid fa-sort"></i>
+          </summary>
+          <ul
+            class="mt-1 p-2 shadow-xl dropdown-content bg-base-100 rounded-box border-orange-300 border-2"
+          >
+            <li
+              *ngFor="let sortOption of sortOptionsArray"
+              class="rounded-xl menu-title w-full flex justify-items-start items-center"
+              (click)="sortDropdownClicked(sortOption)"
+              [ngClass]="{
+                'bg-orange-300': sortOption === selectedSortOption
+              }"
+            >
+              <i
+                *ngIf="this.selectedSortOption === sortOption"
+                class="fa-solid"
+                [ngClass]="getSortDirectionClass()"
+              ></i>
+              <span class="mx-1">{{ sortOption }}</span>
             </li>
           </ul>
         </details>
@@ -58,7 +89,7 @@
               <div class="flex">
                 <div
                   class="h-5 w-5 mr-4 rounded-full shadow-xl border-gray-500 border-2"
-                  [ngClass]="getBackgroundColor(storageItem)"
+                  [ngClass]="getStatusCircleColorClass(storageItem)"
                 ></div>
                 <span class="font-semibold">{{ storageItem.name }}</span>
               </div>

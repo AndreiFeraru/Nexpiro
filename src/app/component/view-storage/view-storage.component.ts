@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddItemComponent } from 'src/app/component/add-item/add-item.component';
 import { EditItemComponent } from 'src/app/component/edit-item/edit-item.component';
+import { SortDirection } from 'src/app/models/sortDirection';
+import { SortOption } from 'src/app/models/sortOption';
 import { Storage } from 'src/app/models/storage';
 import { StorageItem } from 'src/app/models/storageItem';
 import { AuthService } from 'src/app/shared/auth.service';
@@ -26,6 +28,8 @@ import { ToastService } from 'src/app/shared/toast.service';
 })
 export class ViewStorageComponent implements OnDestroy {
   @ViewChild(AddItemComponent) addItemModal!: AddItemComponent | null;
+  @ViewChild('storageDropdown') storageDropdown!: ElementRef;
+  @ViewChild('sortDropdown') sortDropdown!: ElementRef;
 
   authStateSubscription: Subscription | undefined;
 
@@ -37,6 +41,11 @@ export class ViewStorageComponent implements OnDestroy {
 
   searchControl: FormControl = new FormControl('');
   searchQuery: string = '';
+
+  sortOptionsArray: SortOption[] = Object.values(SortOption);
+
+  selectedSortOption: SortOption = SortOption.Expiring;
+  selectedSortDirection: SortDirection = SortDirection.Ascending;
 
   itemSelectedForEdit: StorageItem | undefined;
   selectedStorage: Storage | undefined;
@@ -122,6 +131,7 @@ export class ViewStorageComponent implements OnDestroy {
           if (items) {
             this.storageItems = items;
             this.filteredItems = this.storageItems;
+            this.searchControl.setValue('');
           } else {
             this.toastService.showInfo('No items found in storage');
           }
@@ -145,7 +155,54 @@ export class ViewStorageComponent implements OnDestroy {
     }
   }
 
-  getBackgroundColor(storageItem: any): string {
+  storageDropdownClicked(selectedItem: Storage) {
+    this.storageDropdown.nativeElement.open = false;
+    this.selectStorageAndLoadItems(selectedItem);
+  }
+
+  selectStorageAndLoadItems(storage: Storage) {
+    this.selectedStorage = storage;
+    localStorage.setItem('lastUsedStorageId', storage.id);
+    this.loadStorageItems(storage.id);
+  }
+
+  sortDropdownClicked(selectedItem: SortOption) {
+    this.sortDropdown.nativeElement.open = false;
+    if (this.selectedSortOption == selectedItem) {
+      this.selectedSortDirection = this.selectedSortDirection ^ 1; // Toggle sort direction
+    } else {
+      this.selectedSortOption = selectedItem;
+    }
+    // this.sortArrayBySelectedOption(this.storageItems, this.selectedSortOption);
+    this.sortArrayBySelectedOption(this.filteredItems, this.selectedSortOption);
+  }
+
+  sortArrayBySelectedOption(
+    array: StorageItem[] | undefined,
+    sortOption: SortOption
+  ) {
+    if (!array) return;
+    array.sort((a, b) => {
+      let res: number;
+      switch (sortOption) {
+        case SortOption.Expiring:
+          res =
+            new Date(a.expirationDate).getTime() -
+            new Date(b.expirationDate).getTime();
+          break;
+        case SortOption.Name:
+          res = a.name.localeCompare(b.name);
+          break;
+        case SortOption.Added:
+          res =
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          break;
+      }
+      return this.selectedSortDirection == SortDirection.Ascending ? res : -res;
+    });
+  }
+
+  getStatusCircleColorClass(storageItem: any): string {
     const today = new Date();
     const expirationDate = new Date(storageItem.expirationDate);
     const timeDiff = expirationDate.getTime() - today.getTime();
@@ -160,14 +217,9 @@ export class ViewStorageComponent implements OnDestroy {
     }
   }
 
-  storageDropdownClicked(selectedItem: Storage, dropdown: HTMLDetailsElement) {
-    dropdown.open = false;
-    this.selectStorageAndLoadItems(selectedItem);
-  }
-
-  selectStorageAndLoadItems(storage: Storage) {
-    this.selectedStorage = storage;
-    localStorage.setItem('lastUsedStorageId', storage.id);
-    this.loadStorageItems(storage.id);
+  getSortDirectionClass(): string {
+    return this.selectedSortDirection === SortDirection.Ascending
+      ? 'fa-sort-asc'
+      : 'fa-sort-desc';
   }
 }
