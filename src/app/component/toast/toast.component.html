@@ -4,7 +4,7 @@
       class="relative border-black/30 border-4"
       [ngClass]="'shadow-2xl alert alert-' + toast.type"
     >
-      <span class="text-wrap">{{ toast.message }}</span>
+      <span class="text-wrap mr-9">{{ toast.message }}</span>
       <button
         class="btn btn-circle btn-neutral bg-black/30 text-white/70 border-0 absolute right-1 top-1"
         (click)="this.toastService.removeSticky(toast)"
@@ -18,7 +18,7 @@
       [ngClass]="'shadow-2xl alert alert-' + toast.type"
       class="relative overflow-hidden"
     >
-      <span>{{ toast.message }}</span>
+      <span class="text-wrap mr-9">{{ toast.message }}</span>
       <button
         class="btn btn-circle btn-neutral bg-black/30 text-white/70 border-0 absolute right-1 top-1"
         (click)="this.toastService.remove(toast)"

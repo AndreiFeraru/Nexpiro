@@ -1,12 +1,13 @@
 <div
   class="m-10 flex flex-col justify-center items-center space-y-6 p-6 shadow-xl bg-gray-100 border-orange-300 border-2 rounded-3xl"
 >
-  <span> Welcome, {{ this.LoggedInUserName }}</span>
+  <span *ngIf="isButtonDisabled">Resend in {{ countdown }} seconds</span>
 
   <button
     class="btn text-gray-700 bg-orange-100 border-orange-300 border-2"
-    (click)="logout()"
+    [disabled]="isButtonDisabled"
+    (click)="sendVerificationEmail()"
   >
-    Logout
+    Resend
   </button>
 </div>

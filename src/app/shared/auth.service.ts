@@ -49,7 +49,6 @@ export class AuthService implements OnDestroy {
       this.toastService.showError(
         'Login failed. Please check your username/password and try again'
       );
-      console.error('Login error:', error);
     }
   }
 
@@ -59,7 +58,6 @@ export class AuthService implements OnDestroy {
       await this.authService.setPersistence(browserLocalPersistence);
     } catch (error) {
       this.toastService.showError('Google sign-in failed. Please try again.');
-      console.error('Google sign-in error:', error);
     }
   }
 
@@ -73,7 +71,6 @@ export class AuthService implements OnDestroy {
       this.sendEmailForVerification(res.user);
     } catch (error) {
       this.toastService.showError('Registration failed. Please try again.');
-      console.error('Registration error:', error);
     }
   }
 
@@ -83,7 +80,6 @@ export class AuthService implements OnDestroy {
       this.router.navigate(['/login']);
     } catch (error) {
       this.toastService.showError('Logout failed. Please try again.');
-      console.error('Logout error:', error);
     }
   }
 
@@ -97,19 +93,21 @@ export class AuthService implements OnDestroy {
       this.toastService.showError(
         'Failed to send password reset email. Please try again.'
       );
-      console.error('Password reset error:', error);
     }
   }
 
-  private async sendEmailForVerification(user: User): Promise<void> {
+  async sendEmailForVerification(user: User): Promise<void> {
     try {
       await sendEmailVerification(user);
+      this.toastService.showSuccess(
+        'Verification email sent. Please check your inbox.',
+        true
+      );
       this.router.navigate(['/verify-email']);
     } catch (err) {
       this.toastService.showError(
         'Failed to send verification email. Please try again.'
       );
-      console.error('Verification email error:', err);
     }
   }
 

@@ -16,7 +16,6 @@ export class ForgotPasswordComponent {
   constructor(private auth: AuthService, private toastService: ToastService) {}
 
   async forgotPassword() {
-    await this.auth.forgotPassword(this.email);
     this.auth.forgotPassword(this.email);
     this.email = '';
   }
