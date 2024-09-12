@@ -1,6 +1,7 @@
 export interface Toast {
   message: string;
   type: ToastType;
+  isSticky?: boolean;
 }
 
 export enum ToastType {

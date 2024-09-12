@@ -1,13 +1,10 @@
 .line-animation {
-  animation: lineDisappear 4s linear forwards;
+  width: 100%; /* Start with full width */
+  animation: shrinkWidth 4s linear; /* Adjust timing as needed */
 }
 
-@keyframes lineDisappear {
-  0% {
-    width: 100%;
-  }
-
+@keyframes shrinkWidth {
   100% {
-    width: 0%;
+    width: 0; /* Shrink width to 0 */
   }
 }

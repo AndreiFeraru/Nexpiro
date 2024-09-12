@@ -6,6 +6,7 @@ import { Toast, ToastType } from '../models/toast';
 })
 export class ToastService {
   toasts: Toast[] = [];
+  stickyToasts: Toast[] = [];
 
   private readonly DEFAULT_TOAST_TIME: number = 4000;
 
@@ -13,29 +14,40 @@ export class ToastService {
 
   // TODO add sticky toasts
 
-  show(message: string, type: ToastType) {
-    const toast: Toast = { message: message, type: type };
+  show(message: string, type: ToastType, isSticky: boolean = false) {
+    const toast: Toast = { message: message, type: type, isSticky: isSticky };
+    if (toast.isSticky) {
+      this.stickyToasts.push(toast);
+      return;
+    }
+
     this.toasts.push(toast);
-    setTimeout(() => this.toasts.shift(), this.DEFAULT_TOAST_TIME);
+    setTimeout(() => {
+      this.toasts.shift();
+    }, this.DEFAULT_TOAST_TIME);
   }
 
-  showInfo(message: string) {
-    this.show(message, ToastType.INFO);
+  showInfo(message: string, isSticky: boolean = false) {
+    this.show(message, ToastType.INFO, isSticky);
   }
 
-  showSuccess(message: string) {
-    this.show(message, ToastType.SUCCESS);
+  showSuccess(message: string, isSticky: boolean = false) {
+    this.show(message, ToastType.SUCCESS, isSticky);
   }
 
-  showWarning(message: string) {
-    this.show(message, ToastType.WARNING);
+  showWarning(message: string, isSticky: boolean = false) {
+    this.show(message, ToastType.WARNING, isSticky);
   }
 
-  showError(message: string) {
-    this.show(message, ToastType.ERROR);
+  showError(message: string, isSticky: boolean = false) {
+    this.show(message, ToastType.ERROR, isSticky);
   }
 
   remove(toast: any) {
     this.toasts = this.toasts.filter((t) => t !== toast);
+  }
+
+  removeSticky(toast: any) {
+    this.stickyToasts = this.stickyToasts.filter((t) => t !== toast);
   }
 }
