@@ -20,8 +20,7 @@ export class EditItemComponent implements OnChanges {
   expirationDate: string | undefined;
 
   @Input() itemSelectedForEdit: StorageItem | undefined;
-
-  storageId: string = '0'; // TODO get storage id from user
+  @Input() selectedStorageId: string | undefined;
 
   constructor(
     private storageItemService: StorageItemService,
@@ -69,6 +68,11 @@ export class EditItemComponent implements OnChanges {
   }
 
   editItem() {
+    if (this.selectedStorageId === undefined) {
+      this.toastService.showError('No storage selected');
+      return;
+    }
+
     if (!this.validateForm()) {
       return;
     }
@@ -76,7 +80,7 @@ export class EditItemComponent implements OnChanges {
     this.updateSelectedForEdit();
 
     this.storageItemService
-      .updateItemInStorage(this.storageId, this.itemSelectedForEdit!)
+      .updateItemInStorage(this.selectedStorageId, this.itemSelectedForEdit!)
       .then(
         () => {
           this.toastService.showSuccess(
@@ -132,6 +136,6 @@ export class EditItemComponent implements OnChanges {
     const dateNow = new Date().toISOString();
     this.itemSelectedForEdit.lastModified = dateNow;
     this.itemSelectedForEdit.lastModifiedBy =
-      this.currentUser?.displayName ?? this.currentUser?.email ?? '';
+      this.currentUser?.displayName ?? this.currentUser?.email ?? ''; // TODO change this to uid and retrieve user name from user service
   }
 }

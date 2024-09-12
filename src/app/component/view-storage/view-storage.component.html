@@ -133,5 +133,8 @@
   </div>
 
   <app-add-item [selectedStorageId]="selectedStorage?.id"></app-add-item>
-  <app-edit-item [itemSelectedForEdit]="itemSelectedForEdit"></app-edit-item>
+  <app-edit-item
+    [selectedStorageId]="selectedStorage?.id"
+    [itemSelectedForEdit]="itemSelectedForEdit"
+  ></app-edit-item>
 </div>
