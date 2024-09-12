@@ -1,0 +1,64 @@
+<div class="flex">
+  <input
+    type="text"
+    placeholder="Name"
+    class="input w-full mx-2"
+    [(ngModel)]="newStorageName"
+  />
+  <button type="submit" class="btn btn-primary mx-2" (click)="addStorage()">
+    <i class="fa-solid fa-plus"></i>
+  </button>
+</div>
+
+<div
+  *ngIf="storages?.length"
+  class="join join-vertical w-full shadow-xl border-orange-300 border-2 mt-4"
+>
+  <div *ngFor="let storage of storages">
+    <div
+      class="collapse collapse-arrow join-item glass bg-base-100/50 px-3 shadow-xl"
+    >
+      <input type="radio" name="storage_items_accordion" />
+      <div class="collapse-title text-l flex justify-between items-center">
+        <span class="font-semibold">{{ storage.name }}</span>
+
+        <button
+          type="submit"
+          class="btn btn-primary mx-2"
+          (click)="shareStorage(storage.id, storage.name)"
+        >
+          <i class="fa-solid fa-share"></i>
+        </button>
+
+        <div *ngIf="currentUserCanEdit(storage)">
+          <button
+            class="btn btn-sm btn-ghost"
+            onclick="edit_item_modal.showModal()"
+          >
+            <i class="fa-solid fa-pencil"></i>
+          </button>
+        </div>
+      </div>
+      <div class="collapse-content">
+        <p class="my-1 text-sm">
+          <i class="fa-solid fa-calendar-plus"></i>
+          {{ storage.createdAt }}
+        </p>
+        <div class="my-1 text-sm">
+          <div *ngFor="let permission of storage.userPermissions">
+            <div>
+              <i
+                [ngClass]="
+                  permission.canManageStorage
+                    ? 'fa-solid fa-crown'
+                    : 'fa-solid fa-user'
+                "
+              ></i>
+              <span class="ml-1">{{ permission.userName }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
