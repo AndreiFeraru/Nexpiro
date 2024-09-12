@@ -112,4 +112,8 @@ export class AuthService implements OnDestroy {
       console.error('Verification email error:', err);
     }
   }
+
+  async getCurrentUser(): Promise<User | null> {
+    return this.authService.currentUser;
+  }
 }
