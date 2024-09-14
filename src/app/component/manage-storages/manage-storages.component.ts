@@ -101,6 +101,8 @@ export class ManageStoragesComponent {
       .catch((err) => {
         this.toastService.showError(`Could not add storage ${err}`);
       });
+
+    this.newStorageName = '';
   }
 
   getUserIdsString(permissions: UserPermission[]) {
@@ -145,5 +147,9 @@ export class ManageStoragesComponent {
       .catch((err) => {
         this.toastService.showError(`Could not share storage: ${err}`);
       });
+  }
+
+  getDateFormatted(dateString: string) {
+    return dateString.split('T')[0];
   }
 }

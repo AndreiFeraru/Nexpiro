@@ -28,28 +28,30 @@
       class="collapse collapse-arrow join-item glass bg-base-100/50 px-3 shadow-xl"
     >
       <input type="radio" name="storage_items_accordion" />
-      <div class="collapse-title text-l flex justify-between items-center">
-        <span class="grow font-semibold">{{ storage.name }}</span>
+      <div class="collapse-title text-l">
+        <div class="flex justify-between items-center">
+          <span class="grow font-semibold">{{ storage.name }}</span>
 
-        <button
-          type="submit"
-          class="mx-2"
-          (click)="shareStorage(storage.id, storage.name)"
-        >
-          <i class="fa-solid fa-share"></i>
-        </button>
-
-        <div *ngIf="currentUserCanEdit(storage)">
-          <!-- TODO: Implement edit storage -->
-          <button class="btn btn-sm btn-ghost">
-            <i class="fa-solid fa-pencil"></i>
+          <button
+            type="submit"
+            class="btn btn-sm btn-ghost mx-2"
+            (click)="shareStorage(storage.id, storage.name)"
+          >
+            <i class="fa-solid fa-share"></i>
           </button>
+
+          <div *ngIf="currentUserCanEdit(storage)">
+            <!-- TODO: Implement edit storage -->
+            <button class="btn btn-sm btn-ghost">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+          </div>
         </div>
       </div>
       <div class="collapse-content">
         <p class="my-1 text-sm">
           <i class="fa-solid fa-calendar-plus"></i>
-          {{ storage.createdAt }}
+          {{ getDateFormatted(storage.createdAt) }}
         </p>
         <div class="my-1 text-sm">
           <div *ngFor="let permission of storage.userPermissions">
