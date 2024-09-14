@@ -28,4 +28,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Dev environment using emulators
 
-Run `firebase emulators:start` to emulate a firebase environment while developing.
+1. Run `firebase init emulators` to initialize emulators on the local machine.
+2. Run `firebase emulators:start` to emulate a firebase environment while developing.
