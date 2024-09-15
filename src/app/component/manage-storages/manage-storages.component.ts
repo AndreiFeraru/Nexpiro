@@ -74,7 +74,6 @@ export class ManageStoragesComponent {
       return;
     }
 
-    // create userpermission
     const userPermission: UserPermission = {
       userId: this.loggedInUserId,
       userName: this.loggedInUserName ?? 'Unknown User',
@@ -122,8 +121,8 @@ export class ManageStoragesComponent {
     return !!userPermission?.canManageStorage;
   }
 
-  shareStorage(storageId: string, storageName: string) {
-    const token = uuidv4();
+  async shareStorage(storageId: string, storageName: string) {
+    const token = await this.generateShortCode(8);
     const expirationDate = Date.now() + 1000 * 60 * 60 * 24; // 24 hours
 
     const shareToken: ShareToken = {
@@ -138,25 +137,40 @@ export class ManageStoragesComponent {
     this.storageService
       .addShareToken(shareToken)
       .then(() => {
-        const link = `${window.location.origin}/accept-invite?token=${shareToken.token}`;
+        const link = `${window.location.origin}/invite/${shareToken.token}`;
         if (navigator.share) {
           navigator
             .share({
-              title: 'Check out this storage',
-              text: 'I am sharing this storage with you',
+              title: 'Check out this shared storage',
+              text: 'Here is the link to the shared storage:',
               url: link,
             })
-            .then(() => {
-              this.toastService.showSuccess('Shared successfully');
-            });
+            .then(() => this.toastService.showSuccess('Successfully shared'));
         } else {
-          const message = `Send this link to the person you want to share the storage with: ${link}`;
+          const message = `Send this link to your friend: ${link}`;
           this.toastService.showSuccess(message, true);
         }
       })
       .catch((err) => {
         this.toastService.showError(`Could not share storage: ${err}`);
       });
+  }
+
+  private async generateShortCode(length: number): Promise<string> {
+    const allowedCharacters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    let result: string;
+
+    do {
+      result = Array.from({ length }, () =>
+        allowedCharacters.charAt(
+          Math.floor(Math.random() * allowedCharacters.length)
+        )
+      ).join('');
+    } while (await this.storageService.tokenExists(result));
+
+    return result;
   }
 
   getDateFormatted(dateString: string) {

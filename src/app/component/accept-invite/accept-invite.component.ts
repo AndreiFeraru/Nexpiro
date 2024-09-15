@@ -25,36 +25,33 @@ export class AcceptInviteComponent {
   ) {}
 
   ngOnInit(): void {
-    if (this.route.snapshot.url[0].path !== 'accept-invite') {
+    if (this.route.snapshot.url[0].path !== 'invite') {
       return;
     }
-
-    this.route.queryParams.subscribe((params) => {
-      const token = params['token'];
-      if (!token) {
-        this.toastService.showError('Token is missing');
-        return;
-      }
-      this.storageService
-        .validateToken(token)
-        .then((isValid) => {
-          if (!isValid) {
-            this.toastService.showError('Invalid token');
-            return;
-          }
-          this.storageService
-            .getShareTokenByToken(token)
-            .then((shareToken) => {
-              this.shareToken = shareToken;
-            })
-            .catch((err) => {
-              this.toastService.showError(`Error getting share token: ${err}`);
-            });
-        })
-        .catch((err) => {
-          this.toastService.showError(`Error validating token: ${err}`);
-        });
-    });
+    const token = this.route.snapshot.url[1].path;
+    if (!token) {
+      this.toastService.showError('Token is missing');
+      return;
+    }
+    this.storageService
+      .validateToken(token)
+      .then((isValid) => {
+        if (!isValid) {
+          this.toastService.showError('Invalid token');
+          return;
+        }
+        this.storageService
+          .getShareTokenByToken(token)
+          .then((shareToken) => {
+            this.shareToken = shareToken;
+          })
+          .catch((err) => {
+            this.toastService.showError(`Error getting share token: ${err}`);
+          });
+      })
+      .catch((err) => {
+        this.toastService.showError(`Error validating token: ${err}`);
+      });
   }
 
   async declineInvite() {

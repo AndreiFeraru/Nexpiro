@@ -10,7 +10,5 @@ import { ToastService } from 'src/app/shared/toast.service';
   styleUrls: ['./toast.component.css'],
 })
 export class ToastComponent {
-  constructor(public toastService: ToastService) {
-    console.log(this.toastService.toasts);
-  }
+  constructor(public toastService: ToastService) {}
 }
