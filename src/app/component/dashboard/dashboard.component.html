@@ -1,7 +1,10 @@
 <div
   class="m-10 flex flex-col justify-center items-center space-y-6 p-6 shadow-xl bg-gray-100 border-orange-300 border-2 rounded-3xl"
 >
-  <span> Welcome, {{ this.LoggedInUserName }}</span>
+  <span>
+    Welcome,
+    {{ currentUser?.displayName ?? currentUser?.email ?? "Unknown User" }}</span
+  >
 
   <button
     class="btn text-gray-700 bg-orange-100 border-orange-300 border-2"

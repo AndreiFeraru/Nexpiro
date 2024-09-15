@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/shared/auth.service';
@@ -10,10 +10,9 @@ import { ToastService } from 'src/app/shared/toast.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit, OnDestroy {
   authStateSubscription: Subscription | null = null;
   currentUser: User | null = null;
-  public LoggedInUserName: string = '';
 
   constructor(
     private authService: AuthService,
@@ -24,7 +23,6 @@ export class DashboardComponent {
     this.authStateSubscription = this.authService.authState$.subscribe(
       (user) => {
         this.currentUser = user;
-        this.LoggedInUserName = user?.displayName ?? user?.email ?? '';
       }
     );
   }
