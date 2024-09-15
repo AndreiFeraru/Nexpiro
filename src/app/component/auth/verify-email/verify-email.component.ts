@@ -45,7 +45,7 @@ export class VerifyEmailComponent implements OnInit {
 
   private setButtonState(): void {
     this.isButtonDisabled = true;
-    this.countdown = 3; // TODO change to 30
+    this.countdown = 30;
     this.countdownSubscription = timer(0, 1000)
       .pipe(
         tap(() => this.countdown--),

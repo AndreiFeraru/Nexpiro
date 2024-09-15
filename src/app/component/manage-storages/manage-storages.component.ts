@@ -128,6 +128,7 @@ export class ManageStoragesComponent {
     const token = await this.generateShortCode(8);
     const expirationDate = Date.now() + 1000 * 60 * 60 * 24; // 24 hours
 
+    // TODO: Add permissions to the token
     const shareToken: ShareToken = {
       token: token,
       expirationDate: expirationDate.toString(),
