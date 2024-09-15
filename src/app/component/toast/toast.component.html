@@ -7,7 +7,7 @@
       <span class="text-wrap mr-9">{{ toast.message }}</span>
       <button
         class="btn btn-circle btn-neutral bg-black/30 text-base-100/70 border-0 absolute right-1 top-1"
-        (click)="this.toastService.removeSticky(toast)"
+        (click)="toastService.removeSticky(toast)"
       >
         ✕
       </button>
@@ -21,7 +21,7 @@
       <span class="text-wrap mr-9">{{ toast.message }}</span>
       <button
         class="btn btn-circle btn-neutral bg-black/30 text-text-base-100/70 border-0 absolute right-1 top-1"
-        (click)="this.toastService.remove(toast)"
+        (click)="toastService.remove(toast)"
       >
         ✕
       </button>
