@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'manage-storages', component: ManageStoragesComponent },
-  { path: 'accept-invite', component: AcceptInviteComponent },
+  { path: 'invite/:token', component: AcceptInviteComponent },
   { path: 'view-storage', component: ViewStorageComponent },
 ];
 

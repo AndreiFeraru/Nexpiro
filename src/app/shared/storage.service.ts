@@ -55,6 +55,13 @@ export class StorageService {
     return true;
   }
 
+  async tokenExists(token: string): Promise<boolean> {
+    const tokenRef = ref(this.db, `sharedTokens/${token}`);
+    const snapshot = await get(tokenRef);
+
+    return snapshot.exists();
+  }
+
   async addUserToStorage(storageId: string, userId: string, userName: string) {
     const storage = await this.getStorageById(storageId);
     if (
