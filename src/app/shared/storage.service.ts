@@ -40,7 +40,7 @@ export class StorageService {
     const storagePath = `sharedTokens/${shareToken.token}`;
     const storageRef = ref(this.db, storagePath);
     set(storageRef, shareToken);
-    this.CleanUpExpiredTokens();
+    this.cleanUpExpiredTokens();
   }
 
   async validateToken(token: string): Promise<boolean> {
@@ -50,7 +50,7 @@ export class StorageService {
     if (!snapshot.exists()) throw 'Invalid token';
     if (snapshot.val().expirationDate < Date.now()) throw 'Token has expired';
 
-    this.CleanUpExpiredTokens();
+    this.cleanUpExpiredTokens();
 
     return true;
   }
@@ -101,7 +101,7 @@ export class StorageService {
     return snapshot.val() as Storage;
   }
 
-  private async CleanUpExpiredTokens() {
+  async cleanUpExpiredTokens() {
     const tokensRef = ref(this.db, `sharedTokens`);
     const snapshot = await get(tokensRef);
 

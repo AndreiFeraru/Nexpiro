@@ -54,8 +54,8 @@ export class AcceptInviteComponent {
       });
   }
 
-  acceptInviteOnClick(): void {
-    this.acceptInvite();
+  async declineInvite() {
+    this.router.navigate(['manage-storages']);
   }
 
   async acceptInvite() {
