@@ -100,6 +100,8 @@ export class ManageStoragesComponent {
       .catch((err) => {
         this.toastService.showError(`Could not add storage ${err}`);
       });
+
+    this.newStorageName = '';
   }
 
   getUserIdsString(permissions: UserPermission[]) {
@@ -169,5 +171,9 @@ export class ManageStoragesComponent {
     } while (await this.storageService.tokenExists(result));
 
     return result;
+  }
+
+  getDateFormatted(dateString: string) {
+    return dateString.split('T')[0];
   }
 }
