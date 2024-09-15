@@ -10,10 +10,15 @@
           class="input input-primary pl-10 pr-4 w-full border-orange-300 border-2"
           [formControl]="searchControl"
           placeholder="Search items"
+          [readOnly]="
+            filteredItems?.length === 0 ||
+            !currentUserPermissionsForSelectedStorage?.canReadItems
+          "
         />
       </div>
       <button
         class="btn btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
+        [disabled]="!currentUserPermissionsForSelectedStorage?.canCreateItems"
         onclick="add_item_modal.showModal()"
         (click)="clearAddItemForm()"
       >
@@ -26,7 +31,7 @@
         >
           <summary
             class="btn btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
-            [attr.disabled]="storages?.length === 0 ? true : null"
+            [attr.disabled]="storages?.length === 0 ? 'disabled' : null"
           >
             <i class="fa-solid fa-box-open text-lg"></i>
           </summary>
@@ -53,6 +58,7 @@
         >
           <summary
             class="btn btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
+            [attr.disabled]="filteredItems?.length === 0 ? 'disabled' : null"
           >
             <i class="fa-solid fa-sort text-lg"></i>
           </summary>
@@ -68,7 +74,7 @@
               }"
             >
               <i
-                *ngIf="this.selectedSortOption === sortOption"
+                *ngIf="selectedSortOption === sortOption"
                 class="fa-solid"
                 [ngClass]="getSortDirectionClass()"
               ></i>
@@ -80,7 +86,10 @@
     </div>
 
     <div
-      *ngIf="filteredItems?.length"
+      *ngIf="
+        filteredItems?.length &&
+        currentUserPermissionsForSelectedStorage?.canReadItems
+      "
       class="join join-vertical w-full shadow-xl border-orange-300 border-2"
     >
       <div *ngFor="let storageItem of filteredItems">
@@ -92,16 +101,41 @@
           <div class="collapse-title text-l">
             <div class="flex justify-between items-center">
               <div
-                class="h-5 w-5 mr-4 rounded-full shadow-xl border-gray-500 border-2"
-                [ngClass]="getStatusCircleColorClass(storageItem)"
+                *ngIf="
+                  getDaysToExpire(storageItem.expirationDate) < 0;
+                  then expiredIcon;
+                  else statusCircle
+                "
               ></div>
-              <span class="grow font-semibold">{{ storageItem.name }}</span>
+              <ng-template #statusCircle>
+                <div
+                  class="h-5 w-5 rounded-full shadow-xl border-gray-500 border-2"
+                  [ngClass]="getStatusCircleColorClass(storageItem)"
+                ></div>
+              </ng-template>
+              <ng-template #expiredIcon>
+                <i class="fa-solid fa-exclamation-triangle text-red-500"></i>
+              </ng-template>
+
+              <span class="grow font-semibold ml-4">{{
+                storageItem.name
+              }}</span>
+
               <button
+                *ngIf="currentUserPermissionsForSelectedStorage?.canUpdateItems"
                 class="btn btn-sm btn-ghost"
                 onclick="edit_item_modal.showModal()"
                 (click)="itemSelectedForEdit = storageItem"
               >
                 <i class="fa-solid fa-pencil"></i>
+              </button>
+
+              <button
+                *ngIf="currentUserPermissionsForSelectedStorage?.canDeleteItems"
+                class="btn btn-sm btn-ghost"
+                (click)="deleteItem(storageItem)"
+              >
+                <i class="fa-solid fa-trash"></i>
               </button>
             </div>
           </div>

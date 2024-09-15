@@ -8,6 +8,7 @@ import { SortDirection } from 'src/app/models/sortDirection';
 import { SortOption } from 'src/app/models/sortOption';
 import { Storage } from 'src/app/models/storage';
 import { StorageItem } from 'src/app/models/storageItem';
+import { UserPermission } from 'src/app/models/userPermission';
 import { AuthService } from 'src/app/shared/auth.service';
 import { StorageService } from 'src/app/shared/storage.service';
 import { StorageItemService } from 'src/app/shared/storageItem.service';
@@ -49,6 +50,9 @@ export class ViewStorageComponent implements OnDestroy {
 
   itemSelectedForEdit: StorageItem | undefined;
   selectedStorage: Storage | undefined;
+  currentUserPermissionsForSelectedStorage: UserPermission | undefined;
+
+  loggedInUserId: string | undefined;
 
   constructor(
     private authService: AuthService,
@@ -60,13 +64,15 @@ export class ViewStorageComponent implements OnDestroy {
   ngOnInit(): void {
     this.authStateSubscription = this.authService.authState$.subscribe({
       next: async (user) => {
-        if (!user) {
+        if (!user?.uid) {
           this.toastService.showError('User not found');
           return;
         }
 
+        this.loggedInUserId = user.uid;
+
         try {
-          await this.loadStorages(user!.uid);
+          await this.loadStorages(user.uid);
           if (!this.storages || this.storages.length === 0) {
             return;
           }
@@ -158,6 +164,37 @@ export class ViewStorageComponent implements OnDestroy {
     this.selectedStorage = storage;
     localStorage.setItem('lastUsedStorageId', storage.id);
     this.loadStorageItems(storage.id);
+    this.updateCurrentUserPermissionsForSelectedStorage(storage);
+  }
+
+  updateCurrentUserPermissionsForSelectedStorage(storage: Storage) {
+    const userPermissions = storage.userPermissions?.find(
+      (permission) => permission.userId === this.loggedInUserId
+    );
+
+    if (!userPermissions) {
+      this.toastService.showError('User permissions not found');
+      this.currentUserPermissionsForSelectedStorage = {
+        userId: '',
+        userName: '',
+        canCreateItems: false,
+        canDeleteItems: false,
+        canManageStorage: false,
+        canReadItems: false,
+        canUpdateItems: false,
+      };
+      return;
+    }
+
+    this.currentUserPermissionsForSelectedStorage = {
+      userId: '',
+      userName: '',
+      canCreateItems: userPermissions.canCreateItems,
+      canDeleteItems: userPermissions.canDeleteItems,
+      canManageStorage: userPermissions.canManageStorage,
+      canReadItems: userPermissions.canReadItems,
+      canUpdateItems: userPermissions.canUpdateItems,
+    };
   }
 
   sortDropdownClicked(selectedItem: SortOption) {
@@ -167,7 +204,6 @@ export class ViewStorageComponent implements OnDestroy {
     } else {
       this.selectedSortOption = selectedItem;
     }
-    // this.sortArrayBySelectedOption(this.storageItems, this.selectedSortOption);
     this.sortArrayBySelectedOption(this.filteredItems, this.selectedSortOption);
   }
 
@@ -197,9 +233,11 @@ export class ViewStorageComponent implements OnDestroy {
   }
 
   getStatusCircleColorClass(storageItem: any): string {
-    const timeDiff =
-      new Date(storageItem.expirationDate).getTime() - new Date().getTime();
-    const daysToExpire = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    if (!storageItem.expirationDate) {
+      return 'hidden';
+    }
+
+    const daysToExpire = this.getDaysToExpire(storageItem.expirationDate);
 
     if (daysToExpire <= 1) {
       return 'bg-gradient-to-b from-red-50 to-red-200';
@@ -210,6 +248,15 @@ export class ViewStorageComponent implements OnDestroy {
     }
   }
 
+  getDaysToExpire(expirationDate: string): number {
+    const daysToExpire = Math.ceil(
+      (new Date(expirationDate).getTime() - new Date().getTime()) /
+        (1000 * 60 * 60 * 24)
+    );
+    console.log(daysToExpire);
+    return daysToExpire;
+  }
+
   getSortDirectionClass(): string {
     return this.selectedSortDirection === SortDirection.Ascending
       ? 'fa-sort-asc'
@@ -218,5 +265,23 @@ export class ViewStorageComponent implements OnDestroy {
 
   getDateFormatted(date: string): string {
     return date.split('T')[0];
+  }
+
+  async deleteItem(item: StorageItem) {
+    if (!this.selectedStorage) {
+      this.toastService.showError('Storage is not selected');
+      return;
+    }
+    if (!item?.id) {
+      this.toastService.showError('Item id is missing');
+    }
+    try {
+      await this.storageItemService.deleteItem(
+        item.id,
+        this.selectedStorage?.id
+      );
+    } catch (err) {
+      this.toastService.showError(`Could not delete item: ${err}`);
+    }
   }
 }
