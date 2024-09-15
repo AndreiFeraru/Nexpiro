@@ -139,10 +139,20 @@ export class ManageStoragesComponent {
       .addShareToken(shareToken)
       .then(() => {
         const link = `${window.location.origin}/accept-invite?token=${shareToken.token}`;
-        const message = `Storage shared: ${link}`;
-        console.log(message);
-        this.toastService.showSuccess(message);
-        // TODO Add copy button to toast
+        if (navigator.share) {
+          navigator
+            .share({
+              title: 'Check out this storage',
+              text: 'I am sharing this storage with you',
+              url: link,
+            })
+            .then(() => {
+              this.toastService.showSuccess('Shared successfully');
+            });
+        } else {
+          const message = `Send this link to the person you want to share the storage with: ${link}`;
+          this.toastService.showSuccess(message, true);
+        }
       })
       .catch((err) => {
         this.toastService.showError(`Could not share storage: ${err}`);
@@ -152,4 +162,6 @@ export class ManageStoragesComponent {
   getDateFormatted(dateString: string) {
     return dateString.split('T')[0];
   }
+
+  sharestorage2(link: string) {}
 }
