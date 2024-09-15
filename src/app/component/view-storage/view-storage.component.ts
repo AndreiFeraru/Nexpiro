@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/shared/auth.service';
 import { StorageService } from 'src/app/shared/storage.service';
 import { StorageItemService } from 'src/app/shared/storageItem.service';
 import { ToastService } from 'src/app/shared/toast.service';
+import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 
 @Component({
   standalone: true,
@@ -25,6 +26,7 @@ import { ToastService } from 'src/app/shared/toast.service';
     CommonModule,
     AddItemComponent,
     EditItemComponent,
+    DeleteModalComponent,
   ],
 })
 export class ViewStorageComponent implements OnDestroy {
@@ -49,6 +51,8 @@ export class ViewStorageComponent implements OnDestroy {
   selectedSortDirection: SortDirection = SortDirection.Ascending;
 
   itemSelectedForEdit: StorageItem | undefined;
+  itemSelectedForDelete: StorageItem | undefined;
+
   selectedStorage: Storage | undefined;
   currentUserPermissionsForSelectedStorage: UserPermission | undefined;
 
@@ -267,21 +271,26 @@ export class ViewStorageComponent implements OnDestroy {
     return date.split('T')[0];
   }
 
-  async deleteItem(item: StorageItem) {
+  onDeleteItemClicked(item: StorageItem) {
+    this.itemSelectedForDelete = item;
+  }
+
+  onConfirmDelete() {
     if (!this.selectedStorage) {
       this.toastService.showError('Storage is not selected');
       return;
     }
-    if (!item?.id) {
+    if (!this.itemSelectedForDelete?.id) {
       this.toastService.showError('Item id is missing');
+      return;
     }
-    try {
-      await this.storageItemService.deleteItem(
-        item.id,
-        this.selectedStorage?.id
-      );
-    } catch (err) {
-      this.toastService.showError(`Could not delete item: ${err}`);
-    }
+    this.storageItemService
+      .deleteItem(this.itemSelectedForDelete.id, this.selectedStorage?.id)
+      .then(() => {
+        this.toastService.showSuccess('Item deleted successfully');
+      })
+      .catch((err) => {
+        this.toastService.showError(`Could not delete item: ${err}`);
+      });
   }
 }

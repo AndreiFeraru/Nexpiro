@@ -120,4 +120,28 @@ export class StorageService {
       await set(ref(this.db, `sharedTokens/${token.token}`), null);
     }
   }
+
+  async deleteStorage(storageId: string, userId: string) {
+    const storage = await this.getStorageById(storageId);
+    if (storage.userPermissions.length > 1) {
+      storage.userPermissions = storage.userPermissions.filter(
+        (permission) => permission.userId !== userId
+      );
+      if (
+        !storage.userPermissions.some(
+          (permission) => permission.canManageStorage
+        )
+      ) {
+        storage.userPermissions.forEach(
+          (permission) => (permission.canManageStorage = true)
+        );
+      }
+      await this.editStorage(storage);
+    } else {
+      const storagePath = `storageInfo/${storageId}`;
+      const itemRef = ref(this.db, storagePath);
+
+      await set(itemRef, null);
+    }
+  }
 }

@@ -133,7 +133,8 @@
               <button
                 *ngIf="currentUserPermissionsForSelectedStorage?.canDeleteItems"
                 class="btn btn-sm btn-ghost"
-                (click)="deleteItem(storageItem)"
+                onclick="delete_item_modal.showModal()"
+                (click)="onDeleteItemClicked(storageItem)"
               >
                 <i class="fa-solid fa-trash"></i>
               </button>
@@ -170,8 +171,14 @@
   </div>
 
   <app-add-item [selectedStorageId]="selectedStorage?.id"></app-add-item>
+
   <app-edit-item
     [selectedStorageId]="selectedStorage?.id"
     [itemSelectedForEdit]="itemSelectedForEdit"
   ></app-edit-item>
+
+  <app-delete-modal
+    [itemName]="itemSelectedForDelete?.name ?? ''"
+    (deleteConfirmed)="onConfirmDelete()"
+  ></app-delete-modal>
 </div>

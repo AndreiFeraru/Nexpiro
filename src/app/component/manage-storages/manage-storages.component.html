@@ -40,12 +40,21 @@
             <i class="fa-solid fa-share"></i>
           </button>
 
-          <div *ngIf="currentUserCanEdit(storage)">
+          <div *ngIf="currentUserCanManageStorage(storage)">
             <!-- TODO: Implement edit storage -->
             <button class="btn btn-sm btn-ghost">
               <i class="fa-solid fa-pencil"></i>
             </button>
           </div>
+
+          <button
+            *ngIf="currentUserCanManageStorage(storage)"
+            class="btn btn-sm btn-ghost"
+            onclick="delete_item_modal.showModal()"
+            (click)="onDeleteItemClicked(storage)"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
         </div>
       </div>
       <div class="collapse-content">
@@ -71,3 +80,8 @@
     </div>
   </div>
 </div>
+
+<app-delete-modal
+  [itemName]="storageSelectedForDelete?.name ?? ''"
+  (deleteConfirmed)="onConfirmDelete()"
+></app-delete-modal>

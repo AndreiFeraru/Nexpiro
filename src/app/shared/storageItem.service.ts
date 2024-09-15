@@ -55,4 +55,11 @@ export class StorageItemService {
     }
     set(itemRef, item);
   }
+
+  async deleteItem(itemId: string, storageId: string) {
+    const itemPath = `storages/${storageId}/items/${itemId}`;
+    const itemRef = ref(this.db, itemPath);
+
+    await set(itemRef, null);
+  }
 }

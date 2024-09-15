@@ -9,11 +9,12 @@ import { UserPermission } from '../../models/userPermission';
 import { AuthService } from '../../shared/auth.service';
 import { StorageService } from '../../shared/storage.service';
 import { ToastService } from '../../shared/toast.service';
+import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 
 @Component({
   selector: 'app-manage-storages',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DeleteModalComponent],
   templateUrl: './manage-storages.component.html',
   styleUrls: ['./manage-storages.component.css'],
 })
@@ -24,6 +25,8 @@ export class ManageStoragesComponent {
   newStorageName: string | undefined;
   loggedInUserId: string | undefined;
   loggedInUserName: string | null = null;
+
+  storageSelectedForDelete: Storage | undefined;
 
   constructor(
     private authService: AuthService,
@@ -111,7 +114,7 @@ export class ManageStoragesComponent {
     return permissions.map((permission) => permission.userId).join(', ');
   }
 
-  currentUserCanEdit(storage: Storage): boolean {
+  currentUserCanManageStorage(storage: Storage): boolean {
     if (!storage.userPermissions) {
       return false;
     }
@@ -175,5 +178,29 @@ export class ManageStoragesComponent {
 
   getDateFormatted(dateString: string) {
     return dateString.split('T')[0];
+  }
+
+  onDeleteItemClicked(item: Storage) {
+    this.storageSelectedForDelete = item;
+  }
+
+  onConfirmDelete() {
+    if (!this.loggedInUserId) {
+      this.toastService.showError('User not found');
+      return;
+    }
+    if (!this.storageSelectedForDelete?.id) {
+      this.toastService.showError('Storage id is missing');
+      return;
+    }
+    this.storageService
+      .deleteStorage(this.storageSelectedForDelete.id, this.loggedInUserId)
+      .then(() => {
+        this.loadStorages(this.loggedInUserId!);
+        this.toastService.showSuccess('Storage deleted');
+      })
+      .catch((err) => {
+        this.toastService.showError(`Could not delete storage: ${err}`);
+      });
   }
 }
