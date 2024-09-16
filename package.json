@@ -9,7 +9,8 @@
     "start": "npm run generate-env && ng serve",
     "watch": "ng build --watch --configuration=development",
     "test": "ng test",
-    "gen-and-deploy": "npm run generate-env && firebase deploy --only hosting"
+    "gen-and-deploy": "npm run generate-env && firebase deploy --only hosting",
+    "gen-and-deploy2": "npm run generate-env && ng deploy"
   },
   "private": true,
   "dependencies": {

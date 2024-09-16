@@ -79,7 +79,7 @@
               "browserTarget": "Nexpiro:build:production"
             },
             "development": {
-              "browserTarget": "Nexpiro:build:development"
+              "browserTarget": "NexpiroAngular:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -103,6 +103,16 @@
         },
         "deploy": {
           "builder": "@angular/fire:deploy",
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          },
           "options": {
             "version": 2,
             "browserTarget": "Nexpiro:build:production"
