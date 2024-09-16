@@ -7,8 +7,9 @@
     "build:dev": "npm run generate-env && ng build",
     "build:prod": "npm run generate-env && ng build --prod",
     "start": "npm run generate-env && ng serve",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "watch": "ng build --watch --configuration=development",
+    "test": "ng test",
+    "gen-and-deploy": "npm run generate-env && firebase deploy --only hosting"
   },
   "private": true,
   "dependencies": {
@@ -32,7 +33,6 @@
     "zone.js": "~0.13.3"
   },
   "devDependencies": {
-    "@angular-builders/custom-webpack": "^16.0.1",
     "@angular-devkit/build-angular": "^16.2.14",
     "@angular/cli": "~16.2.14",
     "@angular/compiler-cli": "^16.2.12",
