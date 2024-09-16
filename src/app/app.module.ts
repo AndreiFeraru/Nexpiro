@@ -9,7 +9,7 @@ import {
   getDatabase,
   provideDatabase,
 } from '@angular/fire/database';
-import { environment } from '../environments/environment.dev';
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToastComponent } from './component/toast/toast.component';

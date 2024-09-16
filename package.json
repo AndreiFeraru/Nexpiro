@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 4201",
-    "build": "ng build",
+    "generate-env": "node scripts/generate-env.js",
+    "build:dev": "npm run generate-env && ng build",
+    "build:prod": "npm run generate-env && ng build --prod",
+    "start": "npm run generate-env && ng serve",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -21,6 +23,7 @@
     "@angular/platform-browser": "^16.2.12",
     "@angular/platform-browser-dynamic": "^16.2.12",
     "@angular/router": "^16.2.12",
+    "dotenv": "^16.4.5",
     "firebase": "^10.12.2",
     "firebaseui": "^6.1.0",
     "rxjs": "~7.8.1",
@@ -38,7 +41,6 @@
     "@types/uuid": "^9.0.8",
     "autoprefixer": "^10.4.19",
     "daisyui": "^4.12.10",
-    "dotenv-webpack": "^8.1.0",
     "jasmine-core": "~4.6.1",
     "karma": "~6.4.3",
     "karma-chrome-launcher": "~3.2.0",
