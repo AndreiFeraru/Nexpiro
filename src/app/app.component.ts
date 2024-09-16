@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './shared/auth.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from './shared/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,12 @@ export class AppComponent implements OnDestroy {
 
   constructor(public router: Router, public authService: AuthService) {
     this.authStateSubscription = authService.authState$.subscribe((user) => {
-      if (!user) {
+      if (
+        !user &&
+        !['/register', '/verify-email', '/forgot-password', '/login'].includes(
+          this.router.url
+        )
+      ) {
         this.router.navigate(['/login']);
       }
       this.loggedIn = !!user;
