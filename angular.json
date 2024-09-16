@@ -79,7 +79,7 @@
               "browserTarget": "Nexpiro:build:production"
             },
             "development": {
-              "browserTarget": "NexpiroAngular:build:development"
+              "browserTarget": "Nexpiro:build:development"
             }
           },
           "defaultConfiguration": "development"
