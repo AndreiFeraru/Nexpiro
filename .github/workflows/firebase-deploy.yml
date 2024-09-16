@@ -40,3 +40,5 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEXPIRO_FIREBASE }}"
           channelId: live
           projectId: nexpiro-firebase
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks # Enables the required Firebase CLI experiment for web frameworks
