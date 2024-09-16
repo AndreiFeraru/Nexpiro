@@ -24,14 +24,18 @@ import { ToastComponent } from './component/toast/toast.component';
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => {
       const auth = getAuth();
-      connectAuthEmulator(auth, 'http://localhost:9099', {
-        disableWarnings: true,
-      });
+      if (!environment.production) {
+        connectAuthEmulator(auth, 'http://localhost:9099', {
+          disableWarnings: true,
+        });
+      }
       return auth;
     }),
     provideDatabase(() => {
       const db = getDatabase();
-      connectDatabaseEmulator(db, '127.0.0.1', 9000);
+      if (!environment.production) {
+        connectDatabaseEmulator(db, '127.0.0.1', 9000);
+      }
       return db;
     }),
   ],
