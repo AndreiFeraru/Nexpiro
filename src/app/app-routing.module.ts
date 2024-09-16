@@ -12,13 +12,13 @@ import { ViewStorageComponent } from './component/view-storage/view-storage.comp
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'dashboard', component: DashboardComponent },
   { path: 'manage-storages', component: ManageStoragesComponent },
-  { path: 'invite/:token', component: AcceptInviteComponent },
   { path: 'view-storage', component: ViewStorageComponent },
+  { path: 'invite/:token', component: AcceptInviteComponent },
 ];
 
 @NgModule({
