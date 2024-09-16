@@ -45,7 +45,7 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS="${{ runner.temp }}/firebase-key.json"
 
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@v1
+        uses: firebase/github-action@v1
         with:
           args: deploy --only hosting
         env:
