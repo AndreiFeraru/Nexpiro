@@ -1,11 +1,11 @@
-<div class="relative p-3 min-h-screen max-w-sm mx-auto overflow-x-hidden">
-  <div *ngIf="loggedIn">
+<div class="relative max-w-sm min-h-screen p-3 mx-auto overflow-x-hidden">
+  <div>
     <!-- Top Logo and Text Container -->
     <div
-      class="border-orange-300 border-2 bg-orange-100 z-50 rounded-full px-4 py-2 mb-3 shadow-xl"
+      class="fixed z-50 max-w-sm px-4 py-2 mx-auto bg-orange-100 border-2 border-orange-300 rounded-full shadow-xl inset-x-4 top-2"
     >
       <div
-        class="uppercase text-4xl text-gray-700 font-semibold flex justify-around items-center"
+        class="flex items-center justify-around space-x-3 text-4xl font-semibold text-gray-700 uppercase"
       >
         <span>N</span>
         <span>E</span>
@@ -19,32 +19,33 @@
       </div>
     </div>
 
+    <div class="w-full mt-20 router-content">
+      <router-outlet></router-outlet>
+    </div>
+
     <!-- Bottom Menu Items -->
     <div
-      class="z-50 fixed bottom-2 inset-x-4 max-w-sm mx-auto rounded-full px-4 py-2 shadow-xl flex items-center justify-around bg-orange-100 border-orange-300 border-2"
+      *ngIf="loggedIn"
+      class="fixed z-50 flex items-center justify-around max-w-sm px-4 py-2 mx-auto bg-orange-100 border-2 border-orange-300 rounded-full shadow-xl bottom-2 inset-x-4"
     >
       <a class="tooltip tooltip-top" data-tip="Home" routerLink="/dashboard">
-        <i class="fas fa-home text-gray-600 h-6 w-6"></i>
+        <i class="w-6 h-6 text-gray-600 fas fa-home"></i>
       </a>
       <a
         class="tooltip tooltip-top"
         data-tip="Storages"
         routerLink="/manage-storages"
       >
-        <i class="fas fa-home text-gray-600 h-6 w-6"></i>
+        <i class="w-6 h-6 text-gray-600 fas fa-home"></i>
       </a>
       <a
         class="tooltip tooltip-top"
         data-tip="Items"
         routerLink="/view-storage"
       >
-        <i class="fas fa-info-circle text-gray-600 h-6 w-6"></i>
+        <i class="w-6 h-6 text-gray-600 fas fa-info-circle"></i>
       </a>
     </div>
-  </div>
-
-  <div class="router-content w-full">
-    <router-outlet></router-outlet>
   </div>
 
   <app-toast></app-toast>

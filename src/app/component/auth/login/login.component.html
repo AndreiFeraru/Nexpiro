@@ -1,7 +1,7 @@
-<div class="hero min-h-screen">
+<div class="hero min-h-fit">
   <!-- TODO put some logo or text here -->
-  <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100/75">
-    <form class="card-body font-bold">
+  <div class="w-full max-w-sm my-auto shadow-2xl card shrink-0 bg-base-100/75">
+    <form class="font-bold card-body">
       <div class="flex justify-around">Login</div>
 
       <div class="form-control">
@@ -36,26 +36,26 @@
         <label class="label">
           <a
             href="/forgot-password"
-            class="label-text-alt link link-hover text-blue-800 underline"
+            class="text-blue-800 underline label-text-alt link link-hover"
             >Forgot password?</a
           >
         </label>
         <label class="label">
           <a
             href="/register"
-            class="label-text-alt link link-hover text-blue-800 underline"
+            class="text-blue-800 underline label-text-alt link link-hover"
             >Create a new account</a
           >
         </label>
       </div>
 
-      <div class="form-control mt-6">
-        <button class="btn btn-primary font-bold" (click)="login()">
+      <div class="mt-6 form-control">
+        <button class="font-bold btn btn-primary" (click)="login()">
           Login
         </button>
       </div>
 
-      <div class="form-control mt-2 flex flex-row justify-around">
+      <div class="flex flex-row justify-around mt-2 form-control">
         <button
           class="gsi-material-button"
           style="width: 181px"
