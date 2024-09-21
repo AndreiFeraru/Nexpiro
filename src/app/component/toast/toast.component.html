@@ -2,7 +2,7 @@
   <div *ngFor="let toast of toastService.stickyToasts" class="w-96 max-w-sm">
     <div
       class="relative border-black/30 border-4"
-      [ngClass]="'shadow-2xl alert alert-' + toast.type"
+      [ngClass]="'shadow-xl alert alert-' + toast.type"
     >
       <div class="text-wrap mr-9">{{ toast.message }}</div>
       <button
@@ -15,7 +15,7 @@
   </div>
   <div *ngFor="let toast of toastService.toasts" class="w-96 max-w-sm">
     <div
-      [ngClass]="'shadow-2xl alert alert-' + toast.type"
+      [ngClass]="'shadow-xl alert alert-' + toast.type"
       class="relative overflow-hidden"
     >
       <span class="text-wrap mr-9">{{ toast.message }}</span>
