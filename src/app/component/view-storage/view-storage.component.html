@@ -3,11 +3,11 @@
     <div class="flex mb-3 space-x-2">
       <div class="relative">
         <i
-          class="fas fa-search text-lg absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          class="absolute text-lg text-gray-400 fas fa-search left-3 top-1/2 transform -translate-y-1/2"
         ></i>
         <input
           type="text"
-          class="input input-primary pl-10 pr-4 w-full border-orange-300 border-2"
+          class="w-full pl-10 pr-4 border-2 border-orange-300 input input-primary"
           [formControl]="searchControl"
           placeholder="Search items"
           [readOnly]="
@@ -17,30 +17,30 @@
         />
       </div>
       <button
-        class="btn btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
+        class="text-gray-700 bg-orange-100 border-2 border-orange-300 btn btn-circle"
         [disabled]="!currentUserPermissionsForSelectedStorage?.canCreateItems"
         onclick="add_item_modal.showModal()"
         (click)="clearAddItemForm()"
       >
-        <i class="fa-solid fa-plus text-lg"></i>
+        <i class="text-lg fa-solid fa-plus"></i>
       </button>
       <div>
         <details
-          class="dropdown dropdown-bottom dropdown-end z-50"
+          class="z-50 dropdown dropdown-bottom dropdown-end"
           #storageDropdown
         >
           <summary
-            class="btn btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
+            class="text-gray-700 bg-orange-100 border-2 border-orange-300 btn btn-circle"
             [attr.disabled]="storages?.length === 0 ? 'disabled' : null"
           >
-            <i class="fa-solid fa-box-open text-lg"></i>
+            <i class="text-lg fa-solid fa-box-open"></i>
           </summary>
           <ul
-            class="mt-1 p-2 shadow-xl dropdown-content bg-base-100 rounded-box border-orange-300 border-2"
+            class="p-2 mt-1 border-2 border-orange-300 shadow-xl dropdown-content bg-base-100 rounded-box"
           >
             <li
               *ngFor="let storage of storages"
-              class="rounded-xl menu-title w-full"
+              class="w-full rounded-xl menu-title"
               (click)="storageDropdownClicked(storage)"
               [ngClass]="{
                 'bg-orange-300': storage.id === selectedStorage?.id
@@ -53,21 +53,21 @@
       </div>
       <div>
         <details
-          class="dropdown dropdown-bottom dropdown-end z-50"
+          class="z-50 dropdown dropdown-bottom dropdown-end"
           #sortDropdown
         >
           <summary
-            class="btn btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
+            class="text-gray-700 bg-orange-100 border-2 border-orange-300 btn btn-circle"
             [attr.disabled]="filteredItems?.length === 0 ? 'disabled' : null"
           >
-            <i class="fa-solid fa-sort text-lg"></i>
+            <i class="text-lg fa-solid fa-sort"></i>
           </summary>
           <ul
-            class="mt-1 p-2 shadow-xl dropdown-content bg-base-100 rounded-box border-orange-300 border-2"
+            class="p-2 mt-1 border-2 border-orange-300 shadow-xl dropdown-content bg-base-100 rounded-box"
           >
             <li
               *ngFor="let sortOption of sortOptionsArray"
-              class="rounded-xl menu-title w-full flex justify-items-start items-center"
+              class="flex items-center w-full rounded-xl menu-title justify-items-start"
               (click)="sortDropdownClicked(sortOption)"
               [ngClass]="{
                 'bg-orange-300': sortOption === selectedSortOption
@@ -90,16 +90,16 @@
         filteredItems?.length &&
         currentUserPermissionsForSelectedStorage?.canReadItems
       "
-      class="join join-vertical w-full shadow-xl border-orange-300 border-2"
+      class="w-full border-2 border-orange-300 shadow-xl join join-vertical"
     >
       <div *ngFor="let storageItem of filteredItems">
         <div
-          class="collapse collapse-arrow join-item glass bg-base-100/50 px-3 shadow-xl"
+          class="px-3 shadow-xl collapse collapse-arrow join-item glass bg-base-100/50"
         >
           <input type="radio" name="storage_items_accordion" />
           <!-- <input type="checkbox" /> -->
           <div class="collapse-title text-l">
-            <div class="flex justify-between items-center">
+            <div class="flex items-center justify-between">
               <div
                 *ngIf="
                   getDaysToExpire(storageItem.expirationDate) < 0;
@@ -109,15 +109,15 @@
               ></div>
               <ng-template #statusCircle>
                 <div
-                  class="h-5 w-5 rounded-full shadow-xl border-gray-500 border-2"
+                  class="w-5 h-5 border-2 border-gray-500 rounded-full shadow-xl"
                   [ngClass]="getStatusCircleColorClass(storageItem)"
                 ></div>
               </ng-template>
               <ng-template #expiredIcon>
-                <i class="fa-solid fa-exclamation-triangle text-red-500"></i>
+                <i class="text-red-500 fa-solid fa-exclamation-triangle"></i>
               </ng-template>
 
-              <span class="grow font-semibold ml-4">{{
+              <span class="ml-4 font-semibold grow">{{
                 storageItem.name
               }}</span>
 
@@ -148,14 +148,14 @@
               EXP: {{ getDateFormatted(storageItem.expirationDate) }}
             </p>
             <div
-              class="my-3 border-gray-500 border-dashed border-2 h-1 w-full"
+              class="w-full h-1 my-3 border-2 border-gray-500 border-dashed"
             ></div>
             <div class="flex content-center">
               <p class="my-1 text-sm">
                 <i class="fa-solid fa-calendar-plus"></i>
                 {{ getDateFormatted(storageItem.createdAt) }}
               </p>
-              <p class="ml-3 my-1 text-sm">
+              <p class="my-1 ml-3 text-sm">
                 <i class="fa-solid fa-user"></i>
                 {{ storageItem.lastModifiedBy.substring(0, 28) }}
               </p>

@@ -1,40 +1,40 @@
 <div
-  class="mb-3 flex flex-col p-4 rounded-badge bg-base-100/50 border-orange-300 border-2 shadow-xl"
+  class="flex flex-col p-4 mb-3 border-2 border-orange-300 shadow-xl rounded-badge bg-base-100/50"
 >
-  <span class="mx-4 my-1 text-gray-700 font-semibold">Add new storage</span>
+  <span class="mx-4 my-1 font-semibold text-gray-700">Add new storage</span>
   <div class="flex">
     <input
       type="text"
       placeholder="Name"
-      class="input w-full border-orange-300 border-2"
+      class="w-full border-2 border-orange-300 input"
       [(ngModel)]="newStorageName"
     />
     <button
       type="submit"
-      class="btn ml-2 btn-circle bg-orange-100 border-orange-300 border-2 text-gray-700"
+      class="ml-2 text-gray-700 bg-orange-100 border-2 border-orange-300 btn btn-circle"
       (click)="addStorage()"
     >
-      <i class="fa-solid fa-plus text-lg"></i>
+      <i class="text-lg fa-solid fa-plus"></i>
     </button>
   </div>
 </div>
 
 <div
   *ngIf="storages?.length"
-  class="join join-vertical w-full shadow-xl border-orange-300 border-2"
+  class="w-full border-2 border-orange-300 shadow-xl join join-vertical"
 >
   <div *ngFor="let storage of storages">
     <div
-      class="collapse collapse-arrow join-item glass bg-base-100/50 px-3 shadow-xl"
+      class="px-3 shadow-xl collapse collapse-arrow join-item glass bg-base-100/50"
     >
       <input type="radio" name="storage_items_accordion" />
       <div class="collapse-title text-l">
-        <div class="flex justify-between items-center">
-          <span class="grow font-semibold">{{ storage.name }}</span>
+        <div class="flex items-center justify-between">
+          <span class="font-semibold grow">{{ storage.name }}</span>
 
           <button
             type="submit"
-            class="btn btn-sm btn-ghost mx-2"
+            class="mx-2 btn btn-sm btn-ghost"
             (click)="shareStorage(storage.id, storage.name)"
           >
             <i class="fa-solid fa-share"></i>
