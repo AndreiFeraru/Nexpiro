@@ -10,10 +10,6 @@
           class="input input-primary pl-10 pr-4 w-full border-orange-300 border-2"
           [formControl]="searchControl"
           placeholder="Search items"
-          [readOnly]="
-            filteredItems?.length === 0 ||
-            !currentUserPermissionsForSelectedStorage?.canReadItems
-          "
         />
       </div>
       <button
