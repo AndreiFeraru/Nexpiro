@@ -2,8 +2,8 @@
   "targets": {
     "nexpiro-firebase": {
       "hosting": {
-        "Nexpiro": [
-          "nexpiro-firebase"
+        "nexpiro": [
+          "nexpiro"
         ]
       }
     }
