@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/auth.service';
 import { ToastService } from 'src/app/shared/toast.service';
 
@@ -15,6 +16,7 @@ export class RegisterComponent {
   password: string = '';
 
   constructor(
+    public router: Router,
     private authService: AuthService,
     private toastService: ToastService
   ) {}

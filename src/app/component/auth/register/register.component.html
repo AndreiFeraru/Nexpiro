@@ -32,13 +32,12 @@
       </div>
 
       <div>
-        <label class="label">
-          <a
-            href="/login"
-            class="text-blue-800 underline label-text-alt link link-hover"
-            >Already have an account?</a
-          >
-        </label>
+        <button
+          class="text-xs text-blue-800 underline"
+          (click)="this.router.navigate(['/login'])"
+        >
+          Already have an account?
+        </button>
       </div>
 
       <div class="mt-6 form-control">
