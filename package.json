@@ -12,7 +12,7 @@
     "gen-deploy": "npm run generate-env && firebase deploy",
     "gen-deploy-only-hosting": "npm run generate-env && firebase deploy --only hosting",
     "gen-emulators": "npm run generate-env && firebase emulators:start",
-    "generate-assets": "npx pwa-asset-generator ./src/assets/logo.svg ./src/assets/generated  -m ./src/manifest.json -i ./src/index.html -q 100 -f -b 'linear-gradient(#bae6fd, #7dd3fc)'"
+    "generate-assets": "npx pwa-asset-generator ./src/assets/logo.svg ./src/assets/generated  -m ./src/manifest.json -i ./src/index.html -q 100 -f -b '#7dd3fc'"
   },
   "private": true,
   "dependencies": {
