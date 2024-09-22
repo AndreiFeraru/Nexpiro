@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/auth.service';
 import { ToastService } from 'src/app/shared/toast.service';
 
@@ -13,9 +14,17 @@ import { ToastService } from 'src/app/shared/toast.service';
 export class ForgotPasswordComponent {
   email: string = '';
 
-  constructor(private auth: AuthService, private toastService: ToastService) {}
+  constructor(
+    public router: Router,
+    private auth: AuthService,
+    private toastService: ToastService
+  ) {}
 
   async forgotPassword() {
+    if (!this.email) {
+      this.toastService.showError('Email is empty');
+      return;
+    }
     this.auth.forgotPassword(this.email);
     this.email = '';
   }

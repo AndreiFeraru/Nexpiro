@@ -10,7 +10,9 @@
     "watch": "ng build --watch --configuration=development",
     "test": "ng test",
     "gen-deploy": "npm run generate-env && firebase deploy",
-    "gen-deploy-only-hosting": "npm run generate-env && firebase deploy --only hosting"
+    "gen-deploy-only-hosting": "npm run generate-env && firebase deploy --only hosting",
+    "gen-emulators": "npm run generate-env && firebase emulators:start",
+    "generate-assets": "npx pwa-asset-generator ./src/assets/logo.svg ./src/assets/generated  -m ./src/manifest.json -i ./src/index.html -q 100 -f -b 'linear-gradient(#bae6fd, #7dd3fc)'"
   },
   "private": true,
   "dependencies": {
@@ -28,6 +30,7 @@
     "dotenv": "^16.4.5",
     "firebase": "^10.12.2",
     "firebaseui": "^6.1.0",
+    "pwa-asset-generator": "^6.3.2",
     "rxjs": "~7.8.1",
     "tslib": "^2.6.3",
     "uuid": "^9.0.1",

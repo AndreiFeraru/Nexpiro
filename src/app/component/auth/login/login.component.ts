@@ -20,7 +20,7 @@ export class LoginComponent implements OnDestroy {
   authStateSubscription: Subscription;
 
   constructor(
-    private router: Router,
+    public router: Router,
     private authService: AuthService,
     private toastService: ToastService
   ) {

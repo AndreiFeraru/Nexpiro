@@ -2,7 +2,7 @@
   <div>
     <!-- Top Logo and Text Container -->
     <div
-      class="fixed z-50 max-w-sm px-4 py-2 mx-auto bg-orange-100 border-2 border-orange-300 rounded-full shadow-xl inset-x-4 top-2"
+      class="fixed z-50 max-w-sm px-4 py-2 mx-auto bg-orange-100 border-2 border-orange-300 rounded-full shadow-xl isStandalone:mt-safe-top inset-x-4 top-2"
     >
       <div
         class="flex items-center justify-around space-x-3 text-4xl font-semibold text-gray-700 uppercase"
@@ -28,23 +28,24 @@
       *ngIf="loggedIn"
       class="fixed z-50 flex items-center justify-around max-w-sm px-4 py-2 mx-auto bg-orange-100 border-2 border-orange-300 rounded-full shadow-xl bottom-2 inset-x-4"
     >
-      <a class="tooltip tooltip-top" data-tip="Home" routerLink="/dashboard">
-        <i class="w-6 h-6 text-gray-600 fas fa-home"></i>
-      </a>
-      <a
+      <button
         class="tooltip tooltip-top"
-        data-tip="Storages"
-        routerLink="/manage-storages"
+        (click)="this.router.navigate(['/dashboard'])"
       >
         <i class="w-6 h-6 text-gray-600 fas fa-home"></i>
-      </a>
-      <a
+      </button>
+      <button
         class="tooltip tooltip-top"
-        data-tip="Items"
-        routerLink="/view-storage"
+        (click)="this.router.navigate(['/manage-storages'])"
       >
-        <i class="w-6 h-6 text-gray-600 fas fa-info-circle"></i>
-      </a>
+        <i class="w-6 h-6 text-gray-600 fas fa-box-archive"></i>
+      </button>
+      <button
+        class="tooltip tooltip-top"
+        (click)="this.router.navigate(['/view-storage'])"
+      >
+        <i class="w-6 h-6 text-gray-600 fas fa-pizza-slice"></i>
+      </button>
     </div>
   </div>
 

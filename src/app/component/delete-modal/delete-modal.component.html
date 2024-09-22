@@ -1,11 +1,11 @@
 <dialog id="delete_item_modal" class="modal">
-  <div class="modal-box m-4 w-fit">
+  <div class="m-4 modal-box w-fit">
     <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+      <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">
         ✕
       </button>
     </form>
-    <h3 class="font-bold text-lg">Confirm delete</h3>
+    <h3 class="text-lg font-bold">Confirm delete</h3>
 
     <div class="mt-4">
       Are you sure you want to delete
@@ -15,7 +15,7 @@
 
     <div class="modal-action">
       <form id="modal_action_dialog_form" method="dialog">
-        <button class="btn btn-ghost mr-1">Cancel</button>
+        <button class="mr-1 btn btn-ghost">Cancel</button>
         <button type="submit" class="btn btn-error" (click)="onConfirmDelete()">
           Delete
         </button>

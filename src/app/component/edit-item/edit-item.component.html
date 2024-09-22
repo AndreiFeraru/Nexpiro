@@ -1,19 +1,19 @@
 <dialog id="edit_item_modal" class="modal">
-  <div class="modal-box m-4 w-fit">
+  <div class="m-4 modal-box w-fit">
     <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+      <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">
         ✕
       </button>
     </form>
-    <h3 class="font-bold text-lg">Edit item</h3>
+    <h3 class="text-lg font-bold">Edit item</h3>
     <input
       type="text"
       placeholder="Name"
-      class="input input-ghost w-full"
+      class="w-full input input-ghost"
       [(ngModel)]="name"
     />
     <textarea
-      class="textarea textarea-ghost w-full"
+      class="w-full textarea textarea-ghost"
       placeholder="Description"
       [(ngModel)]="description"
     ></textarea>
@@ -23,15 +23,15 @@
       name="expiration-date"
       min="2024-01-01"
       max="2030-12-31"
-      class="input input-ghost w-full"
+      class="w-full input input-ghost"
       [(ngModel)]="expirationDate"
     />
     <div class="modal-action">
       <form id="modal_action_dialog_form" method="dialog">
-        <button class="btn btn-ghost mr-1">Cancel</button>
+        <button class="mr-1 btn btn-ghost">Cancel</button>
         <button
           type="submit"
-          class="btn bg-orange-100 border-orange-300 border-2"
+          class="bg-orange-100 border-2 border-orange-300 btn"
           (click)="editItem()"
         >
           Confirm

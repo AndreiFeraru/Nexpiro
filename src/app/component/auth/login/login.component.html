@@ -1,6 +1,6 @@
 <div class="hero min-h-fit">
   <!-- TODO put some logo or text here -->
-  <div class="w-full max-w-sm my-auto shadow-2xl card shrink-0 bg-base-100/75">
+  <div class="w-full max-w-sm my-auto shadow-xl card shrink-0 bg-base-100/75">
     <form class="font-bold card-body">
       <div class="flex justify-around">Login</div>
 
@@ -33,20 +33,18 @@
       </div>
 
       <div class="flex flex-row justify-between">
-        <label class="label">
-          <a
-            href="/forgot-password"
-            class="text-blue-800 underline label-text-alt link link-hover"
-            >Forgot password?</a
-          >
-        </label>
-        <label class="label">
-          <a
-            href="/register"
-            class="text-blue-800 underline label-text-alt link link-hover"
-            >Create a new account</a
-          >
-        </label>
+        <button
+          class="text-xs text-blue-800 underline"
+          (click)="this.router.navigate(['/forgot-password'])"
+        >
+          Forgot password?
+        </button>
+        <button
+          class="text-xs text-blue-800 underline"
+          (click)="this.router.navigate(['/register'])"
+        >
+          Create a new account
+        </button>
       </div>
 
       <div class="mt-6 form-control">

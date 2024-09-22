@@ -1,10 +1,10 @@
 <div
-  class="m-10 flex flex-col justify-center items-center space-y-6 p-6 shadow-xl bg-gray-100 border-orange-300 border-2 rounded-badge"
+  class="flex flex-col items-center justify-center p-6 m-10 bg-gray-100 border-2 border-orange-300 shadow-xl space-y-6 rounded-badge"
 >
   <span *ngIf="isButtonDisabled">Resend in {{ countdown }} seconds</span>
 
   <button
-    class="btn text-gray-700 bg-orange-100 border-orange-300 border-2"
+    class="text-gray-700 bg-orange-100 border-2 border-orange-300 btn"
     [disabled]="isButtonDisabled"
     (click)="sendVerificationEmail()"
   >
