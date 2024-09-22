@@ -8,6 +8,9 @@ module.exports = {
         'dot-matrix': ['"DotGothic16"', 'sans-serif'], // Add Google Font here
       },
     },
+    screens: {
+      isStandalone: { raw: '(display-mode: standalone)' },
+    },
   },
   plugins: [require('daisyui')],
   daisyui: {
