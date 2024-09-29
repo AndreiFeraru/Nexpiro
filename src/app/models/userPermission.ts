@@ -6,4 +6,5 @@ export interface UserPermission {
   canCreateItems: boolean;
   canUpdateItems: boolean;
   canDeleteItems: boolean;
+  [key: string]: boolean | string;
 }

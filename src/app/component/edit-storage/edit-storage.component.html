@@ -1,0 +1,94 @@
+<dialog id="edit_storage_modal" class="modal">
+  <div class="max-w-sm modal-box inset-x-4 bg-sky-100">
+    <form method="dialog">
+      <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">
+        ✕
+      </button>
+    </form>
+    <h3 class="text-lg font-bold">Edit storage</h3>
+
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Name</span>
+      </label>
+      <input
+        type="text"
+        placeholder="Name"
+        class="w-full border-2 border-orange-300 input"
+        [(ngModel)]="name"
+      />
+    </div>
+
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Users and permissions</span>
+      </label>
+      <div
+        *ngIf="userPermissions?.length"
+        class="w-full overflow-y-scroll border-2 border-orange-300 shadow-xl join join-vertical max-h-fit"
+      >
+        <div *ngFor="let userPermission of userPermissions">
+          <div
+            class="px-3 shadow-sm collapse collapse-arrow join-item bg-base-100/50"
+          >
+            <input type="checkbox" name="user_permissions_accordion" />
+            <div class="collapse-title">
+              <span class="font-semibold">{{ userPermission.userName }}</span>
+            </div>
+            <div class="collapse-content">
+              <div
+                class="form-control"
+                *ngFor="
+                  let permission of [
+                    { label: 'View items', key: 'canReadItems' },
+                    { label: 'Add items', key: 'canCreateItems' },
+                    { label: 'Edit items', key: 'canUpdateItems' },
+                    { label: 'Delete items', key: 'canDeleteItems' },
+                    { label: 'Manage Storage', key: 'canManageStorage' }
+                  ]
+                "
+              >
+                <label class="cursor-pointer label">
+                  <span class="label-text">{{ permission.label }}</span>
+                  <input
+                    type="checkbox"
+                    [checked]="userPermission[permission.key]"
+                    (change)="
+                      userPermission[permission.key] =
+                        !userPermission[permission.key]
+                    "
+                    class="toggle toggle-accent"
+                  />
+                </label>
+              </div>
+              <div>
+                <button
+                  class="btn btn-error"
+                  (click)="removeUserPermission(userPermission)"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-action">
+      <form id="modal_action_dialog_form" method="dialog">
+        <button class="mr-1 btn btn-ghost">Cancel</button>
+        <button
+          type="submit"
+          class="bg-orange-100 border-2 border-orange-300 btn"
+          (click)="editStorage()"
+        >
+          Confirm
+        </button>
+      </form>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

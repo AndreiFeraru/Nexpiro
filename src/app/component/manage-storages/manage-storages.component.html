@@ -27,7 +27,7 @@
     <div
       class="px-3 shadow-xl collapse collapse-arrow join-item glass bg-base-100/50"
     >
-      <input type="radio" name="storage_items_accordion" />
+      <input type="radio" name="storages_accordion" />
       <div class="collapse-title text-l">
         <div class="flex items-center justify-between">
           <span class="font-semibold grow">{{ storage.name }}</span>
@@ -40,9 +40,12 @@
             <i class="fa-solid fa-share"></i>
           </button>
 
-          <!-- TODO: Implement edit storage -->
-          <div *ngIf="false && currentUserCanManageStorage(storage)">
-            <button class="btn btn-sm btn-ghost">
+          <div *ngIf="currentUserCanManageStorage(storage)">
+            <button
+              class="btn btn-sm btn-ghost"
+              onclick="edit_storage_modal.showModal()"
+              (click)="this.storageSelectedForEdit = storage"
+            >
               <i class="fa-solid fa-pencil"></i>
             </button>
           </div>
@@ -51,7 +54,7 @@
             *ngIf="currentUserCanManageStorage(storage)"
             class="btn btn-sm btn-ghost"
             onclick="delete_item_modal.showModal()"
-            (click)="onDeleteItemClicked(storage)"
+            (click)="this.storageSelectedForDelete = storage"
           >
             <i class="fa-solid fa-trash"></i>
           </button>
@@ -85,3 +88,6 @@
   [itemName]="storageSelectedForDelete?.name ?? ''"
   (deleteConfirmed)="onConfirmDelete()"
 ></app-delete-modal>
+<app-edit-storage
+  [storageSelectedForEdit]="storageSelectedForEdit"
+></app-edit-storage>
