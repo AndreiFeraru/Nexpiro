@@ -9,12 +9,18 @@ import { UserPermission } from '../../models/userPermission';
 import { AuthService } from '../../shared/auth.service';
 import { StorageService } from '../../shared/storage.service';
 import { ToastService } from '../../shared/toast.service';
-import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
+import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
+import { EditStorageComponent } from '../modals/edit-storage/edit-storage.component';
 
 @Component({
   selector: 'app-manage-storages',
   standalone: true,
-  imports: [CommonModule, FormsModule, DeleteModalComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DeleteModalComponent,
+    EditStorageComponent,
+  ],
   templateUrl: './manage-storages.component.html',
   styleUrls: ['./manage-storages.component.css'],
 })
@@ -26,6 +32,7 @@ export class ManageStoragesComponent {
   loggedInUserId: string | undefined;
   loggedInUserName: string | null = null;
 
+  storageSelectedForEdit: Storage | undefined;
   storageSelectedForDelete: Storage | undefined;
 
   constructor(
@@ -179,10 +186,6 @@ export class ManageStoragesComponent {
 
   getDateFormatted(dateString: string) {
     return dateString.split('T')[0];
-  }
-
-  onDeleteItemClicked(item: Storage) {
-    this.storageSelectedForDelete = item;
   }
 
   onConfirmDelete() {

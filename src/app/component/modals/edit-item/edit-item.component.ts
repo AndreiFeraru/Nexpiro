@@ -68,19 +68,12 @@ export class EditItemComponent implements OnChanges {
   }
 
   editItem() {
-    if (this.selectedStorageId === undefined) {
-      this.toastService.showError('No storage selected');
-      return;
-    }
-
-    if (!this.validateForm()) {
-      return;
-    }
+    if (!this.validateForm()) return;
 
     this.updateSelectedForEdit();
 
     this.storageItemService
-      .updateItemInStorage(this.selectedStorageId, this.itemSelectedForEdit!)
+      .updateItemInStorage(this.selectedStorageId!, this.itemSelectedForEdit!)
       .then(
         () => {
           this.toastService.showSuccess(
@@ -89,15 +82,19 @@ export class EditItemComponent implements OnChanges {
           this.clearForm();
           this.itemSelectedForEdit = undefined;
         },
-        (err) => {
+        () => {
           this.toastService.showError(
-            `Error updating item '${this.itemSelectedForEdit!.name}': ${err}`
+            `Error updating item '${this.itemSelectedForEdit!.name}'`
           );
         }
       );
   }
 
   validateForm(): boolean {
+    if (this.selectedStorageId === undefined) {
+      this.toastService.showError('No storage selected');
+      return false;
+    }
     if (!this.itemSelectedForEdit) {
       this.toastService.showError('No item selected for edit');
       return false;
@@ -110,28 +107,26 @@ export class EditItemComponent implements OnChanges {
       this.toastService.showError('Expiration date is required');
       return false;
     }
-
     if (
       (this.currentUser?.displayName === undefined ||
         this.currentUser?.displayName === null) &&
       (this.currentUser?.email === undefined ||
         this.currentUser?.email === null)
     ) {
-      this.toastService.showError(`Could not retrieve user name or email`);
+      this.toastService.showError(
+        `Could not retrieve current user name or email`
+      );
       return false;
     }
-
-    this.name = this.name.trim();
-    this.description = this.description?.trim();
-
     return true;
   }
 
   updateSelectedForEdit() {
-    if (this.itemSelectedForEdit === undefined) return;
-    this.itemSelectedForEdit.name = this.name as string;
-    this.itemSelectedForEdit.description = this.description;
-    this.itemSelectedForEdit.expirationDate = this.expirationDate as string;
+    if (!this.itemSelectedForEdit) return;
+
+    this.itemSelectedForEdit.name = this.name!.trim();
+    this.itemSelectedForEdit.description = this.description!.trim();
+    this.itemSelectedForEdit.expirationDate = this.expirationDate!;
 
     const dateNow = new Date().toISOString();
     this.itemSelectedForEdit.lastModified = dateNow;
