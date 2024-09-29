@@ -28,22 +28,16 @@
       *ngIf="loggedIn"
       class="fixed z-50 flex items-center justify-around max-w-sm px-4 py-2 mx-auto bg-orange-100 border-2 border-orange-300 rounded-full shadow-xl bottom-2 inset-x-4"
     >
-      <button
-        class="tooltip tooltip-top"
-        (click)="this.router.navigate(['/dashboard'])"
-      >
+      <button (click)="this.router.navigate(['/dashboard'])">
         <i class="w-6 h-6 text-gray-600 fas fa-home"></i>
       </button>
-      <button
-        class="tooltip tooltip-top"
-        (click)="this.router.navigate(['/manage-storages'])"
-      >
+      <button (click)="this.router.navigate(['/camera'])">
+        <i class="w-6 h-6 text-gray-600 fas fa-camera"></i>
+      </button>
+      <button (click)="this.router.navigate(['/manage-storages'])">
         <i class="w-6 h-6 text-gray-600 fas fa-box-archive"></i>
       </button>
-      <button
-        class="tooltip tooltip-top"
-        (click)="this.router.navigate(['/view-storage'])"
-      >
+      <button (click)="this.router.navigate(['/view-storage'])">
         <i class="w-6 h-6 text-gray-600 fas fa-pizza-slice"></i>
       </button>
     </div>
