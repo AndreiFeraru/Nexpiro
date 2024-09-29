@@ -9,8 +9,8 @@ import { UserPermission } from '../../models/userPermission';
 import { AuthService } from '../../shared/auth.service';
 import { StorageService } from '../../shared/storage.service';
 import { ToastService } from '../../shared/toast.service';
-import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
-import { EditStorageComponent } from '../edit-storage/edit-storage.component';
+import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
+import { EditStorageComponent } from '../modals/edit-storage/edit-storage.component';
 
 @Component({
   selector: 'app-manage-storages',

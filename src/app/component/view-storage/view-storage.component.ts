@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subscription } from 'rxjs';
-import { AddItemComponent } from 'src/app/component/add-item/add-item.component';
-import { EditItemComponent } from 'src/app/component/edit-item/edit-item.component';
+import { AddItemComponent } from 'src/app/component/modals/add-item/add-item.component';
+import { EditItemComponent } from 'src/app/component/modals/edit-item/edit-item.component';
 import { SortDirection } from 'src/app/models/sortDirection';
 import { SortOption } from 'src/app/models/sortOption';
 import { Storage } from 'src/app/models/storage';
@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/shared/auth.service';
 import { StorageService } from 'src/app/shared/storage.service';
 import { StorageItemService } from 'src/app/shared/storageItem.service';
 import { ToastService } from 'src/app/shared/toast.service';
-import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
+import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
 
 @Component({
   standalone: true,
