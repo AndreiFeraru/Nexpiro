@@ -3,6 +3,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 
+// TODO: Fail if any of these env variables are not set
 const env = {
   production: true,
   firebaseConfig: {
@@ -14,7 +15,8 @@ const env = {
     messagingSenderId: process.env['FIREBASE_MESSAGING_SENDER_ID'] || 'default_messaging_sender_id',
     appId: process.env['FIREBASE_APP_ID'] || 'default_app_id',
     measurementId: process.env['FIREBASE_MEASUREMENT_ID'] || 'default_measurement_id',
-  }
+  },
+  ocrApiKey: process.env['OCR_API_KEY'] || 'helloworld', // TODO add actual OCR API Key in GitHub Secrets
 };
 
 const content = `export const environment = ${JSON.stringify(env, null, 2)};\n`;

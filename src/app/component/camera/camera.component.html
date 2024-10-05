@@ -1,0 +1,14 @@
+<div class="camera-container">
+  <video
+    #videoElement
+    autoplay
+    playsinline
+    class="w-full -inset-x-4 rounded-badge border-2 border-white"
+  ></video>
+  <button
+    class="btn-lg btn-circle bg-red-700 text-white border-2 fixed bottom-20 left-1/2 transform -translate-x-1/2"
+    (click)="captureAndProcessFrame()"
+  >
+    <i class="fas fa-camera"></i>
+  </button>
+</div>
