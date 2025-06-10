@@ -24,7 +24,8 @@
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/assets", "src/manifest.json"],
             "styles": ["src/styles.css"],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": ["tesseract.js"]
           },
           "configurations": {
             "production": {
@@ -115,7 +116,8 @@
           },
           "options": {
             "version": 2,
-            "browserTarget": "Nexpiro:build:production"
+            "browserTarget": "Nexpiro:build:production",
+            "allowedCommonJsDependencies": ["tesseract.js"]
           }
         }
       }
