@@ -13,24 +13,24 @@ export class AuthService implements OnDestroy {
 
   constructor(
     private router: Router,
-    private authService: AuthProviderService,
+    private authProviderService: AuthProviderService,
     private toastService: ToastService
   ) {
-    this.authState$ = this.authService.getAuthState();
+    this.authState$ = this.authProviderService.getAuthState();
   }
 
   ngOnDestroy() {}
 
   async login(email: string, password: string): Promise<void> {
     try {
-      const res = await this.authService.signInWithEmailAndPassword(
+      const res = await this.authProviderService.signInWithEmailAndPassword(
         email,
         password
       );
       if (res.user?.emailVerified == false) {
         this.router.navigate(['/verify-email']);
       } else {
-        await this.authService.setPersistence();
+        await this.authProviderService.setPersistence();
         this.router.navigate(['/dashboard']);
       }
     } catch (error) {
@@ -42,17 +42,18 @@ export class AuthService implements OnDestroy {
 
   async googleSignIn(): Promise<void> {
     try {
-      await this.authService.googleSignIn();
+      await this.authProviderService.googleSignIn();
       // Todo - check if user is verified? (not sure if this is needed for google sign in)
-      await this.authService.setPersistence();
+      await this.authProviderService.setPersistence();
     } catch (error) {
       this.toastService.showError('Google sign-in failed. Please try again.');
+      console.error('Google sign-in error:', error);
     }
   }
 
   async register(email: string, password: string): Promise<void> {
     try {
-      const res = await this.authService.createUserWithEmailAndPassword(
+      const res = await this.authProviderService.createUserWithEmailAndPassword(
         email,
         password
       );
@@ -64,7 +65,7 @@ export class AuthService implements OnDestroy {
 
   async logout(): Promise<void> {
     try {
-      await this.authService.signOut();
+      await this.authProviderService.signOut();
       this.router.navigate(['/login']);
     } catch (error) {
       this.toastService.showError('Logout failed. Please try again.');
@@ -73,7 +74,7 @@ export class AuthService implements OnDestroy {
 
   async forgotPassword(email: string): Promise<void> {
     try {
-      await this.authService.sendPasswordResetEmail(email);
+      await this.authProviderService.sendPasswordResetEmail(email);
       this.toastService.showInfo(
         'Password reset email sent. Please check your inbox.'
       );
@@ -100,6 +101,8 @@ export class AuthService implements OnDestroy {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    return this.authService.currentUser;
+    return this.authProviderService.currentUser;
   }
+
+  async getUserNameFromId(userId: string) {}
 }

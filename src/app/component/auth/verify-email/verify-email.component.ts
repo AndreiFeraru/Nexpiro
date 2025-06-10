@@ -1,8 +1,8 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Subscription, switchMap, tap, timer } from 'rxjs';
-import { AuthService } from 'src/app/shared/auth.service';
-import { ToastService } from 'src/app/shared/toast.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   standalone: true,

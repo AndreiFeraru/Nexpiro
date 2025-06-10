@@ -3,9 +3,9 @@ import { User } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { StorageItem } from 'src/app/models/storageItem';
-import { AuthService } from 'src/app/shared/auth.service';
-import { StorageItemService } from 'src/app/shared/storageItem.service';
-import { ToastService } from 'src/app/shared/toast.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { StorageItemService } from 'src/app/services/storageItem.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   standalone: true,

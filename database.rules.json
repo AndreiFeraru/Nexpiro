@@ -1,6 +1,40 @@
 {
   "rules": {
-    ".read": "auth.uid !== null",
-    ".write": "auth.uid !== null"
+    "sharedTokens": {
+      ".read": "auth != null",
+      "$token": {
+        ".write": "auth != null"
+      }
+    },
+    "storageInfo": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null &&
+        (
+            root.child('storageInfo').child($id).child('userPermissions').child(auth.uid).child('canManageStorage').val() === true ||
+            newData.child('userPermissions').child(auth.uid).child('canManageStorage').val() === true 
+        )"
+      }
+    },
+    "storages": {
+      "$id": {
+        ".read": "auth != null &&
+        ( 
+          root.child('storageInfo').child($id).exists() 
+            ? root.child('storageInfo').child($id).child('userPermissions').child(auth.uid).child('canReadItems').val() === true 
+            : true 
+        )",
+        ".write": "auth != null &&
+        (
+          root.child('storageInfo').child($id).exists() 
+            ? (
+              root.child('storageInfo').child($id).child('userPermissions').child(auth.uid).child('canCreateItems').val() === true || 
+              root.child('storageInfo').child($id).child('userPermissions').child(auth.uid).child('canUpdateItems').val() === true || 
+              root.child('storageInfo').child($id).child('userPermissions').child(auth.uid).child('canDeleteItems').val() === true
+              ) 
+            : false 
+        )"
+      }
+    }
   }
 }

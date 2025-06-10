@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/shared/auth.service';
-import { ToastService } from 'src/app/shared/toast.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   standalone: true,

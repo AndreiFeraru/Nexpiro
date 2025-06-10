@@ -6,13 +6,17 @@ import { AddItemComponent } from 'src/app/component/modals/add-item/add-item.com
 import { EditItemComponent } from 'src/app/component/modals/edit-item/edit-item.component';
 import { SortDirection } from 'src/app/models/sortDirection';
 import { SortOption } from 'src/app/models/sortOption';
-import { Storage } from 'src/app/models/storage';
+import { StorageDetails } from 'src/app/models/storageDetails';
 import { StorageItem } from 'src/app/models/storageItem';
-import { UserPermission } from 'src/app/models/userPermission';
-import { AuthService } from 'src/app/shared/auth.service';
-import { StorageService } from 'src/app/shared/storage.service';
-import { StorageItemService } from 'src/app/shared/storageItem.service';
-import { ToastService } from 'src/app/shared/toast.service';
+import {
+  AllFalseUerPermissionDetails,
+  UserPermissionDetails,
+} from 'src/app/models/userPermissionDetails';
+import { AuthService } from 'src/app/services/auth.service';
+import { StorageService } from 'src/app/services/storage.service';
+import { StorageItemService } from 'src/app/services/storageItem.service';
+import { ToastService } from 'src/app/services/toast.service';
+import { UserPermissionsService } from 'src/app/services/user-permissions.service';
 import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
 
 @Component({
@@ -36,7 +40,7 @@ export class ViewStorageComponent implements OnDestroy {
 
   authStateSubscription: Subscription | undefined;
 
-  storages: Storage[] | undefined;
+  storages: StorageDetails[] | undefined;
 
   storageItemSubscription: Subscription | undefined;
   storageItems: StorageItem[] | undefined;
@@ -53,8 +57,8 @@ export class ViewStorageComponent implements OnDestroy {
   itemSelectedForEdit: StorageItem | undefined;
   itemSelectedForDelete: StorageItem | undefined;
 
-  selectedStorage: Storage | undefined;
-  currentUserPermissionsForSelectedStorage: UserPermission | undefined;
+  selectedStorage: StorageDetails | undefined;
+  currentUserPermissionsForSelectedStorage: UserPermissionDetails | undefined;
 
   loggedInUserId: string | undefined;
 
@@ -62,7 +66,8 @@ export class ViewStorageComponent implements OnDestroy {
     private authService: AuthService,
     private toastService: ToastService,
     private storageService: StorageService,
-    private storageItemService: StorageItemService
+    private storageItemService: StorageItemService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -103,10 +108,10 @@ export class ViewStorageComponent implements OnDestroy {
       },
     });
 
-    this.InitSearch();
+    this.initSearch();
   }
 
-  private InitSearch() {
+  private initSearch() {
     this.searchControl.valueChanges
       .pipe(debounceTime(500))
       .subscribe((query) => {
@@ -159,46 +164,27 @@ export class ViewStorageComponent implements OnDestroy {
     }
   }
 
-  storageDropdownClicked(selectedItem: Storage) {
+  storageDropdownClicked(selectedItem: StorageDetails) {
     this.storageDropdown.nativeElement.open = false;
     this.selectStorageAndLoadItems(selectedItem);
   }
 
-  selectStorageAndLoadItems(storage: Storage) {
+  selectStorageAndLoadItems(storage: StorageDetails) {
     this.selectedStorage = storage;
     localStorage.setItem('lastUsedStorageId', storage.id);
     this.loadStorageItems(storage.id);
     this.updateCurrentUserPermissionsForSelectedStorage(storage);
   }
 
-  updateCurrentUserPermissionsForSelectedStorage(storage: Storage) {
-    const userPermissions = storage.userPermissions?.find(
-      (permission) => permission.userId === this.loggedInUserId
-    );
+  updateCurrentUserPermissionsForSelectedStorage(storage: StorageDetails) {
+    const permissions =
+      this.userPermissionsService.getUserPermissionsForStorage(
+        this.loggedInUserId || '',
+        storage
+      );
 
-    if (!userPermissions) {
-      this.toastService.showError('User permissions not found');
-      this.currentUserPermissionsForSelectedStorage = {
-        userId: '',
-        userName: '',
-        canCreateItems: false,
-        canDeleteItems: false,
-        canManageStorage: false,
-        canReadItems: false,
-        canUpdateItems: false,
-      };
-      return;
-    }
-
-    this.currentUserPermissionsForSelectedStorage = {
-      userId: '',
-      userName: '',
-      canCreateItems: userPermissions.canCreateItems,
-      canDeleteItems: userPermissions.canDeleteItems,
-      canManageStorage: userPermissions.canManageStorage,
-      canReadItems: userPermissions.canReadItems,
-      canUpdateItems: userPermissions.canUpdateItems,
-    };
+    this.currentUserPermissionsForSelectedStorage =
+      permissions || AllFalseUerPermissionDetails;
   }
 
   sortDropdownClicked(selectedItem: SortOption) {
@@ -257,7 +243,6 @@ export class ViewStorageComponent implements OnDestroy {
       (new Date(expirationDate).getTime() - new Date().getTime()) /
         (1000 * 60 * 60 * 24)
     );
-    console.log(daysToExpire);
     return daysToExpire;
   }
 

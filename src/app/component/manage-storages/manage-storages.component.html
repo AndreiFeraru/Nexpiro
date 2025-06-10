@@ -66,16 +66,20 @@
           {{ getDateFormatted(storage.createdAt) }}
         </p>
         <div class="my-1 text-sm">
-          <div *ngFor="let permission of storage.userPermissions">
+          <div
+            *ngFor="let userPermission of storage.userPermissions | keyvalue"
+          >
             <div>
               <i
                 [ngClass]="
-                  permission.canManageStorage
+                  userPermission.value.canManageStorage
                     ? 'fa-solid fa-crown'
                     : 'fa-solid fa-user'
                 "
               ></i>
-              <span class="ml-1">{{ permission.userName }}</span>
+              <span class="ml-1">Uid: {{ userPermission.key }}</span>
+              <!-- TODO figure out a way to show user name here -->
+              <!-- <span class="ml-1">{{ permission.userName }}</span> -->
             </div>
           </div>
         </div>
