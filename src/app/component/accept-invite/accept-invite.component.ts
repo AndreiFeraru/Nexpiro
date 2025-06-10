@@ -2,9 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ShareToken } from 'src/app/models/sharedToken';
-import { AuthService } from 'src/app/shared/auth.service';
-import { StorageService } from 'src/app/shared/storage.service';
-import { ToastService } from 'src/app/shared/toast.service';
+import { AllFalseUerPermissionDetails } from 'src/app/models/userPermissionDetails';
+import { AuthService } from 'src/app/services/auth.service';
+import { ShareTokenService } from 'src/app/services/share-token.service';
+import { StorageService } from 'src/app/services/storage.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-accept-invite',
@@ -21,10 +23,12 @@ export class AcceptInviteComponent {
     private route: ActivatedRoute,
     private storageService: StorageService,
     private authService: AuthService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private tokenService: ShareTokenService
   ) {}
 
   ngOnInit(): void {
+    debugger;
     if (this.route.snapshot.url[0].path !== 'invite') {
       return;
     }
@@ -33,14 +37,14 @@ export class AcceptInviteComponent {
       this.toastService.showError('Token is missing');
       return;
     }
-    this.storageService
+    this.tokenService
       .validateToken(token)
       .then((isValid) => {
         if (!isValid) {
           this.toastService.showError('Invalid token');
           return;
         }
-        this.storageService
+        this.tokenService
           .getShareTokenByToken(token)
           .then((shareToken) => {
             this.shareToken = shareToken;
@@ -72,7 +76,7 @@ export class AcceptInviteComponent {
       await this.storageService.addUserToStorage(
         this.shareToken.storageId,
         user.uid,
-        user.displayName ?? user.email ?? 'Unknown User'
+        this.shareToken.permissions || AllFalseUerPermissionDetails
       );
       this.toastService.showSuccess('Successfully added to storage');
       this.router.navigate(['manage-storages']);

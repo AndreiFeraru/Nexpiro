@@ -3,8 +3,15 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach to Chrome",
+      "name": "Attach to Chrome [4201]",
       "port": 4201,
+      "request": "attach",
+      "type": "chrome",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Attach to Chrome [4200]",
+      "port": 4200,
       "request": "attach",
       "type": "chrome",
       "webRoot": "${workspaceFolder}"

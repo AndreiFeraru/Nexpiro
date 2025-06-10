@@ -2,13 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { Utils } from 'src/app/common/utils';
 import { ShareToken } from 'src/app/models/sharedToken';
-import { Storage } from 'src/app/models/storage';
+import { StorageDetails } from 'src/app/models/storageDetails';
+import { ShareTokenService } from 'src/app/services/share-token.service';
 import { v4 as uuidv4 } from 'uuid';
-import { UserPermission } from '../../models/userPermission';
-import { AuthService } from '../../shared/auth.service';
-import { StorageService } from '../../shared/storage.service';
-import { ToastService } from '../../shared/toast.service';
+import { UserPermissionDetails } from '../../models/userPermissionDetails';
+import { AuthService } from '../../services/auth.service';
+import { StorageService } from '../../services/storage.service';
+import { ToastService } from '../../services/toast.service';
 import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
 import { EditStorageComponent } from '../modals/edit-storage/edit-storage.component';
 
@@ -27,18 +29,23 @@ import { EditStorageComponent } from '../modals/edit-storage/edit-storage.compon
 export class ManageStoragesComponent {
   authStateSubscription: Subscription | undefined;
 
-  storages: Storage[] | undefined;
+  storages: StorageDetails[] | undefined;
   newStorageName: string | undefined;
   loggedInUserId: string | undefined;
   loggedInUserName: string | null = null;
 
-  storageSelectedForEdit: Storage | undefined;
-  storageSelectedForDelete: Storage | undefined;
+  storageSelectedForEdit: StorageDetails | undefined;
+  storageSelectedForDelete: StorageDetails | undefined;
+
+  userIdsToNames: { [key: string]: string } = {};
+
+  getDateFormatted = Utils.getDateFormatted;
 
   constructor(
     private authService: AuthService,
     private storageService: StorageService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private shareTokenService: ShareTokenService
   ) {}
 
   ngOnInit(): void {
@@ -84,9 +91,7 @@ export class ManageStoragesComponent {
       return;
     }
 
-    const userPermission: UserPermission = {
-      userId: this.loggedInUserId,
-      userName: this.loggedInUserName ?? 'Unknown User',
+    const userPermission: UserPermissionDetails = {
       canManageStorage: true,
       canCreateItems: true,
       canDeleteItems: true,
@@ -94,11 +99,11 @@ export class ManageStoragesComponent {
       canUpdateItems: true,
     };
 
-    const newStorage: Storage = {
+    const newStorage: StorageDetails = {
       id: uuidv4(),
       name: this.newStorageName.trim(),
       createdAt: new Date().toISOString(),
-      userPermissions: [userPermission],
+      userPermissions: { [this.loggedInUserId]: userPermission },
     };
 
     this.storageService
@@ -114,27 +119,21 @@ export class ManageStoragesComponent {
     this.newStorageName = '';
   }
 
-  getUserIdsString(permissions: UserPermission[]) {
-    if (!permissions || permissions.length === 0) {
-      return '';
-    }
-    return permissions.map((permission) => permission.userId).join(', ');
-  }
-
-  currentUserCanManageStorage(storage: Storage): boolean {
+  currentUserCanManageStorage(storage: StorageDetails): boolean {
     if (!storage.userPermissions) {
       return false;
     }
-    const userPermission = storage.userPermissions.find(
-      (permission) => permission.userId === this.loggedInUserId
-    );
-    return !!userPermission?.canManageStorage;
+
+    const userPermission =
+      storage.userPermissions[this.loggedInUserId!] !== undefined &&
+      storage.userPermissions[this.loggedInUserId!].canManageStorage;
+
+    return userPermission || false;
   }
 
   async shareStorage(storageId: string, storageName: string) {
     const token = await this.generateShortCode(8);
     const expirationDate = Date.now() + 1000 * 60 * 60 * 24; // 24 hours
-
     // TODO: Add permissions to the token
     const shareToken: ShareToken = {
       token: token,
@@ -143,9 +142,15 @@ export class ManageStoragesComponent {
       storageId: storageId,
       storageName: storageName,
       sharedByUserName: this.loggedInUserName ?? 'Unknown User',
+      permissions: {
+        canManageStorage: true,
+        canReadItems: true,
+        canCreateItems: true,
+        canUpdateItems: true,
+        canDeleteItems: true,
+      },
     };
-
-    this.storageService
+    this.shareTokenService
       .addShareToken(shareToken)
       .then(() => {
         const link = `${window.location.origin}/invite/${shareToken.token}`;
@@ -179,13 +184,9 @@ export class ManageStoragesComponent {
           Math.floor(Math.random() * allowedCharacters.length)
         )
       ).join('');
-    } while (await this.storageService.tokenExists(result));
+    } while (await this.shareTokenService.tokenExists(result)); // TODO think about potential infinite loop
 
     return result;
-  }
-
-  getDateFormatted(dateString: string) {
-    return dateString.split('T')[0];
   }
 
   onConfirmDelete() {

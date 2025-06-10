@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Storage } from 'src/app/models/storage';
-import { UserPermission } from 'src/app/models/userPermission';
-import { StorageService } from 'src/app/shared/storage.service';
-import { ToastService } from 'src/app/shared/toast.service';
+import { StorageDetails } from 'src/app/models/storageDetails';
+import { UserPermissionDetails } from 'src/app/models/userPermissionDetails';
+import { StorageService } from 'src/app/services/storage.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-edit-storage',
@@ -15,9 +15,9 @@ import { ToastService } from 'src/app/shared/toast.service';
 })
 export class EditStorageComponent implements OnChanges {
   name: string | undefined;
-  userPermissions: UserPermission[] | undefined;
+  userPermissions: { [userId: string]: UserPermissionDetails } | undefined;
 
-  @Input() storageSelectedForEdit: Storage | undefined;
+  @Input() storageSelectedForEdit: StorageDetails | undefined;
 
   constructor(
     private storageService: StorageService,
@@ -36,14 +36,14 @@ export class EditStorageComponent implements OnChanges {
     this.updateFormValues(this.storageSelectedForEdit);
   }
 
-  updateFormValues(storageSelectedForEdit: Storage | undefined) {
+  updateFormValues(storageSelectedForEdit: StorageDetails | undefined) {
     this.name = storageSelectedForEdit?.name;
     this.userPermissions = storageSelectedForEdit?.userPermissions;
   }
 
   clearForm() {
     this.name = '';
-    this.userPermissions = [];
+    this.userPermissions = undefined;
   }
 
   editStorage() {
@@ -55,8 +55,8 @@ export class EditStorageComponent implements OnChanges {
       .editStorage(this.storageSelectedForEdit!)
       .then(() => {
         this.toastService.showSuccess('Storage updated successfully');
-        this.clearForm();
-        this.storageSelectedForEdit = undefined;
+        // this.clearForm();
+        // this.storageSelectedForEdit = undefined;
       })
       .catch(() => {
         this.toastService.showError(
@@ -74,7 +74,10 @@ export class EditStorageComponent implements OnChanges {
       this.toastService.showError('Storage name is required');
       return false;
     }
-    if (!this.userPermissions || this.userPermissions.length === 0) {
+    if (
+      !this.userPermissions ||
+      Object.keys(this.userPermissions).length === 0
+    ) {
       this.toastService.showError('User permissions are required');
       return false;
     }
@@ -87,12 +90,17 @@ export class EditStorageComponent implements OnChanges {
     this.storageSelectedForEdit!.userPermissions = this.userPermissions!;
   }
 
-  removeUserPermission(userPermission: UserPermission) {
-    const index = this.userPermissions!.indexOf(userPermission);
-    if (index === -1 || 1) {
+  removeUserPermission(userId: string) {
+    if (!this.userPermissions || !this.userPermissions[userId]) {
       this.toastService.showError('Could not remove user permission'); // TODO Fix toasts showing behind modal
       return;
     }
-    this.userPermissions!.splice(index, 1);
+    if (Object.keys(this.userPermissions).length === 1) {
+      this.toastService.showError(
+        'Cannot remove last user permission from storage'
+      );
+      return;
+    }
+    delete this.userPermissions[userId];
   }
 }

@@ -1,19 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {
-  Auth,
-  GoogleAuthProvider,
-  User,
-  authState,
-  browserLocalPersistence,
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-} from '@angular/fire/auth';
+import { User, sendEmailVerification } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AuthProviderService } from '../wrappers/auth-provider.service';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -24,25 +13,24 @@ export class AuthService implements OnDestroy {
 
   constructor(
     private router: Router,
-    private authService: Auth,
+    private authProviderService: AuthProviderService,
     private toastService: ToastService
   ) {
-    this.authState$ = authState(authService);
+    this.authState$ = this.authProviderService.getAuthState();
   }
 
   ngOnDestroy() {}
 
   async login(email: string, password: string): Promise<void> {
     try {
-      const res = await signInWithEmailAndPassword(
-        this.authService,
+      const res = await this.authProviderService.signInWithEmailAndPassword(
         email,
         password
       );
       if (res.user?.emailVerified == false) {
         this.router.navigate(['/verify-email']);
       } else {
-        await this.authService.setPersistence(browserLocalPersistence);
+        await this.authProviderService.setPersistence();
         this.router.navigate(['/dashboard']);
       }
     } catch (error) {
@@ -54,17 +42,18 @@ export class AuthService implements OnDestroy {
 
   async googleSignIn(): Promise<void> {
     try {
-      await signInWithPopup(this.authService, new GoogleAuthProvider());
-      await this.authService.setPersistence(browserLocalPersistence);
+      await this.authProviderService.googleSignIn();
+      // Todo - check if user is verified? (not sure if this is needed for google sign in)
+      await this.authProviderService.setPersistence();
     } catch (error) {
       this.toastService.showError('Google sign-in failed. Please try again.');
+      console.error('Google sign-in error:', error);
     }
   }
 
   async register(email: string, password: string): Promise<void> {
     try {
-      const res = await createUserWithEmailAndPassword(
-        this.authService,
+      const res = await this.authProviderService.createUserWithEmailAndPassword(
         email,
         password
       );
@@ -76,7 +65,7 @@ export class AuthService implements OnDestroy {
 
   async logout(): Promise<void> {
     try {
-      await signOut(this.authService);
+      await this.authProviderService.signOut();
       this.router.navigate(['/login']);
     } catch (error) {
       this.toastService.showError('Logout failed. Please try again.');
@@ -85,7 +74,7 @@ export class AuthService implements OnDestroy {
 
   async forgotPassword(email: string): Promise<void> {
     try {
-      await sendPasswordResetEmail(this.authService, email);
+      await this.authProviderService.sendPasswordResetEmail(email);
       this.toastService.showInfo(
         'Password reset email sent. Please check your inbox.'
       );
@@ -112,6 +101,8 @@ export class AuthService implements OnDestroy {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    return this.authService.currentUser;
+    return this.authProviderService.currentUser;
   }
+
+  async getUserNameFromId(userId: string) {}
 }

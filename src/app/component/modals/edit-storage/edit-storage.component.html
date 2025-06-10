@@ -24,38 +24,89 @@
         <span class="label-text">Users and permissions</span>
       </label>
       <div
-        *ngIf="userPermissions?.length"
+        *ngIf="userPermissions && (userPermissions | keyvalue).length > 0"
         class="w-full overflow-y-scroll border-2 border-orange-300 shadow-xl join join-vertical max-h-fit"
       >
-        <div *ngFor="let userPermission of userPermissions">
+        <div *ngFor="let userPermission of userPermissions | keyvalue">
           <div
-            class="px-3 shadow-sm collapse collapse-arrow join-item bg-base-100/50"
+            class="overflow-x-scroll shadow-sm collapse collapse-arrow join-item bg-base-100/50"
           >
             <input type="checkbox" name="user_permissions_accordion" />
             <div class="collapse-title">
-              <span class="font-semibold">{{ userPermission.userName }}</span>
+              <!-- TODO figure out a way to display user name instead of uid -->
+              <span class="font-semibold w-20">{{
+                userPermission.key.length <= 20
+                  ? userPermission.key
+                  : userPermission.key.slice(0, 20) + "..."
+              }}</span>
+              <!-- TODO figure out a way to fix UI with really long user names (becomes scrolling) -->
             </div>
             <div class="collapse-content">
-              <div
-                class="form-control"
-                *ngFor="
-                  let permission of [
-                    { label: 'View items', key: 'canReadItems' },
-                    { label: 'Add items', key: 'canCreateItems' },
-                    { label: 'Edit items', key: 'canUpdateItems' },
-                    { label: 'Delete items', key: 'canDeleteItems' },
-                    { label: 'Manage Storage', key: 'canManageStorage' }
-                  ]
-                "
-              >
+              <div class="form-control">
                 <label class="cursor-pointer label">
-                  <span class="label-text">{{ permission.label }}</span>
+                  <span class="label-text">View items</span>
                   <input
                     type="checkbox"
-                    [checked]="userPermission[permission.key]"
+                    [checked]="userPermission.value.canReadItems"
                     (change)="
-                      userPermission[permission.key] =
-                        !userPermission[permission.key]
+                      userPermission.value.canReadItems =
+                        !userPermission.value.canReadItems
+                    "
+                    class="toggle toggle-accent"
+                  />
+                </label>
+              </div>
+              <div class="form-control">
+                <label class="cursor-pointer label">
+                  <span class="label-text">Add items</span>
+                  <input
+                    type="checkbox"
+                    [checked]="userPermission.value.canCreateItems"
+                    (change)="
+                      userPermission.value.canCreateItems =
+                        !userPermission.value.canCreateItems
+                    "
+                    class="toggle toggle-accent"
+                  />
+                </label>
+              </div>
+              <div class="form-control">
+                <label class="cursor-pointer label">
+                  <span class="label-text">Edit items</span>
+                  <input
+                    type="checkbox"
+                    [checked]="userPermission.value.canUpdateItems"
+                    (change)="
+                      userPermission.value.canUpdateItems =
+                        !userPermission.value.canUpdateItems
+                    "
+                    class="toggle toggle-accent"
+                  />
+                </label>
+              </div>
+              <div class="form-control">
+                <label class="cursor-pointer label">
+                  <span class="label-text">Delete items</span>
+                  <input
+                    type="checkbox"
+                    [checked]="userPermission.value.canDeleteItems"
+                    (change)="
+                      userPermission.value.canDeleteItems =
+                        !userPermission.value.canDeleteItems
+                    "
+                    class="toggle toggle-accent"
+                  />
+                </label>
+              </div>
+              <div class="form-control">
+                <label class="cursor-pointer label">
+                  <span class="label-text">Manage storage</span>
+                  <input
+                    type="checkbox"
+                    [checked]="userPermission.value.canManageStorage"
+                    (change)="
+                      userPermission.value.canManageStorage =
+                        !userPermission.value.canManageStorage
                     "
                     class="toggle toggle-accent"
                   />
@@ -64,7 +115,7 @@
               <div>
                 <button
                   class="btn btn-error"
-                  (click)="removeUserPermission(userPermission)"
+                  (click)="removeUserPermission(userPermission.key)"
                 >
                   Remove
                 </button>

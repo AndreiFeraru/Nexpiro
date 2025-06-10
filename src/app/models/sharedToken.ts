@@ -1,3 +1,5 @@
+import { UserPermissionDetails } from './userPermissionDetails';
+
 export interface ShareToken {
   token: string;
   expirationDate: string;
@@ -5,4 +7,5 @@ export interface ShareToken {
   storageId: string;
   storageName: string;
   sharedByUserName: string;
+  permissions?: UserPermissionDetails;
 }
