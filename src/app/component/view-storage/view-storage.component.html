@@ -22,7 +22,7 @@
       </button>
       <div>
         <details
-          class="z-50 dropdown dropdown-bottom dropdown-end"
+          class="z-40 dropdown dropdown-bottom dropdown-end"
           #storageDropdown
         >
           <summary
@@ -49,7 +49,7 @@
       </div>
       <div>
         <details
-          class="z-50 dropdown dropdown-bottom dropdown-end"
+          class="z-40 dropdown dropdown-bottom dropdown-end"
           #sortDropdown
         >
           <summary
@@ -114,7 +114,9 @@
               </ng-template>
 
               <span class="ml-4 font-semibold grow">{{
-                storageItem.name
+                storageItem.name.length <= 18
+                  ? storageItem.name
+                  : storageItem.name.slice(0, 18) + "..."
               }}</span>
 
               <button

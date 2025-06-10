@@ -1,34 +1,43 @@
 <dialog id="add_item_modal" class="modal">
-  <div class="m-4 modal-box w-fit">
+  <div class="max-w-sm modal-box inset-x-4 bg-sky-100">
     <form method="dialog">
       <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">
         ✕
       </button>
     </form>
-    <h3 class="text-lg font-bold">Add item</h3>
+
+    <h3 class="text-lg font-bold mb-4">Add item</h3>
+
     <input
       type="text"
       placeholder="Name"
-      class="w-full input input-ghost"
+      class="w-full border-2 border-orange-300 input mb-2"
       [(ngModel)]="name"
     />
+
     <textarea
-      class="w-full textarea textarea-ghost"
+      class="w-full border-2 border-orange-300 textarea mb-0.5"
       placeholder="Description"
       [(ngModel)]="description"
     ></textarea>
+
     <input
       type="date"
       id="start"
       name="expiration-date"
       min="2024-01-01"
       max="2030-12-31"
-      class="w-full input input-ghost"
+      class="w-full border-2 border-orange-300 input"
       [(ngModel)]="expirationDate"
     />
+
     <div class="modal-action">
       <form id="modal_action_dialog_form" method="dialog">
-        <button class="mr-1 btn btn-ghost">Cancel</button>
+        <button
+          class="mr-1 text-gray-600 border-2 border-orange-300 btn btn-ghost"
+        >
+          Cancel
+        </button>
         <button
           type="submit"
           class="bg-orange-100 border-2 border-orange-300 btn"

@@ -5,6 +5,7 @@
         ✕
       </button>
     </form>
+
     <h3 class="text-lg font-bold">Edit storage</h3>
 
     <div class="form-control">
@@ -25,11 +26,12 @@
       </label>
       <div
         *ngIf="userPermissions && (userPermissions | keyvalue).length > 0"
-        class="w-full overflow-y-scroll border-2 border-orange-300 shadow-xl join join-vertical max-h-fit"
+        class="w-full overflow-y-scroll border-2 border-orange-300 shadow-xl join join-vertical max-h-96"
+        style="scrollbar-width: none"
       >
         <div *ngFor="let userPermission of userPermissions | keyvalue">
           <div
-            class="overflow-x-scroll shadow-sm collapse collapse-arrow join-item bg-base-100/50"
+            class="shadow-sm collapse collapse-arrow join-item bg-base-100/50"
           >
             <input type="checkbox" name="user_permissions_accordion" />
             <div class="collapse-title">
