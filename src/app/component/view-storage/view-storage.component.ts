@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddItemComponent } from 'src/app/component/modals/add-item/add-item.component';
@@ -285,5 +291,25 @@ export class ViewStorageComponent implements OnDestroy {
       .catch((err) => {
         this.toastService.showError(`Could not delete item: ${err}`);
       });
+  }
+
+  zonClickOutside() {
+    console.log('Clicked outside');
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    if (
+      this.storageDropdown.nativeElement.open &&
+      !this.storageDropdown.nativeElement.contains(event.target)
+    ) {
+      this.storageDropdown.nativeElement.removeAttribute('open');
+    }
+    if (
+      this.sortDropdown.nativeElement.open &&
+      !this.sortDropdown.nativeElement.contains(event.target)
+    ) {
+      this.sortDropdown.nativeElement.removeAttribute('open');
+    }
   }
 }
