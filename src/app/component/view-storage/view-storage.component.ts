@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddItemComponent } from 'src/app/component/modals/add-item/add-item.component';
@@ -222,7 +228,7 @@ export class ViewStorageComponent implements OnDestroy {
     });
   }
 
-  getStatusCircleColorClass(storageItem: any): string {
+  getStatusCircleColorClass(storageItem: StorageItem): string {
     if (!storageItem.expirationDate) {
       return 'hidden';
     }
@@ -244,6 +250,14 @@ export class ViewStorageComponent implements OnDestroy {
         (1000 * 60 * 60 * 24)
     );
     return daysToExpire;
+  }
+
+  getDaysToExpireText(expirationDate: string): string {
+    const daysToExpire = this.getDaysToExpire(expirationDate);
+
+    if (daysToExpire > 9) {
+      return '9+';
+    } else return '' + daysToExpire;
   }
 
   getSortDirectionClass(): string {
@@ -277,5 +291,25 @@ export class ViewStorageComponent implements OnDestroy {
       .catch((err) => {
         this.toastService.showError(`Could not delete item: ${err}`);
       });
+  }
+
+  zonClickOutside() {
+    console.log('Clicked outside');
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    if (
+      this.storageDropdown.nativeElement.open &&
+      !this.storageDropdown.nativeElement.contains(event.target)
+    ) {
+      this.storageDropdown.nativeElement.removeAttribute('open');
+    }
+    if (
+      this.sortDropdown.nativeElement.open &&
+      !this.sortDropdown.nativeElement.contains(event.target)
+    ) {
+      this.sortDropdown.nativeElement.removeAttribute('open');
+    }
   }
 }

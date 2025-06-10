@@ -22,7 +22,7 @@
       </button>
       <div>
         <details
-          class="z-50 dropdown dropdown-bottom dropdown-end"
+          class="z-40 dropdown dropdown-bottom dropdown-end"
           #storageDropdown
         >
           <summary
@@ -49,7 +49,7 @@
       </div>
       <div>
         <details
-          class="z-50 dropdown dropdown-bottom dropdown-end"
+          class="z-40 dropdown dropdown-bottom dropdown-end"
           #sortDropdown
         >
           <summary
@@ -90,7 +90,7 @@
     >
       <div *ngFor="let storageItem of filteredItems">
         <div
-          class="px-3 shadow-xl collapse collapse-arrow join-item glass bg-base-100/50"
+          class="px-1.5 py-0 shadow-xl collapse collapse-arrow join-item glass bg-base-100/50"
         >
           <input type="radio" name="storage_items_accordion" />
           <!-- <input type="checkbox" /> -->
@@ -103,18 +103,32 @@
                   else statusCircle
                 "
               ></div>
+
               <ng-template #statusCircle>
                 <div
-                  class="w-5 h-5 border-2 border-gray-500 rounded-full shadow-xl"
+                  class="w-6 h-6 border-2 border-gray-500 rounded-full shadow-xl flex items-center"
                   [ngClass]="getStatusCircleColorClass(storageItem)"
-                ></div>
+                >
+                  <span
+                    class="flex items-center justify-center p-0 w-full text-xs font-bold text-gray-500 text-rounded-full text-center"
+                  >
+                    {{ getDaysToExpireText(storageItem.expirationDate) }}
+                  </span>
+                </div>
               </ng-template>
+
               <ng-template #expiredIcon>
-                <i class="text-red-500 fa-solid fa-exclamation-triangle"></i>
+                <div
+                  class="flex items-center justify-center text-lg w-6 h-6 opacity-85"
+                >
+                  <i class="text-red-500 fa-solid fa-exclamation-triangle"></i>
+                </div>
               </ng-template>
 
               <span class="ml-4 font-semibold grow">{{
-                storageItem.name
+                storageItem.name.length <= 18
+                  ? storageItem.name
+                  : storageItem.name.slice(0, 18) + "..."
               }}</span>
 
               <button
