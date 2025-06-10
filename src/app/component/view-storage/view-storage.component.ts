@@ -222,7 +222,7 @@ export class ViewStorageComponent implements OnDestroy {
     });
   }
 
-  getStatusCircleColorClass(storageItem: any): string {
+  getStatusCircleColorClass(storageItem: StorageItem): string {
     if (!storageItem.expirationDate) {
       return 'hidden';
     }
@@ -244,6 +244,14 @@ export class ViewStorageComponent implements OnDestroy {
         (1000 * 60 * 60 * 24)
     );
     return daysToExpire;
+  }
+
+  getDaysToExpireText(expirationDate: string): string {
+    const daysToExpire = this.getDaysToExpire(expirationDate);
+
+    if (daysToExpire > 9) {
+      return '9+';
+    } else return '' + daysToExpire;
   }
 
   getSortDirectionClass(): string {
