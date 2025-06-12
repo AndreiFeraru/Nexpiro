@@ -1,10 +1,58 @@
-.line-animation {
-  width: 100%; /* Start with full width */
-  animation: shrinkWidth 4s linear; /* Adjust timing as needed */
+.circular-timer {
+  position: absolute;
+  width: 47px;
+  height: 47px;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
-@keyframes shrinkWidth {
-  100% {
-    width: 0; /* Shrink width to 0 */
-  }
+.circular-timer .circle {
+  width: 47px;
+  height: 47px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.circular-timer .circle.left {
+  clip: rect(0, 47px, 47px, 23.5px);
+}
+
+.circular-timer .circle.right {
+  clip: rect(0px, 23.5px, 47px, 0px);
+}
+
+.circular-timer .circle span {
+  width: 47px;
+  height: 47px;
+  border-radius: 100%;
+  position: absolute;
+  border: 5px solid rgba(0, 0, 0, 0.4);
+  top: 0;
+  left: 0;
+}
+
+.circular-timer .circle.left span {
+  clip: rect(0px, 23.5px, 47px, 0px);
+  animation: unload-left 4s linear forwards;
+}
+
+.circular-timer .circle.right span {
+  clip: rect(0, 47px, 47px, 23.5px);
+  animation: unload-right 4s linear forwards;
+}
+
+@keyframes unload-left {
+  0% { transform: rotate(180deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes unload-right {
+  0% { transform: rotate(180deg); }
+  50% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
 }
