@@ -97,14 +97,14 @@ export class ViewStorageComponent implements OnDestroy {
             this.selectStorageAndLoadItems(this.storages[0]);
             return;
           }
-          const storage = this.storages.find(
+          const lastUsedStorage = this.storages.find(
             (storage) => storage.id === lastUsedStorageId
           );
-          if (!storage) {
+          if (!lastUsedStorage) {
             this.selectStorageAndLoadItems(this.storages[0]);
             return;
           }
-          this.selectStorageAndLoadItems(storage);
+          this.selectStorageAndLoadItems(lastUsedStorage);
         } catch (err) {
           this.toastService.showError(`Could not load storages ${err}`);
         }
@@ -146,6 +146,11 @@ export class ViewStorageComponent implements OnDestroy {
           if (items) {
             this.storageItems = items;
             this.filteredItems = this.storageItems;
+            this.sortArrayBySelectedOption(
+              this.filteredItems,
+              this.selectedSortOption,
+              this.selectedSortDirection
+            );
             this.searchControl.setValue('');
           } else {
             this.toastService.showInfo('No items found in storage');
@@ -200,12 +205,17 @@ export class ViewStorageComponent implements OnDestroy {
     } else {
       this.selectedSortOption = selectedItem;
     }
-    this.sortArrayBySelectedOption(this.filteredItems, this.selectedSortOption);
+    this.sortArrayBySelectedOption(
+      this.filteredItems,
+      this.selectedSortOption,
+      this.selectedSortDirection
+    );
   }
 
   sortArrayBySelectedOption(
     array: StorageItem[] | undefined,
-    sortOption: SortOption
+    sortOption: SortOption = this.selectedSortOption,
+    sortDirection: SortDirection = this.selectedSortDirection
   ) {
     if (!array) return;
     array.sort((a, b) => {
@@ -224,7 +234,7 @@ export class ViewStorageComponent implements OnDestroy {
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
           break;
       }
-      return this.selectedSortDirection == SortDirection.Ascending ? res : -res;
+      return sortDirection == SortDirection.Ascending ? res : -res;
     });
   }
 
