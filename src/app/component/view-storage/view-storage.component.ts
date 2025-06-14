@@ -246,11 +246,14 @@ export class ViewStorageComponent implements OnDestroy {
     const daysToExpire = this.getDaysToExpire(storageItem.expirationDate);
 
     if (daysToExpire <= 1) {
-      return 'bg-gradient-to-b from-red-50 to-red-200';
+      // return 'bg-gradient-to-b from-red-50 to-red-200';
+      return 'bg-red-200';
     } else if (daysToExpire <= 4) {
-      return 'bg-gradient-to-b from-yellow-50 to-orange-200';
+      // return 'bg-gradient-to-b from-yellow-50 to-orange-200';
+      return 'bg-orange-200';
     } else {
-      return 'bg-gradient-to-b from-green-50 to-green-200';
+      // return 'bg-gradient-to-b from-green-50 to-green-200';
+      return 'bg-green-200';
     }
   }
 
@@ -270,10 +273,14 @@ export class ViewStorageComponent implements OnDestroy {
     } else return '' + daysToExpire;
   }
 
-  getSortDirectionClass(): string {
-    return this.selectedSortDirection === SortDirection.Ascending
-      ? 'fa-sort-asc'
-      : 'fa-sort-desc';
+  getSortDirectionClass(sortOption: string): string {
+    const icon: string =
+      this.selectedSortDirection === SortDirection.Ascending
+        ? 'fa-sort-asc'
+        : 'fa-sort-desc';
+    const visibility: string =
+      this.selectedSortOption === sortOption ? 'visible' : 'hidden';
+    return `${icon} ${visibility}`;
   }
 
   getDateFormatted(date: string): string {
@@ -303,6 +310,12 @@ export class ViewStorageComponent implements OnDestroy {
       });
   }
 
+  getDropdownItemClass(isSelected: boolean): string {
+    return isSelected
+      ? 'bg-gray-600 text-gray-300'
+      : 'text-gray-600 hover:bg-gray-300';
+  }
+
   zonClickOutside() {
     console.log('Clicked outside');
   }
@@ -320,6 +333,32 @@ export class ViewStorageComponent implements OnDestroy {
       !this.sortDropdown.nativeElement.contains(event.target)
     ) {
       this.sortDropdown.nativeElement.removeAttribute('open');
+    }
+  }
+
+  // Add properties for the filter controls
+  showBgControls = false;
+  blur = 3;
+  hueRotate = 160;
+  saturation = 1.2;
+  contrast = 0.4;
+  brightness = 1.4;
+
+  // Add method to toggle control visibility
+  toggleBgControls() {
+    this.showBgControls = !this.showBgControls;
+  }
+
+  // Add method to update the background filters
+  updateBgFilters() {
+    const filterString = `blur(${this.blur}px) hue-rotate(${this.hueRotate}deg) saturate(${this.saturation}) contrast(${this.contrast}) brightness(${this.brightness})`;
+
+    // Get the background element and apply the filters
+    const bgElement = document.querySelector(
+      '.fixed.inset-0.-z-10 .absolute.inset-0'
+    ) as HTMLElement;
+    if (bgElement) {
+      bgElement.style.filter = filterString;
     }
   }
 }

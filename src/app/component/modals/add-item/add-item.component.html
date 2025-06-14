@@ -1,17 +1,19 @@
 <dialog id="add_item_modal" class="modal">
-  <div class="max-w-sm modal-box inset-x-4 bg-sky-100">
+  <div
+    class="max-w-sm modal-box inset-x-4 bg-white/30 border-t-[2px] border-b-[2px] border-white border-opacity-35 shadow-xl backdrop-blur-sm ring-1 ring-black/5"
+  >
     <form method="dialog">
       <button class="absolute btn btn-sm btn-circle btn-ghost right-2 top-2">
         ✕
       </button>
     </form>
 
-    <h3 class="text-lg font-bold mb-4">Add item</h3>
+    <h3 class="text-lg font-bold mb-4 ml-2">Add item</h3>
 
     <input
       type="text"
       placeholder="Name"
-      class="w-full border-2 border-orange-300 input mb-2"
+      class="input w-full mb-2 shadow-sm bg-white/70 border-2 border-orange-400"
       [(ngModel)]="name"
     />
 

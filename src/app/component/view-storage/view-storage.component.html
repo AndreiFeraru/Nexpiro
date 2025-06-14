@@ -1,180 +1,178 @@
 <div>
-  <div>
-    <div class="flex mb-3 space-x-2">
-      <div class="relative">
-        <i
-          class="absolute text-lg text-gray-400 fas fa-search left-3 top-1/2 transform -translate-y-1/2"
-        ></i>
-        <input
-          type="text"
-          class="w-full pl-10 pr-4 border-2 border-orange-300 input input-primary"
-          [formControl]="searchControl"
-          placeholder="Search items"
-        />
-      </div>
-      <button
-        class="text-gray-700 bg-orange-100 border-2 border-orange-300 btn btn-circle"
-        [disabled]="!currentUserPermissionsForSelectedStorage?.canCreateItems"
-        onclick="add_item_modal.showModal()"
-        (click)="clearAddItemForm()"
-      >
-        <i class="text-lg fa-solid fa-plus"></i>
-      </button>
-      <div>
-        <details
-          class="z-40 dropdown dropdown-bottom dropdown-end"
-          #storageDropdown
-        >
-          <summary
-            class="text-gray-700 bg-orange-100 border-2 border-orange-300 btn btn-circle"
-            [attr.disabled]="storages?.length === 0 ? 'disabled' : null"
-          >
-            <i class="text-lg fa-solid fa-box-open"></i>
-          </summary>
-          <ul
-            class="p-2 mt-1 border-2 border-orange-300 shadow-xl dropdown-content bg-base-100 rounded-box"
-          >
-            <li
-              *ngFor="let storage of storages"
-              class="w-full rounded-xl menu-title"
-              (click)="storageDropdownClicked(storage)"
-              [ngClass]="{
-                'bg-orange-300': storage.id === selectedStorage?.id
-              }"
-            >
-              {{ storage.name }}
-            </li>
-          </ul>
-        </details>
-      </div>
-      <div>
-        <details
-          class="z-40 dropdown dropdown-bottom dropdown-end"
-          #sortDropdown
-        >
-          <summary
-            class="text-gray-700 bg-orange-100 border-2 border-orange-300 btn btn-circle"
-            [attr.disabled]="filteredItems?.length === 0 ? 'disabled' : null"
-          >
-            <i class="text-lg fa-solid fa-sort"></i>
-          </summary>
-          <ul
-            class="p-2 mt-1 border-2 border-orange-300 shadow-xl dropdown-content bg-base-100 rounded-box"
-          >
-            <li
-              *ngFor="let sortOption of sortOptionsArray"
-              class="flex items-center w-full rounded-xl menu-title justify-items-start"
-              (click)="sortDropdownClicked(sortOption)"
-              [ngClass]="{
-                'bg-orange-300': sortOption === selectedSortOption
-              }"
-            >
-              <i
-                *ngIf="selectedSortOption === sortOption"
-                class="fa-solid"
-                [ngClass]="getSortDirectionClass()"
-              ></i>
-              <span class="mx-1">{{ sortOption }}</span>
-            </li>
-          </ul>
-        </details>
-      </div>
+  <div
+    class="flex space-x-2 p-3 mb-3 z-40 relative rounded-badge nx-glass border-opacity-30"
+  >
+    <!-- Search box -->
+    <div class="relative group">
+      <!-- class="absolute text-lg text-orange-500 fas fa-search left-3 top-1/2 transform -translate-y-1/2" -->
+      <i
+        class="absolute text-lg fas fa-search left-3 top-1/2 transform -translate-y-1/2 transition-transform duration-200 ease-in-out group-hover:-translate-y-4"
+      ></i>
+      <input
+        type="text"
+        class="input w-full pl-10 pr-4 nx-glass-borders nx-input-glass bg-white/30 text-orange-500"
+        [formControl]="searchControl"
+        placeholder="Search"
+      />
     </div>
 
-    <div
-      *ngIf="
-        filteredItems?.length &&
-        currentUserPermissionsForSelectedStorage?.canReadItems
-      "
-      class="w-full border-2 border-orange-300 shadow-xl join join-vertical"
+    <!-- Add item -->
+    <button
+      class="btn btn-circle nx-btn-glass"
+      [disabled]="!currentUserPermissionsForSelectedStorage?.canCreateItems"
+      onclick="add_item_modal.showModal()"
+      (click)="clearAddItemForm()"
     >
-      <div *ngFor="let storageItem of filteredItems">
-        <div
-          class="px-1.5 py-0 shadow-xl collapse collapse-arrow join-item glass bg-base-100/50"
+      <i class="text-lg fa-solid fa-plus"></i>
+    </button>
+
+    <!-- Storage dropdown -->
+    <div>
+      <details class="dropdown dropdown-bottom dropdown-end" #storageDropdown>
+        <summary
+          class="btn btn-circle nx-btn-glass"
+          [attr.disabled]="storages?.length === 0 ? 'disabled' : null"
         >
-          <input type="radio" name="storage_items_accordion" />
-          <!-- <input type="checkbox" /> -->
-          <div class="collapse-title text-l">
-            <div class="flex items-center justify-between">
-              <div
-                *ngIf="
-                  getDaysToExpire(storageItem.expirationDate) < 0;
-                  then expiredIcon;
-                  else statusCircle
-                "
-              ></div>
+          <i class="text-lg fa-solid fa-box-open"></i>
+        </summary>
+        <ul
+          class="p-2 mt-1 border-2 border-orange-300 shadow-xl dropdown-content bg-base-100 rounded-box"
+        >
+          <li
+            *ngFor="let storage of storages"
+            class="w-full rounded-xl menu-title"
+            (click)="storageDropdownClicked(storage)"
+            [ngClass]="{
+              'bg-orange-300': storage.id === selectedStorage?.id
+            }"
+          >
+            {{ storage.name }}
+          </li>
+        </ul>
+      </details>
+    </div>
 
-              <ng-template #statusCircle>
-                <div
-                  class="w-6 h-6 border-2 border-gray-500 rounded-full shadow-xl flex items-center"
-                  [ngClass]="getStatusCircleColorClass(storageItem)"
-                >
-                  <span
-                    class="flex items-center justify-center p-0 w-full text-xs font-bold text-gray-500 text-rounded-full text-center"
-                  >
-                    {{ getDaysToExpireText(storageItem.expirationDate) }}
-                  </span>
-                </div>
-              </ng-template>
+    <!-- Sort dropdown -->
+    <div class="relative">
+      <details class="dropdown dropdown-bottom dropdown-end" #sortDropdown>
+        <summary
+          class="btn btn-circle nx-btn-glass"
+          [attr.disabled]="filteredItems?.length === 0 ? 'disabled' : null"
+        >
+          <i class="text-lg fa-solid fa-sort"></i>
+        </summary>
+        <ul
+          class="p-2 mt-1 border-2 dropdown-content rounded-box bg-white/30 border-t-[1px] border-l-[1px] border-b-0 border-r-0 border-opacity-50 shadow-md"
+        >
+          <li
+            *ngFor="let sortOption of sortOptionsArray"
+            class="flex items-center w-full rounded-xl menu-title"
+            (click)="sortDropdownClicked(sortOption)"
+            [ngClass]="getDropdownItemClass(sortOption == selectedSortOption)"
+          >
+            <i
+              class="fa fa-solid"
+              [ngClass]="getSortDirectionClass(sortOption)"
+            ></i>
+            <span class="mx-1">{{ sortOption }}</span>
+          </li>
+        </ul>
+      </details>
+    </div>
+  </div>
 
-              <ng-template #expiredIcon>
-                <div
-                  class="flex items-center justify-center text-lg w-6 h-6 opacity-85"
-                >
-                  <i class="text-red-500 fa-solid fa-exclamation-triangle"></i>
-                </div>
-              </ng-template>
-
-              <span class="ml-4 font-semibold grow">{{
-                storageItem.name.length <= 18
-                  ? storageItem.name
-                  : storageItem.name.slice(0, 18) + "..."
-              }}</span>
-
-              <button
-                *ngIf="currentUserPermissionsForSelectedStorage?.canUpdateItems"
-                class="btn btn-sm btn-ghost"
-                onclick="edit_item_modal.showModal()"
-                (click)="itemSelectedForEdit = storageItem"
-              >
-                <i class="fa-solid fa-pencil"></i>
-              </button>
-
-              <button
-                *ngIf="currentUserPermissionsForSelectedStorage?.canDeleteItems"
-                class="btn btn-sm btn-ghost"
-                onclick="delete_item_modal.showModal()"
-                (click)="onDeleteItemClicked(storageItem)"
-              >
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </div>
-          </div>
-          <div class="collapse-content">
-            <p
-              class="font-semibold font-dot-matrix"
-              style="letter-spacing: 0.2rem"
-            >
-              EXP: {{ getDateFormatted(storageItem.expirationDate) }}
-            </p>
+  <!-- Items -->
+  <div
+    *ngIf="
+      filteredItems?.length &&
+      currentUserPermissionsForSelectedStorage?.canReadItems
+    "
+    class="w-full join join-vertical border-t-[1px] border-l-[1px] border-opacity-5 shadow-xl backdrop-blur-md"
+  >
+    <div *ngFor="let storageItem of filteredItems">
+      <div class="px-1.5 py-0 collapse collapse-arrow join-item bg-base-100/20">
+        <input type="radio" name="storage_items_accordion" />
+        <!-- <input type="checkbox" /> -->
+        <div class="collapse-title text-l">
+          <div class="flex items-center justify-between">
             <div
-              class="w-full h-1 my-3 border-2 border-gray-500 border-dashed"
+              *ngIf="
+                getDaysToExpire(storageItem.expirationDate) < 0;
+                then expiredIcon;
+                else statusCircle
+              "
             ></div>
-            <div class="flex content-center">
-              <p class="my-1 text-sm">
-                <i class="fa-solid fa-calendar-plus"></i>
-                {{ getDateFormatted(storageItem.createdAt) }}
-              </p>
-              <p class="my-1 ml-3 text-sm">
-                <i class="fa-solid fa-user"></i>
-                {{ storageItem.lastModifiedBy.substring(0, 28) }}
-              </p>
-            </div>
 
-            <p class="my-1 font-thin">
-              {{ storageItem.description }}
+            <ng-template #statusCircle>
+              <div
+                class="w-6 h-6 rounded-full shadow-xl flex items-center"
+                [ngClass]="getStatusCircleColorClass(storageItem)"
+              >
+                <span
+                  class="flex items-center justify-center p-0 w-full text-xs font-semibold text-gray-700 text-rounded-full text-center"
+                >
+                  {{ getDaysToExpireText(storageItem.expirationDate) }}
+                </span>
+              </div>
+            </ng-template>
+
+            <ng-template #expiredIcon>
+              <div
+                class="flex items-center justify-center text-lg w-6 h-6 opacity-85"
+              >
+                <i class="text-red-500 fa-solid fa-exclamation-triangle"></i>
+              </div>
+            </ng-template>
+
+            <span class="ml-4 font-semibold grow">{{
+              storageItem.name.length <= 18
+                ? storageItem.name
+                : storageItem.name.slice(0, 18) + "..."
+            }}</span>
+
+            <button
+              *ngIf="currentUserPermissionsForSelectedStorage?.canUpdateItems"
+              class="btn btn-sm btn-ghost"
+              onclick="edit_item_modal.showModal()"
+              (click)="itemSelectedForEdit = storageItem"
+            >
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+
+            <button
+              *ngIf="currentUserPermissionsForSelectedStorage?.canDeleteItems"
+              class="btn btn-sm btn-ghost"
+              onclick="delete_item_modal.showModal()"
+              (click)="onDeleteItemClicked(storageItem)"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="collapse-content">
+          <p
+            class="font-semibold font-dot-matrix"
+            style="letter-spacing: 0.2rem"
+          >
+            EXP: {{ getDateFormatted(storageItem.expirationDate) }}
+          </p>
+          <div
+            class="w-full h-1 my-3 border-2 border-gray-500 border-dashed"
+          ></div>
+          <div class="flex content-center">
+            <p class="my-1 text-sm">
+              <i class="fa-solid fa-calendar-plus"></i>
+              {{ getDateFormatted(storageItem.createdAt) }}
+            </p>
+            <p class="my-1 ml-3 text-sm">
+              <i class="fa-solid fa-user"></i>
+              {{ storageItem.lastModifiedBy.substring(0, 28) }}
             </p>
           </div>
+
+          <p class="my-1 font-extralight">
+            {{ storageItem.description }}
+          </p>
         </div>
       </div>
     </div>
@@ -191,4 +189,106 @@
     [itemName]="itemSelectedForDelete?.name ?? ''"
     (deleteConfirmed)="onConfirmDelete()"
   ></app-delete-modal>
+
+  <!-- Toggle button for the controls -->
+  <button
+    (click)="toggleBgControls()"
+    class="btn btn-ghost btn-xl text-3xl btn-circle fixed bottom-20 right-4 bg-base-200/80"
+    title="Background Settings"
+  >
+    ⚙️
+  </button>
+
+  <!-- Background filter controls -->
+  <div
+    *ngIf="showBgControls"
+    class="fixed bottom-14 right-4 p-3 rounded-lg bg-base-200/80 shadow-lg w-64 z-50"
+  >
+    <div class="flex justify-between mb-2">
+      <h3 class="text-sm font-bold">Background Controls</h3>
+      <button (click)="toggleBgControls()" class="btn btn-xs btn-circle">
+        ✕
+      </button>
+    </div>
+
+    <div class="form-control">
+      <label class="label py-0">
+        <span class="label-text text-xs">Blur: {{ blur }}px</span>
+      </label>
+      <input
+        type="range"
+        min="0"
+        max="20"
+        [(ngModel)]="blur"
+        (ngModelChange)="updateBgFilters()"
+        class="range range-xs"
+      />
+    </div>
+
+    <div class="form-control">
+      <label class="label py-0">
+        <span class="label-text text-xs">Hue: {{ hueRotate }}°</span>
+      </label>
+      <input
+        type="range"
+        min="0"
+        max="360"
+        [(ngModel)]="hueRotate"
+        (ngModelChange)="updateBgFilters()"
+        class="range range-xs"
+      />
+    </div>
+
+    <div class="form-control">
+      <label class="label py-0">
+        <span class="label-text text-xs">Saturation: {{ saturation }}</span>
+      </label>
+      <input
+        type="range"
+        min="0"
+        max="3"
+        step="0.1"
+        [(ngModel)]="saturation"
+        (ngModelChange)="updateBgFilters()"
+        class="range range-xs"
+      />
+    </div>
+
+    <div class="form-control">
+      <label class="label py-0">
+        <span class="label-text text-xs">Contrast: {{ contrast }}</span>
+      </label>
+      <input
+        type="range"
+        min="0"
+        max="2"
+        step="0.1"
+        [(ngModel)]="contrast"
+        (ngModelChange)="updateBgFilters()"
+        class="range range-xs"
+      />
+    </div>
+
+    <div class="form-control">
+      <label class="label py-0">
+        <span class="label-text text-xs">Brightness: {{ brightness }}</span>
+      </label>
+      <input
+        type="range"
+        min="0.5"
+        max="2"
+        step="0.1"
+        [(ngModel)]="brightness"
+        (ngModelChange)="updateBgFilters()"
+        class="range range-xs"
+      />
+    </div>
+
+    <div class="mt-2">
+      <p class="text-xs font-mono break-all opacity-80">
+        filter: {{ blur }}px {{ hueRotate }}deg {{ saturation }} {{ contrast }}
+        {{ brightness }}
+      </p>
+    </div>
+  </div>
 </div>

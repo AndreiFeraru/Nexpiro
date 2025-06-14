@@ -11,3 +11,47 @@
 .collapse-title button {
   pointer-events: all;
 }
+
+body {
+  font-family: "Nunito", sans-serif;
+  /* font-family: 'Roboto', sans-serif; */
+}
+
+.nx-glass-borders {
+  @apply border-t-2 border-b-2 border-l-0 border-r-0;
+  @apply border-white border-opacity-30;
+}
+
+.nx-glass {
+  @apply bg-white/20;
+  @apply nx-glass-borders;
+  @apply shadow-md;
+  @apply backdrop-blur-sm;
+}
+
+.nx-btn-glass {
+  @apply text-gray-700;
+  @apply nx-glass;
+}
+
+.nx-btn-glass:hover {
+  @apply -translate-y-0.5;
+  @apply bg-white/40;
+  @apply nx-glass-borders; 
+  @apply border-t-gray-300 border-b-gray-200
+}
+
+.nx-input-glass {
+  @apply transition-transform duration-200 ease-in-out;
+}
+
+.nx-input-glass::placeholder {
+  @apply text-gray-700;
+}
+
+.nx-input-glass:hover {
+  @apply -translate-y-0.5;
+  @apply bg-white/40;
+  @apply border-t-gray-300 border-b-gray-100;
+  @apply transition-all duration-200; 
+}
