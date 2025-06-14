@@ -20,6 +20,12 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
       rel="stylesheet"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=DotGothic16&amp;display=swap"
       rel="stylesheet"
@@ -207,7 +213,39 @@
       media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
   </head>
-  <body class="min-h-screen bg-sky-300 isStandalone:pt-safe-top">
+  <body class="min-h-screen isStandalone:pt-safe-top relative">
+    <!-- Background image with blur -->
+    <div class="fixed inset-0 -z-10">
+      <div
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style="
+          background-image: url('/assets/minimalistic-orange.jpeg');
+          /* filter: hue-rotate(140deg); */
+          filter: blur(3px) hue-rotate(160deg) saturate(1.2) contrast(0.4)
+            brightness(1.4);
+          transform: scale(1.05);
+        "
+      ></div>
+    </div>
+
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-black/5 to-black/15"
+    ></div>
+
+    <!-- add black vignette effect -->
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent"
+    ></div>
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent"
+    ></div>
+    <div
+      class="absolute inset-0 bg-gradient-to-l from-black/5 to-transparent"
+    ></div>
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-black/5 to-transparent"
+    ></div>
+
     <app-root></app-root>
     <noscript
       >Please enable JavaScript to continue using this application.</noscript
