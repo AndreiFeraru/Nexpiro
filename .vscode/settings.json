@@ -1,8 +1,5 @@
 {
-    "cSpell.words": [
-        "Nexpiro",
-        "uuidv"
-    ],
-    "scss.lint.unknownAtRules": "ignore",
-    "css.lint.unknownAtRules": "ignore"
+  "cSpell.words": ["Nexpiro", "preventdefault", "uuidv"],
+  "scss.lint.unknownAtRules": "ignore",
+  "css.lint.unknownAtRules": "ignore"
 }

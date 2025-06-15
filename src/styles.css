@@ -23,35 +23,94 @@ body {
 }
 
 .nx-glass {
-  @apply bg-white/20;
+  @apply bg-white/10;
   @apply nx-glass-borders;
   @apply shadow-md;
-  @apply backdrop-blur-sm;
+  @apply backdrop-blur-md;
+  @apply text-gray-800;
 }
 
 .nx-btn-glass {
-  @apply text-gray-700;
   @apply nx-glass;
 }
 
 .nx-btn-glass:hover {
+  /* make slightly bigger (1.05x)*/
+  /* @apply transition-transform duration-200 ease-in-out;
+  @apply transform;
+  @apply scale-105; */
+
+  /* raise slightly higher on hover */
   @apply -translate-y-0.5;
+  
   @apply bg-white/40;
   @apply nx-glass-borders; 
   @apply border-t-gray-300 border-b-gray-200
 }
 
-.nx-input-glass {
-  @apply transition-transform duration-200 ease-in-out;
+@media (hover: none) {
+  .nx-btn-glass:hover {
+    @apply translate-y-0;
+    @apply bg-white/20;
+    @apply nx-glass-borders;
+    @apply border-white border-opacity-30;
+  }
 }
 
-.nx-input-glass::placeholder {
-  @apply text-gray-700;
+.nx-input-glass {
+  @apply nx-glass;
+}
+
+.nx-hoverable {
+  transition-duration: 200ms;
+}
+
+.nx-hoverable:hover {
+  @apply -translate-y-0.5;
+  @apply bg-white/40;
+  @apply border-t-gray-300 border-b-gray-100;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
+}
+.nx-pressable:active:hover,
+  .nx-pressable:active:focus {
+  animation: button-pop 0s ease-out;
+  transform: scale(var(--btn-focus-scale, 0.97));
 }
 
 .nx-input-glass:hover {
   @apply -translate-y-0.5;
   @apply bg-white/40;
   @apply border-t-gray-300 border-b-gray-100;
-  @apply transition-all duration-200; 
+}
+
+.nx-input-blank:focus {
+  @apply bg-transparent;
+  @apply border-0;
+}
+
+@media (hover: none) {
+  .nx-input-glass:hover {
+    @apply translate-y-0;
+    @apply bg-white/20;
+    @apply nx-glass-borders;
+  }
+}
+
+.nx-input-glass::placeholder {
+  @apply text-gray-800;
+}
+
+.nx-placeholder-gray-800::placeholder {
+  @apply text-gray-800;
+}
+
+.bouncy-animation {
+  @apply transition-all;
+  transition-duration: 400ms;
+  @apply ease-in-out
+}
+
+.nx-dropdown {
+  
 }
