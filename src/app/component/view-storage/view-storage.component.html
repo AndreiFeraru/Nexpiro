@@ -1,83 +1,112 @@
 <div>
-  <div
-    class="flex space-x-2 p-3 mb-3 z-40 relative rounded-badge nx-glass border-opacity-30"
-  >
-    <!-- Search box -->
-    <div class="relative group">
-      <!-- class="absolute text-lg text-orange-500 fas fa-search left-3 top-1/2 transform -translate-y-1/2" -->
-      <i
-        class="absolute text-lg fas fa-search left-3 top-1/2 transform -translate-y-1/2 transition-transform duration-200 ease-in-out group-hover:-translate-y-4"
-      ></i>
-      <input
-        type="text"
-        class="input w-full pl-10 pr-4 nx-glass-borders nx-input-glass bg-white/30 text-orange-500"
-        [formControl]="searchControl"
-        placeholder="Search"
-      />
-    </div>
-
-    <!-- Add item -->
-    <button
-      class="btn btn-circle nx-btn-glass"
-      [disabled]="!currentUserPermissionsForSelectedStorage?.canCreateItems"
-      onclick="add_item_modal.showModal()"
-      (click)="clearAddItemForm()"
-    >
-      <i class="text-lg fa-solid fa-plus"></i>
-    </button>
-
-    <!-- Storage dropdown -->
-    <div>
-      <details class="dropdown dropdown-bottom dropdown-end" #storageDropdown>
+  <div class="flex justify-center items-center gap-2 py-1 mb-2">
+    <div class="flex flex-grow items-center gap-2 py-1 max-w-60">
+      <!-- Storages dropdown -->
+      <details
+        class="dropdown dropdown-bottom bouncy-animation relative z-40"
+        [ngClass]="{
+          'min-w-12 w-12': ui_isSearchExpanded,
+          'w-1/5 flex-grow': !ui_isSearchExpanded
+        }"
+        onclick="event.preventDefault()"
+        (click)="handleStorageDropdownClick()"
+        #storageDropdown
+      >
         <summary
-          class="btn btn-circle nx-btn-glass"
+          class="btn nx-btn-glass w-full pl-3"
           [attr.disabled]="storages?.length === 0 ? 'disabled' : null"
         >
-          <i class="text-lg fa-solid fa-box-open"></i>
+          <div
+            class="w-full h-full flex items-center justify-start whitespace-nowrap"
+          >
+            <i class="text-xl fas fa-box-open mr-3"></i>
+            <span class="overflow-hidden">
+              {{ this.selectedStorage?.name ?? "" }}</span
+            >
+          </div>
         </summary>
         <ul
-          class="p-2 mt-1 border-2 border-orange-300 shadow-xl dropdown-content bg-base-100 rounded-box"
+          class="absolute p-2 mt-1 border-2 dropdown-content rounded-box nx-glass"
         >
           <li
             *ngFor="let storage of storages"
-            class="w-full rounded-xl menu-title"
+            class="w-full rounded-xl menu-title font-medium nx-hoverable text-gray-800"
             (click)="storageDropdownClicked(storage)"
             [ngClass]="{
-              'bg-orange-300': storage.id === selectedStorage?.id
-            }"
+                'nx-glass': storage == selectedStorage,
+              }"
           >
             {{ storage.name }}
           </li>
         </ul>
       </details>
-    </div>
 
-    <!-- Sort dropdown -->
-    <div class="relative">
-      <details class="dropdown dropdown-bottom dropdown-end" #sortDropdown>
-        <summary
-          class="btn btn-circle nx-btn-glass"
-          [attr.disabled]="filteredItems?.length === 0 ? 'disabled' : null"
+      <!-- Search -->
+      <div
+        class="flex items-center h-12 bouncy-animation rounded-full nx-glass nx-hoverable nx-pressable overflow-hidden"
+        [ngClass]="{
+          'w-1/5 flex-grow': ui_isSearchExpanded,
+          'min-w-12 w-12': !ui_isSearchExpanded
+        }"
+        (click)="ui_isSearchExpanded = true"
+      >
+        <div
+          class="w-full flex items-center justify-start group overflow-hidden whitespace-normal"
+          (click)="ui_isSearchExpanded = true; searchInput.focus()"
         >
-          <i class="text-lg fa-solid fa-sort"></i>
-        </summary>
-        <ul
-          class="p-2 mt-1 border-2 dropdown-content rounded-box bg-white/30 border-t-[1px] border-l-[1px] border-b-0 border-r-0 border-opacity-50 shadow-md"
-        >
-          <li
-            *ngFor="let sortOption of sortOptionsArray"
-            class="flex items-center w-full rounded-xl menu-title"
-            (click)="sortDropdownClicked(sortOption)"
-            [ngClass]="getDropdownItemClass(sortOption == selectedSortOption)"
+          <i class="fas fa-search text-xl text-gray-800 h-full mx-3"></i>
+          <input
+            #searchInput
+            type="text"
+            class="input w-full nx-placeholder-gray-800 transition-all"
+            [ngClass]="{
+              'bg-white/20 shadow-md': ui_isSearchExpanded,
+              'bg-transparent shadow-none': !ui_isSearchExpanded
+            }"
+            [formControl]="searchControl"
+            placeholder="Search"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 py-1">
+      <!-- Add item -->
+      <button
+        class="btn btn-md btn-circle nx-btn-glass flex-none"
+        [disabled]="!currentUserPermissionsForSelectedStorage?.canCreateItems"
+        onclick="add_item_modal.showModal()"
+        (click)="clearAddItemForm()"
+      >
+        <i class="text-lg fa-solid fa-plus"></i>
+      </button>
+
+      <!-- Sort dropdown -->
+      <div class="relative z-40 flex-none">
+        <details class="dropdown dropdown-bottom dropdown-end" #sortDropdown>
+          <summary
+            class="btn btn-circle nx-btn-glass"
+            [attr.disabled]="filteredItems?.length === 0 ? 'disabled' : null"
           >
-            <i
-              class="fa fa-solid"
-              [ngClass]="getSortDirectionClass(sortOption)"
-            ></i>
-            <span class="mx-1">{{ sortOption }}</span>
-          </li>
-        </ul>
-      </details>
+            <i class="text-lg fa-solid fa-sort"></i>
+          </summary>
+          <ul class="p-2 mt-1 border-2 dropdown-content rounded-box nx-glass">
+            <li
+              *ngFor="let sortOption of sortOptionsArray"
+              class="flex items-center w-full rounded-xl menu-title font-medium nx-hoverable text-gray-800"
+              (click)="sortDropdownClicked(sortOption)"
+              [ngClass]="{
+                'nx-glass': sortOption === selectedSortOption
+              }"
+            >
+              <i
+                class="fa fa-solid h-full"
+                [ngClass]="getSortDirectionClass(sortOption)"
+              ></i>
+              <span class="mx-1">{{ sortOption }}</span>
+            </li>
+          </ul>
+        </details>
+      </div>
     </div>
   </div>
 
@@ -87,10 +116,10 @@
       filteredItems?.length &&
       currentUserPermissionsForSelectedStorage?.canReadItems
     "
-    class="w-full join join-vertical border-t-[1px] border-l-[1px] border-opacity-5 shadow-xl backdrop-blur-md"
+    class="w-full join join-vertical nx-glass"
   >
     <div *ngFor="let storageItem of filteredItems">
-      <div class="px-1.5 py-0 collapse collapse-arrow join-item bg-base-100/20">
+      <div class="px-1.5 py-0 collapse collapse-arrow join-item">
         <input type="radio" name="storage_items_accordion" />
         <!-- <input type="checkbox" /> -->
         <div class="collapse-title text-l">
@@ -109,7 +138,7 @@
                 [ngClass]="getStatusCircleColorClass(storageItem)"
               >
                 <span
-                  class="flex items-center justify-center p-0 w-full text-xs font-semibold text-gray-700 text-rounded-full text-center"
+                  class="flex items-center justify-center p-0 w-full text-xs font-semibold text-gray-800 text-rounded-full text-center"
                 >
                   {{ getDaysToExpireText(storageItem.expirationDate) }}
                 </span>
@@ -129,6 +158,7 @@
                 ? storageItem.name
                 : storageItem.name.slice(0, 18) + "..."
             }}</span>
+            <!-- Todo find more elegant way to handle long item names (autoscroll on hold maybe?) -->
 
             <button
               *ngIf="currentUserPermissionsForSelectedStorage?.canUpdateItems"
@@ -157,20 +187,20 @@
             EXP: {{ getDateFormatted(storageItem.expirationDate) }}
           </p>
           <div
-            class="w-full h-1 my-3 border-2 border-gray-500 border-dashed"
+            class="w-full h-1 my-2 border-2 border-gray-800 border-dashed"
           ></div>
-          <div class="flex content-center">
+          <div class="flex items-center justify-between content-center">
+            <p class="my-1 text-sm">
+              <i class="fa-solid fa-user"></i>
+              {{ storageItem.lastModifiedBy.substring(0, 28) }}
+            </p>
             <p class="my-1 text-sm">
               <i class="fa-solid fa-calendar-plus"></i>
               {{ getDateFormatted(storageItem.createdAt) }}
             </p>
-            <p class="my-1 ml-3 text-sm">
-              <i class="fa-solid fa-user"></i>
-              {{ storageItem.lastModifiedBy.substring(0, 28) }}
-            </p>
           </div>
 
-          <p class="my-1 font-extralight">
+          <p class="my-1 italic">
             {{ storageItem.description }}
           </p>
         </div>
@@ -286,9 +316,11 @@
 
     <div class="mt-2">
       <p class="text-xs font-mono break-all opacity-80">
-        filter: {{ blur }}px {{ hueRotate }}deg {{ saturation }} {{ contrast }}
+        filter: {{ blur }}px {{ hueRotate }}deg {{ saturation }}
+        {{ contrast }}
         {{ brightness }}
       </p>
     </div>
   </div>
+  <!-- End Background Filter Controls -->
 </div>

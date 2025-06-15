@@ -43,7 +43,6 @@ export class ViewStorageComponent implements OnDestroy {
   @ViewChild(AddItemComponent) addItemModal!: AddItemComponent | null;
   @ViewChild('storageDropdown') storageDropdown!: ElementRef;
   @ViewChild('sortDropdown') sortDropdown!: ElementRef;
-
   authStateSubscription: Subscription | undefined;
 
   storages: StorageDetails[] | undefined;
@@ -67,6 +66,8 @@ export class ViewStorageComponent implements OnDestroy {
   currentUserPermissionsForSelectedStorage: UserPermissionDetails | undefined;
 
   loggedInUserId: string | undefined;
+
+  ui_isSearchExpanded: boolean = true;
 
   constructor(
     private authService: AuthService,
@@ -176,7 +177,6 @@ export class ViewStorageComponent implements OnDestroy {
   }
 
   storageDropdownClicked(selectedItem: StorageDetails) {
-    this.storageDropdown.nativeElement.open = false;
     this.selectStorageAndLoadItems(selectedItem);
   }
 
@@ -310,16 +310,6 @@ export class ViewStorageComponent implements OnDestroy {
       });
   }
 
-  getDropdownItemClass(isSelected: boolean): string {
-    return isSelected
-      ? 'bg-gray-600 text-gray-300'
-      : 'text-gray-600 hover:bg-gray-300';
-  }
-
-  zonClickOutside() {
-    console.log('Clicked outside');
-  }
-
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
     if (
@@ -336,6 +326,18 @@ export class ViewStorageComponent implements OnDestroy {
     }
   }
 
+  handleStorageDropdownClick() {
+    if (this.ui_isSearchExpanded) {
+      this.ui_isSearchExpanded = false;
+      this.storageDropdown.nativeElement.open = false;
+      return;
+    } else {
+      this.storageDropdown.nativeElement.open =
+        !this.storageDropdown.nativeElement.open;
+    }
+  }
+
+  // ===== Filter Controls =====
   // Add properties for the filter controls
   showBgControls = false;
   blur = 3;
@@ -361,4 +363,5 @@ export class ViewStorageComponent implements OnDestroy {
       bgElement.style.filter = filterString;
     }
   }
+  // ===== End Filter Controls =====
 }
