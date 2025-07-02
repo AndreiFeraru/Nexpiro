@@ -26,12 +26,17 @@ body {
   @apply bg-white/10;
   @apply nx-glass-borders;
   @apply shadow-md;
-  @apply backdrop-blur-md;
+  @apply backdrop-blur-sm;
   @apply text-gray-800;
 }
 
 .nx-btn-glass {
   @apply nx-glass;
+}
+
+.nx-btn-glass-green {
+  @apply nx-glass;
+  @apply bg-green-500/70;
 }
 
 .nx-btn-glass:hover {
@@ -59,6 +64,7 @@ body {
 
 .nx-input-glass {
   @apply nx-glass;
+  @apply nx-placeholder-gray-800;
 }
 
 .nx-hoverable {
@@ -72,33 +78,27 @@ body {
   transition-duration: 200ms;
   transition-timing-function: ease-in-out;
 }
+
+.nx-no-hoverable {
+
+}
+
+.nx-no-hoverable:hover {
+  @apply translate-y-0;
+  @apply bg-white/20;
+  @apply nx-glass-borders;
+}
+
+
 .nx-pressable:active:hover,
   .nx-pressable:active:focus {
   animation: button-pop 0s ease-out;
   transform: scale(var(--btn-focus-scale, 0.97));
 }
 
-.nx-input-glass:hover {
-  @apply -translate-y-0.5;
-  @apply bg-white/40;
-  @apply border-t-gray-300 border-b-gray-100;
-}
-
 .nx-input-blank:focus {
   @apply bg-transparent;
   @apply border-0;
-}
-
-@media (hover: none) {
-  .nx-input-glass:hover {
-    @apply translate-y-0;
-    @apply bg-white/20;
-    @apply nx-glass-borders;
-  }
-}
-
-.nx-input-glass::placeholder {
-  @apply text-gray-800;
 }
 
 .nx-placeholder-gray-800::placeholder {
@@ -111,6 +111,17 @@ body {
   @apply ease-in-out
 }
 
-.nx-dropdown {
-  
+/* Ensure this overrides the second declaration that sets background to #0006 */
+.modal:not(dialog:not(.modal-open)),
+.modal::backdrop {
+    background-color: transparent !important;
+}
+
+:root:has(:is(.modal-open, .modal:target, .modal-toggle:checked + .modal, .modal[open])) {
+    overflow: hidden;
+    /* Prevent scrollbar from appearing when modal is open */
+    scrollbar-gutter: stable;
+    /* Ensure no scrollbar appears when modal is open */
+    scrollbar-width: none;
+    /* Hide scrollbar in Firefox */   
 }
