@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+} from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -16,7 +22,7 @@ import { v4 as uuidv4 } from 'uuid';
   styleUrls: ['./add-item.component.css'],
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
 })
-export class AddItemComponent implements OnDestroy {
+export class AddItemComponent implements OnDestroy, OnChanges {
   authStateSubscription: Subscription | undefined;
 
   name: string | undefined;
@@ -24,6 +30,7 @@ export class AddItemComponent implements OnDestroy {
   expirationDate: string | undefined;
   currentUser: User | null = null;
 
+  @Input() inputExpirationDate: string | undefined;
   @Input() selectedStorageId: string | undefined;
 
   constructor(
@@ -45,6 +52,17 @@ export class AddItemComponent implements OnDestroy {
     this.authStateSubscription?.unsubscribe();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      !changes['inputExpirationDate'] ||
+      !changes['inputExpirationDate'].currentValue
+    ) {
+      return;
+    }
+    this.inputExpirationDate = changes['inputExpirationDate'].currentValue;
+    this.expirationDate = this.inputExpirationDate;
+  }
+
   public clearForm() {
     this.name = '';
     this.description = '';
@@ -62,12 +80,7 @@ export class AddItemComponent implements OnDestroy {
       return false;
     }
 
-    if (
-      (this.currentUser?.displayName === undefined ||
-        this.currentUser?.displayName === null) &&
-      (this.currentUser?.email === undefined ||
-        this.currentUser?.email === null)
-    ) {
+    if (!this.currentUser?.displayName && !this.currentUser?.email) {
       this.toastService.showError(`Could not retrieve user name or email`);
       return false;
     }
@@ -109,5 +122,14 @@ export class AddItemComponent implements OnDestroy {
         this.toastService.showError(`Error adding item '${item.name}': ${err}`);
       }
     );
+  }
+
+  openModal() {
+    const modal = document.getElementById(
+      'add_item_modal'
+    ) as HTMLDialogElement;
+    if (modal) {
+      modal.showModal();
+    }
   }
 }

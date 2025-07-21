@@ -1,4 +1,11 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -18,9 +25,11 @@ export class EditItemComponent implements OnChanges {
   name: string | undefined;
   description: string | undefined;
   expirationDate: string | undefined;
+  @ViewChild('edit_item_modal') editItemModal!: ElementRef;
 
   @Input() itemSelectedForEdit: StorageItem | undefined;
   @Input() selectedStorageId: string | undefined;
+  @Input() parentButtonPosition: { x: string; y: string } | undefined;
 
   constructor(
     private storageItemService: StorageItemService,
@@ -40,6 +49,30 @@ export class EditItemComponent implements OnChanges {
     this.clearForm();
   }
 
+  ngAfterViewInit() {
+    if (this.editItemModal) {
+      this.editItemModal.nativeElement.addEventListener('cancel', () =>
+        this.editItemModal.nativeElement.close()
+      );
+
+      // Set transform origin before each open
+      this.editItemModal.nativeElement.addEventListener('beforeshow', () => {
+        const positionString = localStorage.getItem('editButtonPosition');
+        if (positionString) {
+          const position = JSON.parse(positionString);
+          this.editItemModal.nativeElement.style.setProperty(
+            '--origin-x',
+            `${position.x}px`
+          );
+          this.editItemModal.nativeElement.style.setProperty(
+            '--origin-y',
+            `${position.y}px`
+          );
+        }
+      });
+    }
+  }
+
   ngOnDestroy(): void {
     this.authStateSubscription?.unsubscribe();
   }
@@ -52,7 +85,9 @@ export class EditItemComponent implements OnChanges {
       return;
     }
     this.itemSelectedForEdit = changes['itemSelectedForEdit'].currentValue;
-    this.updateFormValues(this.itemSelectedForEdit);
+    this.name = this.itemSelectedForEdit?.name;
+    this.description = this.itemSelectedForEdit?.description;
+    this.expirationDate = this.itemSelectedForEdit?.expirationDate;
   }
 
   clearForm() {
@@ -61,16 +96,10 @@ export class EditItemComponent implements OnChanges {
     this.expirationDate = new Date().toISOString().split('T')[0];
   }
 
-  updateFormValues(itemSelectedForEdit: StorageItem | undefined) {
-    this.name = itemSelectedForEdit?.name;
-    this.description = itemSelectedForEdit?.description;
-    this.expirationDate = itemSelectedForEdit?.expirationDate;
-  }
-
   editItem() {
     if (!this.validateForm()) return;
 
-    this.updateSelectedForEdit();
+    this.updateItemSelectedForEdit();
 
     this.storageItemService
       .updateItemInStorage(this.selectedStorageId!, this.itemSelectedForEdit!)
@@ -107,12 +136,7 @@ export class EditItemComponent implements OnChanges {
       this.toastService.showError('Expiration date is required');
       return false;
     }
-    if (
-      (this.currentUser?.displayName === undefined ||
-        this.currentUser?.displayName === null) &&
-      (this.currentUser?.email === undefined ||
-        this.currentUser?.email === null)
-    ) {
+    if (!this.currentUser?.displayName && !this.currentUser?.email) {
       this.toastService.showError(
         `Could not retrieve current user name or email`
       );
@@ -121,7 +145,7 @@ export class EditItemComponent implements OnChanges {
     return true;
   }
 
-  updateSelectedForEdit() {
+  updateItemSelectedForEdit() {
     if (!this.itemSelectedForEdit) return;
 
     this.itemSelectedForEdit.name = this.name!.trim();

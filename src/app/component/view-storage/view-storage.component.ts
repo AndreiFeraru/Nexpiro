@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddItemComponent } from 'src/app/component/modals/add-item/add-item.component';
 import { EditItemComponent } from 'src/app/component/modals/edit-item/edit-item.component';
@@ -33,7 +40,7 @@ import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.compon
     DeleteModalComponent,
   ],
 })
-export class ViewStorageComponent implements OnDestroy {
+export class ViewStorageComponent implements OnDestroy, AfterViewInit {
   @ViewChild(AddItemComponent) addItemModal!: AddItemComponent | null;
   @ViewChild('storageDropdown') storageDropdown!: ElementRef;
   @ViewChild('sortDropdown') sortDropdown!: ElementRef;
@@ -54,6 +61,7 @@ export class ViewStorageComponent implements OnDestroy {
   selectedSortOption: SortOption = SortOption.Expiring;
   selectedSortDirection: SortDirection = SortDirection.Ascending;
 
+  addItemExpirationDate: string = '';
   itemSelectedForEdit: StorageItem | undefined;
   itemSelectedForDelete: StorageItem | undefined;
 
@@ -62,12 +70,15 @@ export class ViewStorageComponent implements OnDestroy {
 
   loggedInUserId: string | undefined;
 
+  queryParamsSubscription: Subscription | undefined;
+
   constructor(
     private authService: AuthService,
     private toastService: ToastService,
     private storageService: StorageService,
     private storageItemService: StorageItemService,
-    private userPermissionsService: UserPermissionsService
+    private userPermissionsService: UserPermissionsService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -108,10 +119,27 @@ export class ViewStorageComponent implements OnDestroy {
       },
     });
 
-    this.initSearch();
+    this.InitSearch();
   }
 
-  private initSearch() {
+  ngAfterViewInit() {
+    this.queryParamsSubscription = this.route.queryParams.subscribe(
+      (params) => {
+        const expirationDate = params['expirationDate'];
+        const showModal = params['showModal'];
+        if (expirationDate && showModal && this.addItemModal) {
+          this.addItemExpirationDate = expirationDate;
+          this.clearAndOpenAddItemForm();
+        } else {
+          console.log('expirationDate: ', expirationDate);
+          console.log('showModal: ', showModal);
+          console.log('addItemModal: ', this.addItemModal);
+        }
+      }
+    );
+  }
+
+  private InitSearch() {
     this.searchControl.valueChanges
       .pipe(debounceTime(500))
       .subscribe((query) => {
@@ -156,12 +184,17 @@ export class ViewStorageComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.storageItemSubscription?.unsubscribe();
     this.authStateSubscription?.unsubscribe();
+    this.queryParamsSubscription?.unsubscribe();
   }
 
-  clearAddItemForm() {
-    if (this.addItemModal) {
-      this.addItemModal.clearForm();
+  clearAndOpenAddItemForm() {
+    console.log('clearAndOpenAddItemForm');
+    if (!this.addItemModal) {
+      this.toastService.showError('Add item modal not found');
+      return;
     }
+    this.addItemModal.clearForm();
+    this.addItemModal.openModal();
   }
 
   storageDropdownClicked(selectedItem: StorageDetails) {

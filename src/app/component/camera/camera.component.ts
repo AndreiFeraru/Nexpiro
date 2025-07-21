@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   ViewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 import * as Tesseract from 'tesseract.js';
-
-declare var ImageCapture: any;
 
 @Component({
   selector: 'app-camera',
@@ -25,11 +25,10 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
   @ViewChild('canvasElement', { static: false }) canvasElement!: ElementRef;
   video!: HTMLVideoElement;
   canvas!: HTMLCanvasElement;
-  stream: MediaStream | undefined;
   scanInterval: any;
-  capturedImage: string | null = null; // Store the captured image data URL
+  capturedImage: string | null = null;
 
-  constructor(private toastService: ToastService, private http: HttpClient) {}
+  constructor(private toastService: ToastService, private router: Router) {}
 
   ngAfterViewInit() {
     this.startCamera();
@@ -41,15 +40,13 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
     navigator.mediaDevices
       .getUserMedia({
         video: {
-          width: { ideal: 720 },
-          height: { ideal: 1280 },
           facingMode: 'environment',
         },
       })
       .then((stream) => {
-        this.stream = stream;
         this.video.srcObject = stream;
         this.video.play();
+        this.handleOrientationChange(screen.orientation);
         this.startScanning();
       })
       .catch(() => {
@@ -59,12 +56,32 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
       });
   }
 
+  @HostListener('window:orientationchange', ['$event'])
+  onOrientationChange(): void {
+    this.handleOrientationChange(screen.orientation);
+  }
+
+  handleOrientationChange(orientation: ScreenOrientation): void {
+    const video = this.videoElement.nativeElement;
+    if (orientation.angle === 0 || orientation.angle === 180) {
+      // Portrait mode
+      video.style.transform = 'rotate(0deg)';
+    } else if (orientation.angle === 90) {
+      // Landscape mode (right)
+      video.style.transform = 'rotate(90deg)';
+    } else if (orientation.angle === -90) {
+      // Landscape mode (left)
+      video.style.transform = 'rotate(-90deg)';
+    }
+  }
+
   startScanning() {
     this.scanInterval = setInterval(() => {
       this.captureAndProcessFrame();
-    }, 1000);
+    }, 999999); // TODO Change the interval to a reasonable value
   }
 
+  // TODO Delete unused code (such as the function below)
   async onFileSelected(event: Event) {
     const fileInput = event.target as HTMLInputElement;
 
@@ -86,16 +103,22 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
   }
 
   captureAndProcessFrame() {
-    if (!this.stream) return;
-    const track = this.stream.getVideoTracks()[0];
-    const imageCapture = new ImageCapture(track);
+    if (!this.video) return;
 
-    imageCapture
-      .grabFrame()
-      .then((imageBitmap: ImageBitmap) => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    if (!context) return;
+
+    canvas.width = this.video.videoWidth;
+    canvas.height = this.video.videoHeight;
+    context.drawImage(this.video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      createImageBitmap(blob).then((imageBitmap) => {
         this.processFrame(imageBitmap);
-      })
-      .catch((err: Error) => console.error('Frame Capture Error:', err));
+      });
+    });
     return;
   }
 
@@ -125,11 +148,15 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
             // this.stopCameraAndClearInterval();
             clearInterval(this.scanInterval);
             const message = `Expiration date detected: ${expirationDate}`;
+            console.log(message);
             this.toastService.showSuccess(message, true);
+            this.router.navigate(['/view-storage'], {
+              queryParams: { expirationDate: expirationDate, showModal: true },
+            });
           }
         });
       })
-      .catch((err) => console.error('OCR API Error:', err));
+      .catch((err) => console.error('[AndreiF] OCR API Error:', err));
   }
 
   async runOcrLocally(frameData: string) {
@@ -174,7 +201,9 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
         },
         body: formData,
       });
+      console.log('OCR API Response:', response);
       const result = await response.json();
+      console.log('OCR API Result:', result);
       return result;
     } catch (error) {
       console.error('OCR API Error:', error);
@@ -193,8 +222,8 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
 
   stopCameraAndClearInterval() {
     clearInterval(this.scanInterval);
-    if (!this.stream) return;
-    this.stream.getTracks().forEach((track: any) => track.stop());
+    if (!this.video) return;
+    this.video.pause();
   }
 
   ngOnDestroy() {

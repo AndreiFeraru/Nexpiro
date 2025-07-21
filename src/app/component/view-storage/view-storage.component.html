@@ -15,8 +15,7 @@
       <button
         class="text-gray-700 bg-orange-100 border-2 border-orange-300 btn btn-circle"
         [disabled]="!currentUserPermissionsForSelectedStorage?.canCreateItems"
-        onclick="add_item_modal.showModal()"
-        (click)="clearAddItemForm()"
+        (click)="clearAndOpenAddItemForm()"
       >
         <i class="text-lg fa-solid fa-plus"></i>
       </button>
@@ -92,8 +91,8 @@
         <div
           class="px-3 shadow-xl collapse collapse-arrow join-item glass bg-base-100/50"
         >
-          <input type="radio" name="storage_items_accordion" />
-          <!-- <input type="checkbox" /> -->
+          <!-- <input type="radio" name="storage_items_accordion" /> -->
+          <input type="checkbox" name="storage_items_accordion" />
           <div class="collapse-title text-l">
             <div class="flex items-center justify-between">
               <div
@@ -166,7 +165,10 @@
     </div>
   </div>
 
-  <app-add-item [selectedStorageId]="selectedStorage?.id"></app-add-item>
+  <app-add-item
+    [inputExpirationDate]="addItemExpirationDate"
+    [selectedStorageId]="selectedStorage?.id"
+  ></app-add-item>
 
   <app-edit-item
     [selectedStorageId]="selectedStorage?.id"
