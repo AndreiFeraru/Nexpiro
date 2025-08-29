@@ -30,7 +30,8 @@
         class="w-full overflow-y-scroll border-2 border-orange-300 shadow-xl join join-vertical max-h-96"
         style="scrollbar-width: none"
       >
-        <div *ngFor="let userPermission of userPermissions | keyvalue">
+        @for (userPermission of userPermissions | keyvalue; track $index) {
+        <div>
           <div
             class="shadow-sm collapse collapse-arrow join-item bg-base-100/50"
           >
@@ -126,6 +127,7 @@
             </div>
           </div>
         </div>
+        }
       </div>
       }
     </div>

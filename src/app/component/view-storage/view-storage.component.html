@@ -28,8 +28,8 @@
         <ul
           class="absolute p-2 mt-1 border-2 dropdown-content rounded-box nx-glass"
         >
+          @for (storage of storages; track storage.id) {
           <li
-            *ngFor="let storage of storages"
             class="w-full rounded-xl menu-title font-medium nx-hoverable text-gray-800"
             (click)="storageDropdownClicked(storage)"
             [ngClass]="{
@@ -38,6 +38,7 @@
           >
             {{ storage.name }}
           </li>
+          }
         </ul>
       </details>
 
@@ -90,8 +91,8 @@
             <i class="text-lg fa-solid fa-sort"></i>
           </summary>
           <ul class="p-2 mt-1 border-2 dropdown-content rounded-box nx-glass">
+            @for (sortOption of sortOptionsArray; track $index) {
             <li
-              *ngFor="let sortOption of sortOptionsArray"
               class="flex items-center w-full rounded-xl menu-title font-medium nx-hoverable text-gray-800"
               (click)="sortDropdownClicked(sortOption)"
               [ngClass]="{
@@ -104,6 +105,7 @@
               ></i>
               <span class="mx-1">{{ sortOption }}</span>
             </li>
+            }
           </ul>
         </details>
       </div>
@@ -114,7 +116,8 @@
   @if (filteredItems?.length &&
   currentUserPermissionsForSelectedStorage?.canReadItems) {
   <div class="w-full join join-vertical nx-glass">
-    <div *ngFor="let storageItem of filteredItems">
+    @for (storageItem of filteredItems; track storageItem.id) {
+    <div>
       <div class="px-1.5 py-0 collapse collapse-arrow join-item">
         <input type="radio" name="storage_items_accordion" />
         <!-- <input type="checkbox" /> -->
@@ -196,6 +199,7 @@
         </div>
       </div>
     </div>
+    }
   </div>
   }
 
