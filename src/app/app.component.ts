@@ -1,12 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ToastComponent } from './component/toast/toast.component';
 import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  imports: [ToastComponent, RouterOutlet],
 })
 export class AppComponent implements OnDestroy {
   title = 'Nexpiro';
