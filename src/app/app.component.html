@@ -24,8 +24,8 @@
     </div>
 
     <!-- Bottom Menu Items -->
+    @if (loggedIn) {
     <div
-      *ngIf="loggedIn"
       class="fixed z-50 flex items-center justify-around max-w-sm px-4 py-2 mx-auto bottom-2 inset-x-4 backdrop-blur-md bg-base-100/20 border-t-[1px] border-l-[1px] rounded-full shadow-xl ring-1 ring-black/5"
     >
       <button
@@ -47,6 +47,7 @@
         <i class="w-6 h-6 text-gray-700 fas fa-pizza-slice"></i>
       </button>
     </div>
+    }
   </div>
 
   <app-toast></app-toast>

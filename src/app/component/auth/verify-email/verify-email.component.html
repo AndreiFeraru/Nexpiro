@@ -1,7 +1,9 @@
 <div
   class="flex flex-col items-center justify-center p-6 m-10 bg-gray-100 border-2 border-orange-300 shadow-xl space-y-6 rounded-badge"
 >
-  <span *ngIf="isButtonDisabled">Resend in {{ countdown }} seconds</span>
+  @if (isButtonDisabled) {
+  <span>Resend in {{ countdown }} seconds</span>
+  }
 
   <button
     class="text-gray-700 bg-orange-100 border-2 border-orange-300 btn"

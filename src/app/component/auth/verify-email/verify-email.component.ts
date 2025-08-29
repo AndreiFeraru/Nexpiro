@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Subscription, switchMap, tap, timer } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,7 +8,6 @@ import { ToastService } from 'src/app/services/toast.service';
   selector: 'app-verify-email',
   templateUrl: './verify-email.component.html',
   styleUrls: ['./verify-email.component.css'],
-  imports: [NgIf],
 })
 export class VerifyEmailComponent implements OnInit {
   isButtonDisabled: boolean = true;

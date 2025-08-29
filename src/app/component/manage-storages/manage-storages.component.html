@@ -19,10 +19,8 @@
   </div>
 </div>
 
-<div
-  *ngIf="storages?.length"
-  class="w-full border-2 border-orange-300 shadow-xl join join-vertical"
->
+@if (storages?.length) {
+<div class="w-full border-2 border-orange-300 shadow-xl join join-vertical">
   <div *ngFor="let storage of storages">
     <div
       class="px-3 shadow-xl collapse collapse-arrow join-item glass bg-base-100/50"
@@ -40,7 +38,8 @@
             <i class="fa-solid fa-share"></i>
           </button>
 
-          <div *ngIf="currentUserCanManageStorage(storage)">
+          @if (currentUserCanManageStorage(storage)) {
+          <div>
             <button
               class="btn btn-sm btn-ghost"
               onclick="edit_storage_modal.showModal()"
@@ -49,15 +48,15 @@
               <i class="fa-solid fa-pencil"></i>
             </button>
           </div>
-
+          } @if (currentUserCanManageStorage(storage)) {
           <button
-            *ngIf="currentUserCanManageStorage(storage)"
             class="btn btn-sm btn-ghost"
             onclick="delete_item_modal.showModal()"
             (click)="this.storageSelectedForDelete = storage"
           >
             <i class="fa-solid fa-trash"></i>
           </button>
+          }
         </div>
       </div>
       <div class="collapse-content">
@@ -87,6 +86,7 @@
     </div>
   </div>
 </div>
+}
 
 <app-delete-modal
   [itemName]="storageSelectedForDelete?.name ?? ''"

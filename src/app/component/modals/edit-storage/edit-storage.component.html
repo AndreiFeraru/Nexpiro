@@ -24,8 +24,9 @@
       <label class="label">
         <span class="label-text">Users and permissions</span>
       </label>
+
+      @if (userPermissions && (userPermissions | keyvalue).length > 0) {
       <div
-        *ngIf="userPermissions && (userPermissions | keyvalue).length > 0"
         class="w-full overflow-y-scroll border-2 border-orange-300 shadow-xl join join-vertical max-h-96"
         style="scrollbar-width: none"
       >
@@ -126,6 +127,7 @@
           </div>
         </div>
       </div>
+      }
     </div>
 
     <div class="modal-action">

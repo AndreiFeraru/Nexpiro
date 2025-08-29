@@ -111,47 +111,35 @@
   </div>
 
   <!-- Items -->
-  <div
-    *ngIf="
-      filteredItems?.length &&
-      currentUserPermissionsForSelectedStorage?.canReadItems
-    "
-    class="w-full join join-vertical nx-glass"
-  >
+  @if (filteredItems?.length &&
+  currentUserPermissionsForSelectedStorage?.canReadItems) {
+  <div class="w-full join join-vertical nx-glass">
     <div *ngFor="let storageItem of filteredItems">
       <div class="px-1.5 py-0 collapse collapse-arrow join-item">
         <input type="radio" name="storage_items_accordion" />
         <!-- <input type="checkbox" /> -->
         <div class="collapse-title text-l">
           <div class="flex items-center justify-between">
+            @if (getDaysToExpire(storageItem.expirationDate) < 0) {
+            <!-- Expired Icon -->
             <div
-              *ngIf="
-                getDaysToExpire(storageItem.expirationDate) < 0;
-                then expiredIcon;
-                else statusCircle
-              "
-            ></div>
-
-            <ng-template #statusCircle>
-              <div
-                class="w-6 h-6 rounded-full shadow-xl flex items-center"
-                [ngClass]="getStatusCircleColorClass(storageItem)"
+              class="flex items-center justify-center text-lg w-6 h-6 opacity-85"
+            >
+              <i class="text-red-500 fa-solid fa-exclamation-triangle"></i>
+            </div>
+            } @else {
+            <!-- Status Circle -->
+            <div
+              class="w-6 h-6 rounded-full shadow-xl flex items-center"
+              [ngClass]="getStatusCircleColorClass(storageItem)"
+            >
+              <span
+                class="flex items-center justify-center p-0 w-full text-xs font-semibold text-gray-800 text-rounded-full text-center"
               >
-                <span
-                  class="flex items-center justify-center p-0 w-full text-xs font-semibold text-gray-800 text-rounded-full text-center"
-                >
-                  {{ getDaysToExpireText(storageItem.expirationDate) }}
-                </span>
-              </div>
-            </ng-template>
-
-            <ng-template #expiredIcon>
-              <div
-                class="flex items-center justify-center text-lg w-6 h-6 opacity-85"
-              >
-                <i class="text-red-500 fa-solid fa-exclamation-triangle"></i>
-              </div>
-            </ng-template>
+                {{ getDaysToExpireText(storageItem.expirationDate) }}
+              </span>
+            </div>
+            }
 
             <span class="ml-4 font-semibold grow">{{
               storageItem.name.length <= 18
@@ -160,23 +148,25 @@
             }}</span>
             <!-- Todo find more elegant way to handle long item names (autoscroll on hold maybe?) -->
 
+            @if (currentUserPermissionsForSelectedStorage?.canUpdateItems) {
+
             <button
-              *ngIf="currentUserPermissionsForSelectedStorage?.canUpdateItems"
               class="btn btn-sm btn-ghost"
               onclick="edit_item_modal.showModal()"
               (click)="itemSelectedForEdit = storageItem"
             >
               <i class="fa-solid fa-pencil"></i>
             </button>
+            } @if (currentUserPermissionsForSelectedStorage?.canDeleteItems) {
 
             <button
-              *ngIf="currentUserPermissionsForSelectedStorage?.canDeleteItems"
               class="btn btn-sm btn-ghost"
               onclick="delete_item_modal.showModal()"
               (click)="onDeleteItemClicked(storageItem)"
             >
               <i class="fa-solid fa-trash"></i>
             </button>
+            }
           </div>
         </div>
         <div class="collapse-content">
@@ -207,6 +197,7 @@
       </div>
     </div>
   </div>
+  }
 
   <app-add-item [selectedStorageId]="selectedStorage?.id"></app-add-item>
 
@@ -230,8 +221,8 @@
   </button>
 
   <!-- Background filter controls -->
+  @if (showBgControls) {
   <div
-    *ngIf="showBgControls"
     class="fixed bottom-14 right-4 p-3 rounded-lg bg-base-200/80 shadow-lg w-64 z-50"
   >
     <div class="flex justify-between mb-2">
@@ -322,5 +313,7 @@
       </p>
     </div>
   </div>
+  }
+
   <!-- End Background Filter Controls -->
 </div>
