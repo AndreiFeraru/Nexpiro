@@ -44,7 +44,7 @@
             <button
               class="btn btn-sm btn-ghost"
               onclick="edit_storage_modal.showModal()"
-              (click)="this.storageSelectedForEdit = storage"
+              (click)="storageSelectedForEdit = storage"
             >
               <i class="fa-solid fa-pencil"></i>
             </button>
@@ -53,7 +53,7 @@
           <button
             class="btn btn-sm btn-ghost"
             onclick="delete_item_modal.showModal()"
-            (click)="this.storageSelectedForDelete = storage"
+            (click)="storageSelectedForDelete = storage"
           >
             <i class="fa-solid fa-trash"></i>
           </button>
