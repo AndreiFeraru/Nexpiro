@@ -8,7 +8,7 @@ describe('ViewStorageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ViewStorageComponent],
+      imports: [ViewStorageComponent],
     });
     fixture = TestBed.createComponent(ViewStorageComponent);
     component = fixture.componentInstance;
