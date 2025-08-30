@@ -1,9 +1,9 @@
 <div>
-  <div class="flex justify-center items-center gap-2 py-1 mb-2">
-    <div class="flex flex-grow items-center gap-2 py-1 max-w-60">
+  <div class="flex items-center justify-center py-1 mb-2 gap-2">
+    <div class="flex items-center flex-grow py-1 gap-2 max-w-60">
       <!-- Storages dropdown -->
       <details
-        class="dropdown dropdown-bottom bouncy-animation relative z-40"
+        class="relative z-40 dropdown dropdown-bottom bouncy-animation"
         [ngClass]="{
           'min-w-12 w-12': ui_isSearchExpanded,
           'w-1/5 flex-grow': !ui_isSearchExpanded
@@ -13,13 +13,13 @@
         #storageDropdown
       >
         <summary
-          class="btn nx-btn-glass w-full pl-3"
+          class="w-full pl-3 btn nx-btn-glass"
           [attr.disabled]="storages?.length === 0 ? 'disabled' : null"
         >
           <div
-            class="w-full h-full flex items-center justify-start whitespace-nowrap"
+            class="flex items-center justify-start w-full h-full whitespace-nowrap"
           >
-            <i class="text-xl fas fa-box-open mr-3"></i>
+            <i class="mr-3 text-xl fas fa-box-open"></i>
             <span class="overflow-hidden">
               {{ selectedStorage?.name ?? "" }}</span
             >
@@ -30,7 +30,7 @@
         >
           @for (storage of storages; track storage.id) {
           <li
-            class="w-full rounded-xl menu-title font-medium nx-hoverable text-gray-800"
+            class="w-full font-medium text-gray-800 rounded-xl menu-title nx-hoverable"
             (click)="storageDropdownClicked(storage)"
             [ngClass]="{
                 'nx-glass': storage == selectedStorage,
@@ -44,7 +44,7 @@
 
       <!-- Search -->
       <div
-        class="flex items-center h-12 bouncy-animation rounded-full nx-glass nx-hoverable nx-pressable overflow-hidden"
+        class="flex items-center h-12 overflow-hidden rounded-full bouncy-animation nx-glass nx-hoverable nx-pressable"
         [ngClass]="{
           'w-1/5 flex-grow': ui_isSearchExpanded,
           'min-w-12 w-12': !ui_isSearchExpanded
@@ -52,14 +52,14 @@
         (click)="ui_isSearchExpanded = true"
       >
         <div
-          class="w-full flex items-center justify-start group overflow-hidden whitespace-normal"
+          class="flex items-center justify-start w-full overflow-hidden whitespace-normal group"
           (click)="ui_isSearchExpanded = true; searchInput.focus()"
         >
-          <i class="fas fa-search text-xl text-gray-800 h-full mx-3"></i>
+          <i class="h-full mx-3 text-xl text-gray-800 fas fa-search"></i>
           <input
             #searchInput
             type="text"
-            class="input w-full nx-placeholder-gray-800 transition-all"
+            class="w-full input nx-placeholder-gray-800 transition-all"
             [ngClass]="{
               'bg-white/20 shadow-md': ui_isSearchExpanded,
               'bg-transparent shadow-none': !ui_isSearchExpanded
@@ -70,10 +70,10 @@
         </div>
       </div>
     </div>
-    <div class="flex items-center gap-2 py-1">
+    <div class="flex items-center py-1 gap-2">
       <!-- Add item -->
       <button
-        class="btn btn-md btn-circle nx-btn-glass flex-none"
+        class="flex-none btn btn-md btn-circle nx-btn-glass"
         [disabled]="!currentUserPermissionsForSelectedStorage?.canCreateItems"
         onclick="add_item_modal.showModal()"
         (click)="clearAddItemForm()"
@@ -93,14 +93,14 @@
           <ul class="p-2 mt-1 border-2 dropdown-content rounded-box nx-glass">
             @for (sortOption of sortOptionsArray; track $index) {
             <li
-              class="flex items-center w-full rounded-xl menu-title font-medium nx-hoverable text-gray-800"
+              class="flex items-center w-full font-medium text-gray-800 rounded-xl menu-title nx-hoverable"
               (click)="sortDropdownClicked(sortOption)"
               [ngClass]="{
                 'nx-glass': sortOption === selectedSortOption
               }"
             >
               <i
-                class="fa fa-solid h-full"
+                class="h-full fa fa-solid"
                 [ngClass]="getSortDirectionClass(sortOption)"
               ></i>
               <span class="mx-1">{{ sortOption }}</span>
@@ -126,18 +126,18 @@
             @if (getDaysToExpire(storageItem.expirationDate) < 0) {
             <!-- Expired Icon -->
             <div
-              class="flex items-center justify-center text-lg w-6 h-6 opacity-85"
+              class="flex items-center justify-center w-6 h-6 text-lg opacity-85"
             >
               <i class="text-red-500 fa-solid fa-exclamation-triangle"></i>
             </div>
             } @else {
             <!-- Status Circle -->
             <div
-              class="w-6 h-6 rounded-full shadow-xl flex items-center"
+              class="flex items-center w-6 h-6 rounded-full shadow-xl"
               [ngClass]="getStatusCircleColorClass(storageItem)"
             >
               <span
-                class="flex items-center justify-center p-0 w-full text-xs font-semibold text-gray-800 text-rounded-full text-center"
+                class="flex items-center justify-center w-full p-0 text-xs font-semibold text-center text-gray-800 text-rounded-full"
               >
                 {{ getDaysToExpireText(storageItem.expirationDate) }}
               </span>
@@ -182,7 +182,7 @@
           <div
             class="w-full h-1 my-2 border-2 border-gray-800 border-dashed"
           ></div>
-          <div class="flex items-center justify-between content-center">
+          <div class="flex items-center content-center justify-between">
             <p class="my-1 text-sm">
               <i class="fa-solid fa-user"></i>
               {{ storageItem.lastModifiedBy.substring(0, 28) }}
@@ -218,7 +218,7 @@
   <!-- Toggle button for the controls -->
   <button
     (click)="toggleBgControls()"
-    class="btn btn-ghost btn-xl text-3xl btn-circle fixed bottom-20 right-4 bg-base-200/80"
+    class="fixed text-3xl btn btn-ghost btn-xl btn-circle bottom-20 right-4 bg-base-200/80"
     title="Background Settings"
   >
     ⚙️
@@ -227,7 +227,7 @@
   <!-- Background filter controls -->
   @if (showBgControls) {
   <div
-    class="fixed bottom-14 right-4 p-3 rounded-lg bg-base-200/80 shadow-lg w-64 z-50"
+    class="fixed z-50 w-64 p-3 rounded-lg shadow-lg bottom-14 right-4 bg-base-200/80"
   >
     <div class="flex justify-between mb-2">
       <h3 class="text-sm font-bold">Background Controls</h3>
@@ -237,8 +237,8 @@
     </div>
 
     <div class="form-control">
-      <label class="label py-0">
-        <span class="label-text text-xs">Blur: {{ blur }}px</span>
+      <label class="py-0 label">
+        <span class="text-xs label-text">Blur: {{ blur }}px</span>
       </label>
       <input
         type="range"
@@ -251,8 +251,8 @@
     </div>
 
     <div class="form-control">
-      <label class="label py-0">
-        <span class="label-text text-xs">Hue: {{ hueRotate }}°</span>
+      <label class="py-0 label">
+        <span class="text-xs label-text">Hue: {{ hueRotate }}°</span>
       </label>
       <input
         type="range"
@@ -265,8 +265,8 @@
     </div>
 
     <div class="form-control">
-      <label class="label py-0">
-        <span class="label-text text-xs">Saturation: {{ saturation }}</span>
+      <label class="py-0 label">
+        <span class="text-xs label-text">Saturation: {{ saturation }}</span>
       </label>
       <input
         type="range"
@@ -280,8 +280,8 @@
     </div>
 
     <div class="form-control">
-      <label class="label py-0">
-        <span class="label-text text-xs">Contrast: {{ contrast }}</span>
+      <label class="py-0 label">
+        <span class="text-xs label-text">Contrast: {{ contrast }}</span>
       </label>
       <input
         type="range"
@@ -295,8 +295,8 @@
     </div>
 
     <div class="form-control">
-      <label class="label py-0">
-        <span class="label-text text-xs">Brightness: {{ brightness }}</span>
+      <label class="py-0 label">
+        <span class="text-xs label-text">Brightness: {{ brightness }}</span>
       </label>
       <input
         type="range"
@@ -310,7 +310,7 @@
     </div>
 
     <div class="mt-2">
-      <p class="text-xs font-mono break-all opacity-80">
+      <p class="font-mono text-xs break-all opacity-80">
         filter: {{ blur }}px {{ hueRotate }}deg {{ saturation }}
         {{ contrast }}
         {{ brightness }}

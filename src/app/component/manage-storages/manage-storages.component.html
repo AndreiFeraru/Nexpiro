@@ -1,12 +1,12 @@
 <div
-  class="flex flex-col p-4 mb-3 border-2 border-orange-300 shadow-xl rounded-badge bg-base-100/50"
+  class="flex flex-col p-4 mb-3 border-2 border-orange-300 shadow-xl rounded-box bg-base-100/50"
 >
   <span class="mx-4 my-1 font-semibold text-gray-700">Add new storage</span>
   <div class="flex">
     <input
       type="text"
       placeholder="Name"
-      class="w-full border-2 border-orange-300 input"
+      class="w-full border-2 border-orange-300 input rounded-field"
       [(ngModel)]="newStorageName"
     />
     <button
@@ -20,70 +20,66 @@
 </div>
 
 @if (storages?.length) {
-<div class="w-full border-2 border-orange-300 shadow-xl join join-vertical">
+<div class="w-full shadow-xl join join-vertical">
   @for (storage of storages; track storage.id) {
-  <div>
-    <div
-      class="px-3 shadow-xl collapse collapse-arrow join-item glass bg-base-100/50"
-    >
-      <input type="radio" name="storages_accordion" />
-      <div class="collapse-title text-l">
-        <div class="flex items-center justify-between">
-          <span class="font-semibold grow">{{ storage.name }}</span>
+  <div class="px-3 rounded-full shadow-xl collapse collapse-arrow join-item">
+    <input type="radio" name="storages_accordion" />
+    <div class="collapse-title text-l">
+      <div class="flex items-center justify-between">
+        <span class="font-semibold grow">{{ storage.name }}</span>
 
-          <button
-            type="submit"
-            class="mx-2 btn btn-sm btn-ghost"
-            (click)="shareStorage(storage.id, storage.name)"
-          >
-            <i class="fa-solid fa-share"></i>
-          </button>
+        <button
+          type="submit"
+          class="mx-2 btn btn-sm btn-ghost"
+          (click)="shareStorage(storage.id, storage.name)"
+        >
+          <i class="fa-solid fa-share"></i>
+        </button>
 
-          @if (currentUserCanManageStorage(storage)) {
-          <div>
-            <button
-              class="btn btn-sm btn-ghost"
-              onclick="edit_storage_modal.showModal()"
-              (click)="storageSelectedForEdit = storage"
-            >
-              <i class="fa-solid fa-pencil"></i>
-            </button>
-          </div>
-          } @if (currentUserCanManageStorage(storage)) {
+        @if (currentUserCanManageStorage(storage)) {
+        <div>
           <button
             class="btn btn-sm btn-ghost"
-            onclick="delete_item_modal.showModal()"
-            (click)="storageSelectedForDelete = storage"
+            onclick="edit_storage_modal.showModal()"
+            (click)="storageSelectedForEdit = storage"
           >
-            <i class="fa-solid fa-trash"></i>
+            <i class="fa-solid fa-pencil"></i>
           </button>
-          }
         </div>
+        } @if (currentUserCanManageStorage(storage)) {
+        <button
+          class="btn btn-sm btn-ghost"
+          onclick="delete_item_modal.showModal()"
+          (click)="storageSelectedForDelete = storage"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
+        }
       </div>
-      <div class="collapse-content">
-        <p class="my-1 text-sm">
-          <i class="fa-solid fa-calendar-plus"></i>
-          {{ getDateFormatted(storage.createdAt) }}
-        </p>
-        <div class="my-1 text-sm">
-          @for (userPermission of storage.userPermissions | keyvalue; track
-          $index) {
+    </div>
+    <div class="collapse-content">
+      <p class="my-1 text-sm">
+        <i class="fa-solid fa-calendar-plus"></i>
+        {{ getDateFormatted(storage.createdAt) }}
+      </p>
+      <div class="my-1 text-sm">
+        @for (userPermission of storage.userPermissions | keyvalue; track
+        $index) {
+        <div>
           <div>
-            <div>
-              <i
-                [ngClass]="
-                  userPermission.value.canManageStorage
-                    ? 'fa-solid fa-crown'
-                    : 'fa-solid fa-user'
-                "
-              ></i>
-              <span class="ml-1">Uid: {{ userPermission.key }}</span>
-              <!-- TODO figure out a way to show user name here -->
-              <!-- <span class="ml-1">{{ permission.userName }}</span> -->
-            </div>
+            <i
+              [ngClass]="
+                userPermission.value.canManageStorage
+                  ? 'fa-solid fa-crown'
+                  : 'fa-solid fa-user'
+              "
+            ></i>
+            <span class="ml-1">Uid: {{ userPermission.key }}</span>
+            <!-- TODO figure out a way to show user name here -->
+            <!-- <span class="ml-1">{{ permission.userName }}</span> -->
           </div>
-          }
         </div>
+        }
       </div>
     </div>
   </div>

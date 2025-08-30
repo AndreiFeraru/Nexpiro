@@ -1,7 +1,7 @@
 <dialog id="add_item_modal" class="modal">
   <div class="max-w-sm modal-box inset-x-4 nx-glass">
     <div class="flex items-center justify-between mb-4">
-      <h3 class="text-lg font-bold ml-2">Add item</h3>
+      <h3 class="ml-2 text-lg font-bold">Add item</h3>
       <form method="dialog">
         <button class="btn btn-circle btn-sm nx-btn-glass">✕</button>
       </form>
@@ -10,7 +10,7 @@
     <input
       type="text"
       placeholder="Name"
-      class="input w-full mb-2 nx-input-glass"
+      class="w-full mb-2 input nx-input-glass"
       [(ngModel)]="name"
     />
 
@@ -26,7 +26,7 @@
       name="expiration-date"
       min="2024-01-01"
       max="2030-12-31"
-      class="input w-full nx-input-glass"
+      class="w-full input nx-input-glass"
       [(ngModel)]="expirationDate"
     />
 
@@ -43,7 +43,7 @@
       </form>
     </div>
   </div>
-  <form method="dialog" class="modal-backdrop bg-transparent">
+  <form method="dialog" class="bg-transparent modal-backdrop">
     <button>close</button>
   </form>
 </dialog>
