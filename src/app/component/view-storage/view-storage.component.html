@@ -1,6 +1,6 @@
 <div>
-  <div class="flex items-center justify-center py-1 mb-2 gap-2">
-    <div class="flex items-center flex-grow py-1 gap-2 max-w-60">
+  <div class="flex items-center justify-center gap-2 py-1 mb-2">
+    <div class="flex items-center flex-grow gap-2 py-1 max-w-60">
       <!-- Storages dropdown -->
       <details
         class="relative z-40 dropdown dropdown-bottom bouncy-animation"
@@ -55,11 +55,11 @@
           class="flex items-center justify-start w-full overflow-hidden whitespace-normal group"
           (click)="ui_isSearchExpanded = true; searchInput.focus()"
         >
-          <i class="h-full mx-3 text-xl text-gray-800 fas fa-search"></i>
+          <i class="h-full mx-3.5 text-xl text-gray-800 fas fa-search"></i>
           <input
             #searchInput
             type="text"
-            class="w-full input nx-placeholder-gray-800 transition-all"
+            class="w-full transition-all input nx-placeholder-gray-800"
             [ngClass]="{
               'bg-white/20 shadow-md': ui_isSearchExpanded,
               'bg-transparent shadow-none': !ui_isSearchExpanded
@@ -70,7 +70,7 @@
         </div>
       </div>
     </div>
-    <div class="flex items-center py-1 gap-2">
+    <div class="flex items-center gap-2 py-1">
       <!-- Add item -->
       <button
         class="flex-none btn btn-md btn-circle nx-btn-glass"

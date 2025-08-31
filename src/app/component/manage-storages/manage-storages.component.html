@@ -1,12 +1,12 @@
 <div
-  class="flex flex-col p-4 mb-3 border-2 border-orange-300 shadow-xl rounded-box bg-base-100/50"
+  class="flex flex-col p-4 mb-3 border-2 border-orange-300 shadow-xl rounded-badge bg-base-100/50"
 >
   <span class="mx-4 my-1 font-semibold text-gray-700">Add new storage</span>
   <div class="flex">
     <input
       type="text"
       placeholder="Name"
-      class="w-full border-2 border-orange-300 input rounded-field"
+      class="w-full border-2 border-orange-300 input"
       [(ngModel)]="newStorageName"
     />
     <button
@@ -20,32 +20,29 @@
 </div>
 
 @if (storages?.length) {
-<div class="w-full shadow-xl join join-vertical">
+<div class="w-full shadow-xl join join-vertical nx-glass">
   @for (storage of storages; track storage.id) {
-  <div class="px-3 rounded-full shadow-xl collapse collapse-arrow join-item">
+  <div class="px-1.5 py-0 collapse collapse-arrow join-item">
     <input type="radio" name="storages_accordion" />
     <div class="collapse-title text-l">
       <div class="flex items-center justify-between">
         <span class="font-semibold grow">{{ storage.name }}</span>
-
         <button
           type="submit"
-          class="mx-2 btn btn-sm btn-ghost"
+          class="btn btn-sm btn-ghost"
           (click)="shareStorage(storage.id, storage.name)"
         >
-          <i class="fa-solid fa-share"></i>
+          <i class="fa-solid fa-share-nodes"></i>
         </button>
 
         @if (currentUserCanManageStorage(storage)) {
-        <div>
-          <button
-            class="btn btn-sm btn-ghost"
-            onclick="edit_storage_modal.showModal()"
-            (click)="storageSelectedForEdit = storage"
-          >
-            <i class="fa-solid fa-pencil"></i>
-          </button>
-        </div>
+        <button
+          class="btn btn-sm btn-ghost"
+          onclick="edit_storage_modal.showModal()"
+          (click)="storageSelectedForEdit = storage"
+        >
+          <i class="fa-solid fa-pencil"></i>
+        </button>
         } @if (currentUserCanManageStorage(storage)) {
         <button
           class="btn btn-sm btn-ghost"
