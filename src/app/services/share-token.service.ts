@@ -25,7 +25,6 @@ export class ShareTokenService {
   }
 
   async addShareToken(shareToken: ShareToken) {
-    debugger;
     const storagePath = `sharedTokens/${shareToken.token}`;
     const storageRef = ref(this.db, storagePath);
     set(storageRef, shareToken)

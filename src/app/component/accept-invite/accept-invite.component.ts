@@ -28,7 +28,6 @@ export class AcceptInviteComponent {
   ) {}
 
   ngOnInit(): void {
-    debugger;
     if (this.route.snapshot.url[0].path !== 'invite') {
       return;
     }
