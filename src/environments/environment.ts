@@ -10,4 +10,6 @@ export const environment = {
     appId: '1:200709942102:web:b1e24fed98503643ec84f7',
     measurementId: 'G-RPT43DZSWH',
   },
+  vapidKey:
+    'BB1CqR1ohp9X4B7Dvl_vR1yhZLQ4OZ5orhM1PxXKLqF8bzLthkAQhn-FomzbJgJQEELmA0yVCcKqUTRs_zNZIOc',
 };

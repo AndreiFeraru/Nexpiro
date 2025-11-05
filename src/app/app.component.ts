@@ -1,7 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './shared/auth.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from './shared/auth.service';
+import { MessagingService } from './shared/messaging.service';
 
 @Component({
   selector: 'app-root',
@@ -14,11 +15,16 @@ export class AppComponent implements OnDestroy {
 
   authStateSubscription: Subscription;
 
-  constructor(public router: Router, public authService: AuthService) {
+  constructor(
+    public router: Router,
+    public authService: AuthService,
+    private messagingService: MessagingService
+  ) {
     this.authStateSubscription = authService.authState$.subscribe((user) => {
       this.loggedIn = !!user;
     });
   }
+
   ngOnDestroy(): void {
     this.authStateSubscription.unsubscribe();
   }
